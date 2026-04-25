@@ -12,14 +12,14 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
 <RequestExample>
   ```bash cURL theme={null}
   curl --request GET \
-    --url 'https://api.apimart.ai/v1/user/balance' \
+    --url 'https://claw.dualseason.com/v1/user/balance' \
     --header 'Authorization: Bearer <token>'
   ```
 
   ```python Python theme={null}
   import requests
 
-  API_BASE = 'https://api.apimart.ai'
+  API_BASE = 'https://claw.dualseason.com'
   API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxx'
 
   headers = {
@@ -45,7 +45,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
   ```
 
   ```javascript JavaScript theme={null}
-  const API_BASE = 'https://api.apimart.ai';
+  const API_BASE = 'https://claw.dualseason.com';
   const API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxx';
 
   async function getUserBalance() {
@@ -93,7 +93,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
   }
 
   func main() {
-      url := "https://api.apimart.ai/v1/user/balance"
+      url := "https://claw.dualseason.com/v1/user/balance"
 
       req, _ := http.NewRequest("GET", url, nil)
       req.Header.Set("Authorization", "Bearer <token>")
@@ -129,7 +129,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/user/balance";
+          String url = "https://claw.dualseason.com/v1/user/balance";
 
           HttpClient client = HttpClient.newHttpClient();
           HttpRequest request = HttpRequest.newBuilder()
@@ -151,7 +151,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
 
   $api_key = 'sk-xxxxxxxxxxxxxxxxxxxxxx';
 
-  $ch = curl_init('https://api.apimart.ai/v1/user/balance');
+  $ch = curl_init('https://claw.dualseason.com/v1/user/balance');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
       "Authorization: Bearer $api_key"
@@ -182,7 +182,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
 
   api_key = 'sk-xxxxxxxxxxxxxxxxxxxxxx'
 
-  url = URI("https://api.apimart.ai/v1/user/balance")
+  url = URI("https://claw.dualseason.com/v1/user/balance")
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
@@ -209,7 +209,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
   import Foundation
 
   let apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxx"
-  let url = URL(string: "https://api.apimart.ai/v1/user/balance")!
+  let url = URL(string: "https://claw.dualseason.com/v1/user/balance")!
 
   var request = URLRequest(url: url)
   request.httpMethod = "GET"
@@ -239,7 +239,7 @@ description: "- 查询用户账户的总体剩余额度和已使用额度"
       static async Task Main(string[] args)
       {
           var apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxx";
-          var url = "https://api.apimart.ai/v1/user/balance";
+          var url = "https://claw.dualseason.com/v1/user/balance";
 
           using var client = new HttpClient();
           client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");

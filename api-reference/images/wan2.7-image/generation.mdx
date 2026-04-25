@@ -10,7 +10,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
-    --url https://api.apimart.ai/v1/images/generations \
+    --url https://claw.dualseason.com/v1/images/generations \
     --header 'Authorization: Bearer <token>' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -22,7 +22,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   ```python Python theme={null}
   import requests
 
-  url = "https://api.apimart.ai/v1/images/generations"
+  url = "https://claw.dualseason.com/v1/images/generations"
 
   payload = {
       "model": "wan2.7-image-pro",
@@ -40,7 +40,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   ```
 
   ```javascript JavaScript theme={null}
-  const url = "https://api.apimart.ai/v1/images/generations";
+  const url = "https://claw.dualseason.com/v1/images/generations";
 
   const payload = {
     model: "wan2.7-image-pro",
@@ -74,7 +74,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/images/generations"
+      url := "https://claw.dualseason.com/v1/images/generations"
 
       payload := map[string]interface{}{
           "model":  "wan2.7-image-pro",
@@ -107,7 +107,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/images/generations";
+          String url = "https://claw.dualseason.com/v1/images/generations";
 
           String payload = """
           {
@@ -135,7 +135,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/images/generations";
+  $url = "https://claw.dualseason.com/v1/images/generations";
 
   $payload = [
       "model" => "wan2.7-image-pro",
@@ -163,7 +163,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   require 'json'
   require 'uri'
 
-  url = URI("https://api.apimart.ai/v1/images/generations")
+  url = URI("https://claw.dualseason.com/v1/images/generations")
 
   payload = {
     model: "wan2.7-image-pro",
@@ -185,7 +185,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/images/generations")!
+  let url = URL(string: "https://claw.dualseason.com/v1/images/generations")!
 
   let payload: [String: Any] = [
       "model": "wan2.7-image-pro",
@@ -225,7 +225,7 @@ description: "- 万相 2.7 图像系列，支持文生图、图生图（编辑�
 
           var content = new StringContent(payload, Encoding.UTF8, "application/json");
           var response = await client.PostAsync(
-              "https://api.apimart.ai/v1/images/generations", content);
+              "https://claw.dualseason.com/v1/images/generations", content);
           Console.WriteLine(await response.Content.ReadAsStringAsync());
       }
   }

@@ -34,7 +34,7 @@ sequenceDiagram
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
-    --url https://api.apimart.ai/v1/uploads/images \
+    --url https://claw.dualseason.com/v1/uploads/images \
     --header 'Authorization: Bearer <token>' \
     --form 'file=@/path/to/your/image.jpg'
   ```
@@ -45,7 +45,7 @@ sequenceDiagram
   # 上传图片
   with open('image.jpg', 'rb') as f:
       response = requests.post(
-          "https://api.apimart.ai/v1/uploads/images",
+          "https://claw.dualseason.com/v1/uploads/images",
           headers={
               "Authorization": "Bearer <token>"
           },
@@ -60,7 +60,7 @@ sequenceDiagram
 
   # 使用上传的图片进行生成
   response = requests.post(
-      "https://api.apimart.ai/v1/images/generations",
+      "https://claw.dualseason.com/v1/images/generations",
       headers={
           "Authorization": "Bearer <token>",
           "Content-Type": "application/json"
@@ -78,7 +78,7 @@ sequenceDiagram
   const formData = new FormData();
   formData.append('file', fileInput.files[0]);
 
-  const uploadResponse = await fetch('https://api.apimart.ai/v1/uploads/images', {
+  const uploadResponse = await fetch('https://claw.dualseason.com/v1/uploads/images', {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer <token>'
@@ -91,7 +91,7 @@ sequenceDiagram
   console.log(`图片 URL: ${imageUrl}`);
 
   // 使用上传的图片进行生成
-  const genResponse = await fetch('https://api.apimart.ai/v1/images/generations', {
+  const genResponse = await fetch('https://claw.dualseason.com/v1/images/generations', {
     method: 'POST',
     headers: {
       'Authorization': 'Bearer <token>',
@@ -219,7 +219,7 @@ import requests
 import time
 
 API_KEY = "your-Apimart-key"
-BASE_URL = "https://api.apimart.ai"
+BASE_URL = "https://claw.dualseason.com"
 
 # 第一步：上传参考图片
 def upload_image(file_path):

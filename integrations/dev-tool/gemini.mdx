@@ -51,14 +51,14 @@ gemini --version
 
 ```powershell theme={null}
 $env:GEMINI_API_KEY = "sk-xxxxxxxxxxxx"
-$env:GEMINI_BASE_URL = "https://api.apimart.ai/v1"
+$env:GEMINI_BASE_URL = "https://claw.dualseason.com/v1"
 ```
 
 **macOS/Linux (Bash):**
 
 ```bash theme={null}
 export GEMINI_API_KEY="sk-xxxxxxxxxxxx"
-export GEMINI_BASE_URL="https://api.apimart.ai/v1"
+export GEMINI_BASE_URL="https://claw.dualseason.com/v1"
 ```
 
 ### 2.2 永久环境变量配置（推荐）
@@ -72,7 +72,7 @@ export GEMINI_BASE_URL="https://api.apimart.ai/v1"
 
 ```powershell theme={null}
 [System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', 'sk-xxxxxxxxxxxx', 'User')
-[System.Environment]::SetEnvironmentVariable('GEMINI_BASE_URL', 'https://api.apimart.ai/v1', 'User')
+[System.Environment]::SetEnvironmentVariable('GEMINI_BASE_URL', 'https://claw.dualseason.com/v1', 'User')
 ```
 
 3. 重启 PowerShell 或执行以下命令刷新环境变量：
@@ -99,7 +99,7 @@ nano ~/.zshrc
 ```bash theme={null}
 # APIMart Gemini CLI 配置
 export GEMINI_API_KEY="sk-xxxxxxxxxxxx"
-export GEMINI_BASE_URL="https://api.apimart.ai/v1"
+export GEMINI_BASE_URL="https://claw.dualseason.com/v1"
 ```
 
 3. 保存文件并重新加载配置：
@@ -119,7 +119,7 @@ source ~/.zshrc
 ```bash theme={null}
 # .env
 GEMINI_API_KEY=sk-xxxxxxxxxxxx
-GEMINI_BASE_URL=https://api.apimart.ai/v1
+GEMINI_BASE_URL=https://claw.dualseason.com/v1
 ```
 
 然后在运行命令前加载环境变量：
@@ -142,7 +142,7 @@ gemini chat
 
 <Note>
   **重要提示：** - 将 `sk-xxxxxxxxxxxx` 替换为您从 [APIMart 控制台](https://apimart.ai/keys) 获取的实际 API 密钥 - `GEMINI_BASE_URL` 设置为
-  `https://api.apimart.ai/v1`，确保 Gemini CLI 连接到 APIMart - 如果使用 `.env` 文件，请将其添加到 `.gitignore` 避免泄露 API 密钥
+  `https://claw.dualseason.com/v1`，确保 Gemini CLI 连接到 APIMart - 如果使用 `.env` 文件，请将其添加到 `.gitignore` 避免泄露 API 密钥
 </Note>
 
 ### 2.4 验证配置
@@ -228,7 +228,7 @@ import openai
 
 # 配置 APIMart API
 openai.api_key = "sk-xxxxxxxxxxxx"  # 您的 APIMart API 密钥
-openai.api_base = "https://api.apimart.ai/v1"
+openai.api_base = "https://claw.dualseason.com/v1"
 
 # 使用 Gemini 模型
 response = openai.ChatCompletion.create(
@@ -248,7 +248,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "sk-xxxxxxxxxxxx", // 您的 APIMart API 密钥
-  baseURL: "https://api.apimart.ai/v1",
+  baseURL: "https://claw.dualseason.com/v1",
 });
 
 async function main() {
@@ -266,7 +266,7 @@ main();
 ### 4.3 使用 cURL
 
 ```bash theme={null}
-curl https://api.apimart.ai/v1/chat/completions \
+curl https://claw.dualseason.com/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-xxxxxxxxxxxx" \
   -d '{
@@ -403,7 +403,7 @@ response = openai.ChatCompletion.create(
 import openai
 
 openai.api_key = "sk-xxxxxxxxxxxx"
-openai.api_base = "https://api.apimart.ai/v1"
+openai.api_base = "https://claw.dualseason.com/v1"
 
 try:
     response = openai.ChatCompletion.create(

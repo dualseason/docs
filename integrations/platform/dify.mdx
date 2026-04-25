@@ -49,7 +49,7 @@ description: "详细指导如何在 Dify LLMOps 平台中配置和使用 APIMart
 
   **方式一（推荐）：** 使用 OpenAI 提供商的自定义 API 功能
 
-  * 在 OpenAI 提供商设置中，直接修改 Base URL 为 `https://api.apimart.ai/v1`
+  * 在 OpenAI 提供商设置中，直接修改 Base URL 为 `https://claw.dualseason.com/v1`
   * 输入 APIMart 的 API Key
   * 更快捷，配置简单
 
@@ -69,7 +69,7 @@ description: "详细指导如何在 Dify LLMOps 平台中配置和使用 APIMart
 2. 点击 **配置** 或 **设置** 按钮
 3. 在配置页面：
    * **API Key**：填入您的 APIMart API 密钥（`sk-xxxxxxxxxxxx`）
-   * **API Base URL** 或 **Base URL**：填入 `https://api.apimart.ai/v1`
+   * **API Base URL** 或 **Base URL**：填入 `https://claw.dualseason.com/v1`
 4. 点击 **保存**
 
 <Frame>
@@ -146,7 +146,7 @@ description: "详细指导如何在 Dify LLMOps 平台中配置和使用 APIMart
 | **模型名称**               | `APIMart` 或自定义名称                                                 |
 | **模型类型**               | 选择 `LLM`（大语言模型）                                                  |
 | **API Key**            | 您的 APIMart API 密钥（`sk-xxxxxxxxxxxx`）                             |
-| **API endpoint URL**   | `https://api.apimart.ai/v1`                                      |
+| **API endpoint URL**   | `https://claw.dualseason.com/v1`                                      |
 | **API endpoint中的模型名称** | 填入具体模型名（如 `gpt-4o`、`gpt-4o-mini`、`claude-sonnet-4-5-20250929` 等） |
 
 <Frame>
@@ -156,7 +156,7 @@ description: "详细指导如何在 Dify LLMOps 平台中配置和使用 APIMart
 <caption>*填写 APIMart 提供商配置信息*</caption>
 
 <Warning>
-  **重要提示：** - Base URL 必须包含 `/v1` 后缀：`https://api.apimart.ai/v1` - API 密钥必须是从 APIMart 控制台获取的以 `sk-` 开头的密钥 - 确保您的 API 密钥有足够的余额
+  **重要提示：** - Base URL 必须包含 `/v1` 后缀：`https://claw.dualseason.com/v1` - API 密钥必须是从 APIMart 控制台获取的以 `sk-` 开头的密钥 - 确保您的 API 密钥有足够的余额
 </Warning>
 
 ### 2.3 添加更多模型（可选）
@@ -392,7 +392,7 @@ Dify 的工作流功能允许您：
 **解决方案：**
 
 1. **检查 Base URL**：
-   * 确保是 `https://api.apimart.ai/v1`（包含 `/v1`）
+   * 确保是 `https://claw.dualseason.com/v1`（包含 `/v1`）
    * 不要添加额外的路径或遗漏 `/v1`
 
 2. **验证 API Key**：
@@ -400,7 +400,7 @@ Dify 的工作流功能允许您：
    * 在 [APIMart 控制台](https://apimart.ai/keys) 检查密钥是否有效
 
 3. **检查网络连接**：
-   * 确保服务器能访问 `https://api.apimart.ai`
+   * 确保服务器能访问 `https://claw.dualseason.com`
    * 自部署版本需要确保服务器网络畅通
 
 ### Q2: 模型响应速度慢？

@@ -9,7 +9,7 @@ description: "- 支持多种语音模型和音色选择"
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
-    --url https://api.apimart.ai/v1/audio/speech \
+    --url https://claw.dualseason.com/v1/audio/speech \
     --header 'Authorization: Bearer <token>' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -25,7 +25,7 @@ description: "- 支持多种语音模型和音色选择"
   ```python Python theme={null}
   import requests
 
-  url = "https://api.apimart.ai/v1/audio/speech"
+  url = "https://claw.dualseason.com/v1/audio/speech"
 
   payload = {
       "model": "gpt-4o-mini-tts",
@@ -47,7 +47,7 @@ description: "- 支持多种语音模型和音色选择"
   ```
 
   ```javascript JavaScript theme={null}
-  const url = "https://api.apimart.ai/v1/audio/speech";
+  const url = "https://claw.dualseason.com/v1/audio/speech";
 
   const payload = {
     model: "tts-1",
@@ -91,7 +91,7 @@ description: "- 支持多种语音模型和音色选择"
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/audio/speech"
+      url := "https://claw.dualseason.com/v1/audio/speech"
 
       payload := map[string]interface{}{
           "model":           "tts-1",
@@ -132,7 +132,7 @@ description: "- 支持多种语音模型和音色选择"
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/audio/speech";
+          String url = "https://claw.dualseason.com/v1/audio/speech";
 
           String json = """
           {
@@ -165,7 +165,7 @@ description: "- 支持多种语音模型和音色选择"
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/audio/speech";
+  $url = "https://claw.dualseason.com/v1/audio/speech";
 
   $data = [
       "model" => "tts-1",
@@ -196,7 +196,7 @@ description: "- 支持多种语音模型和音色选择"
   require 'uri'
   require 'json'
 
-  url = URI("https://api.apimart.ai/v1/audio/speech")
+  url = URI("https://claw.dualseason.com/v1/audio/speech")
 
   request = Net::HTTP::Post.new(url)
   request["Authorization"] = "Bearer <token>"
@@ -223,7 +223,7 @@ description: "- 支持多种语音模型和音色选择"
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/audio/speech")!
+  let url = URL(string: "https://claw.dualseason.com/v1/audio/speech")!
 
   var request = URLRequest(url: url)
   request.httpMethod = "POST"
@@ -269,7 +269,7 @@ description: "- 支持多种语音模型和音色选择"
   {
       static async Task Main(string[] args)
       {
-          var url = "https://api.apimart.ai/v1/audio/speech";
+          var url = "https://claw.dualseason.com/v1/audio/speech";
 
           var payload = new
           {
@@ -319,7 +319,7 @@ description: "- 支持多种语音模型和音色选择"
 
           const char *json_data = "{\"model\":\"gpt-4o-mini-tts\",\"input\":\"今天天气真好,适合出去散步。\",\"voice\":\"alloy\",\"response_format\":\"opus\",\"speed\":1.0}";
 
-          curl_easy_setopt(curl, CURLOPT_URL, "https://api.apimart.ai/v1/audio/speech");
+          curl_easy_setopt(curl, CURLOPT_URL, "https://claw.dualseason.com/v1/audio/speech");
           curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
           curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_data);
           curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -347,7 +347,7 @@ description: "- 支持多种语音模型和音色选择"
 
   int main(int argc, const char * argv[]) {
       @autoreleasepool {
-          NSURL *url = [NSURL URLWithString:@"https://api.apimart.ai/v1/audio/speech"];
+          NSURL *url = [NSURL URLWithString:@"https://claw.dualseason.com/v1/audio/speech"];
 
           NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
           [request setHTTPMethod:@"POST"];
@@ -391,7 +391,7 @@ description: "- 支持多种语音模型和音色选择"
   open Cohttp
   open Cohttp_lwt_unix
 
-  let url = "https://api.apimart.ai/v1/audio/speech"
+  let url = "https://claw.dualseason.com/v1/audio/speech"
 
   let json_body = `Assoc [
     ("model", `String "tts-1");
@@ -424,7 +424,7 @@ description: "- 支持多种语音模型和音色选择"
   import 'dart:convert';
 
   void main() async {
-    final url = Uri.parse('https://api.apimart.ai/v1/audio/speech');
+    final url = Uri.parse('https://claw.dualseason.com/v1/audio/speech');
 
     final payload = {
       'model': 'tts-1',
@@ -451,7 +451,7 @@ description: "- 支持多种语音模型和音色选择"
   ```r R theme={null}
   library(httr)
 
-  url <- "https://api.apimart.ai/v1/audio/speech"
+  url <- "https://claw.dualseason.com/v1/audio/speech"
 
   payload <- list(
     model = "tts-1",

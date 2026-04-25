@@ -66,12 +66,12 @@ description: "详细指导如何在沉浸式翻译浏览器扩展中配置和使
 | **自定义翻译服务名称**    | `APIMart`                                    | 可自定义，方便识别         |
 | **APIKEY**       | `sk-xxxxxxxxxxxx`                            | 您的 APIMart API 密钥 |
 | **模型**           | `gpt-4o-mini` 或其他                            | 从下拉列表选择           |
-| **自定义 API 接口地址** | `https://api.apimart.ai/v1/chat/completions` | 完整的 API 端点地址      |
+| **自定义 API 接口地址** | `https://claw.dualseason.com/v1/chat/completions` | 完整的 API 端点地址      |
 | **每秒最大请求数**      | `5`                                          | 控制请求频率，建议 3-5     |
 
 <Note>
   **配置说明：** - **APIKEY**：必须是从 [APIMart 控制台](https://apimart.ai/keys) 获取的以 `sk-` 开头的密钥 - **API 接口地址**：必须使用完整路径
-  `https://api.apimart.ai/v1/chat/completions` - **模型选择**：推荐 `gpt-4o-mini`（经济实惠）或 `gpt-5`（最佳质量） - **请求频率**：设置为 5 可以平衡速度和稳定性
+  `https://claw.dualseason.com/v1/chat/completions` - **模型选择**：推荐 `gpt-4o-mini`（经济实惠）或 `gpt-5`（最佳质量） - **请求频率**：设置为 5 可以平衡速度和稳定性
 </Note>
 
 <Frame>
@@ -215,7 +215,7 @@ description: "详细指导如何在沉浸式翻译浏览器扩展中配置和使
    * 在 [APIMart 控制台](https://apimart.ai/keys) 检查密钥是否有效和是否有余额
 
 3. **检查 API 接口地址**：
-   * 必须填写完整路径：`https://api.apimart.ai/v1/chat/completions`
+   * 必须填写完整路径：`https://claw.dualseason.com/v1/chat/completions`
    * 注意不是 `/v1` 而是 `/v1/chat/completions`
 
 4. **检查模型名称**：

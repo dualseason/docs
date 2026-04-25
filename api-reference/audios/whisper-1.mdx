@@ -9,7 +9,7 @@ description: "- 支持 99 种语言的语音识别"
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
-    --url https://api.apimart.ai/v1/audio/transcriptions \
+    --url https://claw.dualseason.com/v1/audio/transcriptions \
     --header 'Authorization: Bearer <token>' \
     --header 'Content-Type: multipart/form-data' \
     --form 'file=@/path/to/audio.mp3' \
@@ -21,7 +21,7 @@ description: "- 支持 99 种语言的语音识别"
   ```python Python theme={null}
   import requests
 
-  url = "https://api.apimart.ai/v1/audio/transcriptions"
+  url = "https://claw.dualseason.com/v1/audio/transcriptions"
 
   files = {
       "file": open("/path/to/audio.mp3", "rb")
@@ -43,7 +43,7 @@ description: "- 支持 99 种语言的语音识别"
   ```
 
   ```javascript JavaScript theme={null}
-  const url = "https://api.apimart.ai/v1/audio/transcriptions";
+  const url = "https://claw.dualseason.com/v1/audio/transcriptions";
 
   const formData = new FormData();
   formData.append("file", audioFile);
@@ -78,7 +78,7 @@ description: "- 支持 99 种语言的语音识别"
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/audio/transcriptions"
+      url := "https://claw.dualseason.com/v1/audio/transcriptions"
 
       file, _ := os.Open("/path/to/audio.mp3")
       defer file.Close()
@@ -119,7 +119,7 @@ description: "- 支持 99 种语言的语音识别"
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/audio/transcriptions";
+          String url = "https://claw.dualseason.com/v1/audio/transcriptions";
           
           File audioFile = new File("/path/to/audio.mp3");
           
@@ -131,7 +131,7 @@ description: "- 支持 99 种语言的语音识别"
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/audio/transcriptions";
+  $url = "https://claw.dualseason.com/v1/audio/transcriptions";
 
   $file = new CURLFile('/path/to/audio.mp3', 'audio/mpeg', 'audio.mp3');
 
@@ -161,7 +161,7 @@ description: "- 支持 99 种语言的语音识别"
   require 'net/http'
   require 'uri'
 
-  url = URI("https://api.apimart.ai/v1/audio/transcriptions")
+  url = URI("https://claw.dualseason.com/v1/audio/transcriptions")
 
   File.open('/path/to/audio.mp3', 'rb') do |file|
     request = Net::HTTP::Post.new(url)
@@ -187,7 +187,7 @@ description: "- 支持 99 种语言的语音识别"
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/audio/transcriptions")!
+  let url = URL(string: "https://claw.dualseason.com/v1/audio/transcriptions")!
 
   var request = URLRequest(url: url)
   request.httpMethod = "POST"
@@ -244,7 +244,7 @@ description: "- 支持 99 种语言的语音识别"
   {
       static async Task Main(string[] args)
       {
-          var url = "https://api.apimart.ai/v1/audio/transcriptions";
+          var url = "https://claw.dualseason.com/v1/audio/transcriptions";
 
           using var client = new HttpClient();
           client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
@@ -302,7 +302,7 @@ description: "- 支持 99 种语言的语音识别"
       headers = curl_slist_append(headers, "Authorization: Bearer <token>");
 
       if(curl) {
-          curl_easy_setopt(curl, CURLOPT_URL, "https://api.apimart.ai/v1/audio/transcriptions");
+          curl_easy_setopt(curl, CURLOPT_URL, "https://claw.dualseason.com/v1/audio/transcriptions");
           curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
           curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
 
@@ -328,7 +328,7 @@ description: "- 支持 99 种语言的语音识别"
 
   int main(int argc, const char * argv[]) {
       @autoreleasepool {
-          NSURL *url = [NSURL URLWithString:@"https://api.apimart.ai/v1/audio/transcriptions"];
+          NSURL *url = [NSURL URLWithString:@"https://claw.dualseason.com/v1/audio/transcriptions"];
           
           NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
           [request setHTTPMethod:@"POST"];
@@ -383,7 +383,7 @@ description: "- 支持 99 种语言的语音识别"
   open Cohttp
   open Cohttp_lwt_unix
 
-  let url = "https://api.apimart.ai/v1/audio/transcriptions"
+  let url = "https://claw.dualseason.com/v1/audio/transcriptions"
 
   (* Note: Multipart form data handling in OCaml requires additional libraries *)
   let () =
@@ -395,7 +395,7 @@ description: "- 支持 99 种语言的语音识别"
   import 'package:http/http.dart' as http;
 
   void main() async {
-    final url = Uri.parse('https://api.apimart.ai/v1/audio/transcriptions');
+    final url = Uri.parse('https://claw.dualseason.com/v1/audio/transcriptions');
     
     var request = http.MultipartRequest('POST', url);
     request.headers['Authorization'] = 'Bearer <token>';
@@ -415,7 +415,7 @@ description: "- 支持 99 种语言的语音识别"
   ```r R theme={null}
   library(httr)
 
-  url <- "https://api.apimart.ai/v1/audio/transcriptions"
+  url <- "https://claw.dualseason.com/v1/audio/transcriptions"
 
   response <- POST(
     url,

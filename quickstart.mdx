@@ -35,7 +35,7 @@ description: "快速开始使用我们的API服务"
 ### 文字生成示例
 
 ```bash theme={null}
-curl -X POST https://api.apimart.ai/v1/chat/completions \
+curl -X POST https://claw.dualseason.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -52,7 +52,7 @@ curl -X POST https://api.apimart.ai/v1/chat/completions \
 ### 图像生成示例
 
 ```bash theme={null}
-curl -X POST https://api.apimart.ai/v1/images/generations \
+curl -X POST https://claw.dualseason.com/v1/images/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -66,7 +66,7 @@ curl -X POST https://api.apimart.ai/v1/images/generations \
 ### 视频生成示例
 
 ```bash theme={null}
-curl -X POST https://api.apimart.ai/v1/videos/generations \
+curl -X POST https://claw.dualseason.com/v1/videos/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -82,7 +82,7 @@ curl -X POST https://api.apimart.ai/v1/videos/generations \
 由于我们使用异步处理模式，您需要查询任务状态来获取结果：
 
 ```bash theme={null}
-curl -X GET https://api.apimart.ai/v1/tasks/YOUR_TASK_ID \
+curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
 

@@ -10,7 +10,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
-    --url https://api.apimart.ai/v1/images/generations \
+    --url https://claw.dualseason.com/v1/images/generations \
     --header 'Authorization: Bearer <token>' \
     --header 'Content-Type: application/json' \
     --data '{
@@ -25,7 +25,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   ```python Python theme={null}
   import requests
 
-  url = "https://api.apimart.ai/v1/images/generations"
+  url = "https://claw.dualseason.com/v1/images/generations"
 
   payload = {
       "model": "gemini-3.1-flash-image-preview",
@@ -46,7 +46,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   ```
 
   ```javascript JavaScript theme={null}
-  const url = "https://api.apimart.ai/v1/images/generations";
+  const url = "https://claw.dualseason.com/v1/images/generations";
 
   const payload = {
     model: "gemini-3.1-flash-image-preview",
@@ -83,7 +83,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/images/generations"
+      url := "https://claw.dualseason.com/v1/images/generations"
 
       payload := map[string]interface{}{
           "model":      "gemini-3.1-flash-image-preview",
@@ -119,7 +119,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/images/generations";
+          String url = "https://claw.dualseason.com/v1/images/generations";
 
           String payload = """
           {
@@ -150,7 +150,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/images/generations";
+  $url = "https://claw.dualseason.com/v1/images/generations";
 
   $payload = [
       "model" => "gemini-3.1-flash-image-preview",
@@ -181,7 +181,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   require 'json'
   require 'uri'
 
-  url = URI("https://api.apimart.ai/v1/images/generations")
+  url = URI("https://claw.dualseason.com/v1/images/generations")
 
   payload = {
     model: "gemini-3.1-flash-image-preview",
@@ -206,7 +206,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/images/generations")!
+  let url = URL(string: "https://claw.dualseason.com/v1/images/generations")!
 
   let payload: [String: Any] = [
       "model": "gemini-3.1-flash-image-preview",
@@ -246,7 +246,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   {
       static async Task Main(string[] args)
       {
-          var url = "https://api.apimart.ai/v1/images/generations";
+          var url = "https://claw.dualseason.com/v1/images/generations";
 
           var payload = @"{
               ""model"": ""gemini-3.1-flash-image-preview"",
@@ -280,7 +280,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
       curl = curl_easy_init();
 
       if(curl) {
-          const char *url = "https://api.apimart.ai/v1/images/generations";
+          const char *url = "https://claw.dualseason.com/v1/images/generations";
           const char *payload = "{"
               "\"model\":\"gemini-3.1-flash-image-preview\","
               "\"prompt\":\"赛博朋克风格的城市夜景，霓虹灯闪烁\","
@@ -318,7 +318,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
 
   int main(int argc, const char * argv[]) {
       @autoreleasepool {
-          NSURL *url = [NSURL URLWithString:@"https://api.apimart.ai/v1/images/generations"];
+          NSURL *url = [NSURL URLWithString:@"https://claw.dualseason.com/v1/images/generations"];
 
           NSDictionary *payload = @{
               @"model": @"gemini-3.1-flash-image-preview",
@@ -364,7 +364,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   open Cohttp
   open Cohttp_lwt_unix
 
-  let url = "https://api.apimart.ai/v1/images/generations"
+  let url = "https://claw.dualseason.com/v1/images/generations"
 
   let payload = {|{
     "model": "gemini-3.1-flash-image-preview",
@@ -393,7 +393,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   import 'package:http/http.dart' as http;
 
   void main() async {
-    final url = Uri.parse('https://api.apimart.ai/v1/images/generations');
+    final url = Uri.parse('https://claw.dualseason.com/v1/images/generations');
 
     final payload = {
       'model': 'gemini-3.1-flash-image-preview',
@@ -420,7 +420,7 @@ description: "- 支持文生图、图生图，最高 4K 分辨率输出"
   library(httr)
   library(jsonlite)
 
-  url <- "https://api.apimart.ai/v1/images/generations"
+  url <- "https://claw.dualseason.com/v1/images/generations"
 
   payload <- list(
     model = "gemini-3.1-flash-image-preview",

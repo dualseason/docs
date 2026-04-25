@@ -20,7 +20,7 @@
       },
       {
         "label": "模型定价",
-        "href": "https://api.apimart.ai/models"
+        "href": "https://claw.dualseason.com/models"
       }
     ],
     "primary": {
@@ -192,7 +192,7 @@
         },
         {
           "anchor": "模型定价",
-          "href": "https://api.apimart.ai/models",
+          "href": "https://claw.dualseason.com/models",
           "icon": "dollar-sign"
         }
       ]

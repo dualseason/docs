@@ -96,7 +96,7 @@ claude --version
 ```json theme={null}
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://api.apimart.ai",
+    "ANTHROPIC_BASE_URL": "https://claw.dualseason.com",
     "ANTHROPIC_AUTH_TOKEN": "sk-xxxxxxxxxxxx",
     "ANTHROPIC_MODEL": "claude-sonnet-4-6-apimart",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
@@ -106,7 +106,7 @@ claude --version
 
 | 参数                                         | 说明                                          |
 | ------------------------------------------ | ------------------------------------------- |
-| `ANTHROPIC_BASE_URL`                       | APIMart API 地址，固定为 `https://api.apimart.ai` |
+| `ANTHROPIC_BASE_URL`                       | APIMart API 地址，固定为 `https://claw.dualseason.com` |
 | `ANTHROPIC_AUTH_TOKEN`                     | 您的 APIMart API 密钥（以 `sk-` 开头）               |
 | `ANTHROPIC_MODEL`                          | 默认使用的模型，可从下方模型列表中选择                         |
 | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` | 设为 `1` 可减少非必要的网络请求                          |
@@ -120,7 +120,7 @@ claude --version
 <Tabs>
   <Tab title="macOS (zsh)">
     ```bash theme={null}
-    echo 'export ANTHROPIC_BASE_URL="https://api.apimart.ai"' >> ~/.zshrc
+    echo 'export ANTHROPIC_BASE_URL="https://claw.dualseason.com"' >> ~/.zshrc
     echo 'export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"' >> ~/.zshrc
     echo 'export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"' >> ~/.zshrc
     source ~/.zshrc
@@ -129,7 +129,7 @@ claude --version
 
   <Tab title="macOS / Linux (bash)">
     ```bash theme={null}
-    echo 'export ANTHROPIC_BASE_URL="https://api.apimart.ai"' >> ~/.bashrc
+    echo 'export ANTHROPIC_BASE_URL="https://claw.dualseason.com"' >> ~/.bashrc
     echo 'export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"' >> ~/.bashrc
     echo 'export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"' >> ~/.bashrc
     source ~/.bashrc
@@ -141,7 +141,7 @@ claude --version
 
     1. 右键 "此电脑" → "属性" → "高级系统设置" → "环境变量"
     2. 在 "用户变量" 中新建：
-       * `ANTHROPIC_BASE_URL` = `https://api.apimart.ai`
+       * `ANTHROPIC_BASE_URL` = `https://claw.dualseason.com`
        * `ANTHROPIC_API_KEY` = `sk-xxxxxxxxxxxx`
        * `ANTHROPIC_MODEL` = `claude-sonnet-4-6-apimart`
     3. 重启终端窗口
@@ -149,7 +149,7 @@ claude --version
     **方式 B：PowerShell 命令设置**
 
     ```powershell theme={null}
-    [System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://api.apimart.ai', 'User')
+    [System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://claw.dualseason.com', 'User')
     [System.Environment]::SetEnvironmentVariable('ANTHROPIC_API_KEY', 'sk-xxxxxxxxxxxx', 'User')
     [System.Environment]::SetEnvironmentVariable('ANTHROPIC_MODEL', 'claude-sonnet-4-6-apimart', 'User')
     ```
@@ -165,20 +165,20 @@ claude --version
     ```bash theme={null}
     export ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx"
     export ANTHROPIC_MODEL="claude-sonnet-4-6-apimart"
-    export ANTHROPIC_BASE_URL="https://api.apimart.ai"
+    export ANTHROPIC_BASE_URL="https://claw.dualseason.com"
     claude
     ```
   </Tab>
 
   <Tab title="Windows (PowerShell)">
-    `powershell $env:ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx" $env:ANTHROPIC_MODEL="claude-sonnet-4-6-apimart" $env:ANTHROPIC_BASE_URL="https://api.apimart.ai" claude `
+    `powershell $env:ANTHROPIC_API_KEY="sk-xxxxxxxxxxxx" $env:ANTHROPIC_MODEL="claude-sonnet-4-6-apimart" $env:ANTHROPIC_BASE_URL="https://claw.dualseason.com" claude `
   </Tab>
 
   <Tab title="Windows (CMD)">
     ```cmd theme={null}
     set ANTHROPIC_API_KEY=sk-xxxxxxxxxxxx
     set ANTHROPIC_MODEL=claude-sonnet-4-6-apimart
-    set ANTHROPIC_BASE_URL=https://api.apimart.ai
+    set ANTHROPIC_BASE_URL=https://claw.dualseason.com
     claude
     ```
   </Tab>
@@ -276,7 +276,7 @@ Thinking 版本同样支持，如 `claude-opus-4-6-thinking-apimart`、`claude-s
 | `401 Unauthorized` | API 密钥缺失或无效 | 检查密钥是否正确，是否以 `sk-` 开头                    |
 | `403 Forbidden`    | 权限不足或密钥过期   | 前往 [控制台](https://apimart.ai/keys) 确认密钥状态 |
 
-同时确保 `ANTHROPIC_BASE_URL` 设置为 `https://api.apimart.ai`，而非 Anthropic 官方地址。
+同时确保 `ANTHROPIC_BASE_URL` 设置为 `https://claw.dualseason.com`，而非 Anthropic 官方地址。
 
 ### Q3: 提示 "Unable to connect" 连接失败？
 
@@ -284,7 +284,7 @@ Thinking 版本同样支持，如 `claude-opus-4-6-thinking-apimart`、`claude-s
 
 1. 检查网络连接是否正常
 2. 确认 `ANTHROPIC_BASE_URL` 配置正确
-3. 如果使用了代理，确保代理设置允许访问 `api.apimart.ai`
+3. 如果使用了代理，确保代理设置允许访问 `claw.dualseason.com`
 
 ### Q4: 提示 "Auth conflict" 认证冲突？
 

@@ -10,14 +10,14 @@ description: "- 查询异步任务的执行状态和结果"
 <RequestExample>
   ```bash cURL theme={null}
   curl --request GET \
-    --url 'https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh' \
+    --url 'https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh' \
     --header 'Authorization: Bearer <token>'
   ```
 
   ```python Python theme={null}
   import requests
 
-  url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt"
+  url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt"
 
   headers = {
       "Authorization": "Bearer <token>"
@@ -33,7 +33,7 @@ description: "- 查询异步任务的执行状态和结果"
   ```
 
   ```javascript JavaScript theme={null}
-  const url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
+  const url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
 
   const headers = {
     "Authorization": "Bearer <token>"
@@ -58,7 +58,7 @@ description: "- 查询异步任务的执行状态和结果"
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
+      url := "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
 
       req, _ := http.NewRequest("GET", url, nil)
       req.Header.Set("Authorization", "Bearer <token>")
@@ -83,7 +83,7 @@ description: "- 查询异步任务的执行状态和结果"
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
+          String url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
 
           HttpClient client = HttpClient.newHttpClient();
           HttpRequest request = HttpRequest.newBuilder()
@@ -103,7 +103,7 @@ description: "- 查询异步任务的执行状态和结果"
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
+  $url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
 
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -123,7 +123,7 @@ description: "- 查询异步任务的执行状态和结果"
   require 'json'
   require 'uri'
 
-  url = URI("https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh")
+  url = URI("https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh")
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
@@ -138,7 +138,7 @@ description: "- 查询异步任务的执行状态和结果"
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh")!
+  let url = URL(string: "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh")!
 
   var request = URLRequest(url: url)
   request.httpMethod = "GET"
@@ -167,7 +167,7 @@ description: "- 查询异步任务的执行状态和结果"
   {
       static async Task Main(string[] args)
       {
-          var url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
+          var url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
 
           using var client = new HttpClient();
           client.DefaultRequestHeaders.Add("Authorization", "Bearer <token>");
@@ -192,7 +192,7 @@ description: "- 查询异步任务的执行状态和结果"
       curl = curl_easy_init();
 
       if(curl) {
-          const char *url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
+          const char *url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh";
 
           struct curl_slist *headers = NULL;
           headers = curl_slist_append(headers, "Authorization: Bearer <token>");
@@ -221,7 +221,7 @@ description: "- 查询异步任务的执行状态和结果"
 
   int main(int argc, const char * argv[]) {
       @autoreleasepool {
-          NSURL *url = [NSURL URLWithString:@"https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"];
+          NSURL *url = [NSURL URLWithString:@"https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"];
           
           NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
           [request setHTTPMethod:@"GET"];
@@ -252,7 +252,7 @@ description: "- 查询异步任务的执行状态和结果"
   open Cohttp
   open Cohttp_lwt_unix
 
-  let url = "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
+  let url = "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
 
   let () =
     let headers = Header.init ()
@@ -270,7 +270,7 @@ description: "- 查询异步任务的执行状态和结果"
   import 'package:http/http.dart' as http;
 
   void main() async {
-    final url = Uri.parse('https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh');
+    final url = Uri.parse('https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh');
     
     final response = await http.get(
       url,
@@ -286,7 +286,7 @@ description: "- 查询异步任务的执行状态和结果"
   ```r R theme={null}
   library(httr)
 
-  url <- "https://api.apimart.ai/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
+  url <- "https://claw.dualseason.com/v1/tasks/task-unified-1757156493-imcg5zqt?language=zh"
 
   response <- GET(
     url,
