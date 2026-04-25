@@ -16,17 +16,17 @@
     "links": [
       {
         "label": "控制台",
-        "href": "https://apimart.ai"
+        "href": "https://claw.dualseason.com/console"
       },
       {
         "label": "模型定价",
-        "href": "https://claw.dualseason.com/models"
+        "href": "https://claw.dualseason.com/pricing"
       }
     ],
     "primary": {
       "type": "button",
       "label": "获取 API Key",
-      "href": "https://apimart.ai/keys"
+      "href": "https://claw.dualseason.com/console/token"
     }
   },
   "navigation": {
@@ -182,17 +182,17 @@
       "anchors": [
         {
           "anchor": "控制台",
-          "href": "https://apimart.ai",
+          "href": "https://claw.dualseason.com/console",
           "icon": "house"
         },
         {
           "anchor": "API Keys",
-          "href": "https://apimart.ai/keys",
+          "href": "https://claw.dualseason.com/console/token",
           "icon": "key"
         },
         {
           "anchor": "模型定价",
-          "href": "https://claw.dualseason.com/models",
+          "href": "https://claw.dualseason.com/pricing",
           "icon": "dollar-sign"
         }
       ]
