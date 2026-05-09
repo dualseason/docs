@@ -34,6 +34,25 @@
     }
   },
   "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "控制台",
+          "icon": "house",
+          "href": "https://claw.dualseason.com/console"
+        },
+        {
+          "anchor": "API Keys",
+          "icon": "key",
+          "href": "https://claw.dualseason.com/console/token"
+        },
+        {
+          "anchor": "模型定价",
+          "icon": "dollar-sign",
+          "href": "https://claw.dualseason.com/pricing"
+        }
+      ]
+    },
     "tabs": [
       {
         "tab": "概览",
@@ -41,9 +60,11 @@
           {
             "group": "开始使用",
             "pages": [
-              "index",
               "quickstart",
-              "development"
+              "development",
+              "opencode",
+              "claude-code",
+              "codex"
             ]
           }
         ]
@@ -181,26 +202,7 @@
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "控制台",
-          "href": "https://claw.dualseason.com/console",
-          "icon": "house"
-        },
-        {
-          "anchor": "API Keys",
-          "href": "https://claw.dualseason.com/console/token",
-          "icon": "key"
-        },
-        {
-          "anchor": "模型定价",
-          "href": "https://claw.dualseason.com/pricing",
-          "icon": "dollar-sign"
-        }
-      ]
-    }
+    ]
   },
   "contextual": {
     "options": [

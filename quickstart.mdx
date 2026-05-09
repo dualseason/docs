@@ -1,40 +1,58 @@
 ---
 title: "快速开始"
-description: "快速开始使用我们的API服务"
+description: "本指南将帮助您快速开始使用推理大模型的文本生成功能。"
 ---
-
-欢迎使用我们的API服务！本指南将帮助您快速开始使用图像和视频生成功能。
 
 ## 第一步：获取API密钥
 
 1. 访问 [API密钥管理页面](https://claw.dualseason.com/console/token)
 2. 登录您的账户
 3. 创建新的API密钥
-4. 保存您的密钥（密钥只显示一次）
+   <Frame>
+     ![Image](/images/image.png)
+   </Frame>
+4. 复制您的密钥
+   <Frame>
+     ![Image](/images/image-1.png)
+   </Frame>
 
 ## 第二步：选择模型
 
-我们提供多种AI模型供您选择：
+打开模型广场，里面有的模型都能选择
+
+<Frame>
+  ![Image](/images/image-2.png)
+</Frame>
 
 ### 文字生成模型
 
-* **GPT-4o**: 强大的对话和文本生成能力
-* **Claude**: Anthropic 的高性能对话模型
-* **Gemini**: Google 的多模态大语言模型
+- **GPT-5.5**: 目前最强大的对话和文本生成能力，并且兼具性价比的一款模型，适合写代码做任务
+- **Claude-opus-4-7**: Anthropic 的高性能对话模型，比上一代4-6要更加便宜，方案架构能力突出
+- **Gemini 3.1**: Google 的多模态大语言模型，优点和价格都不突出，不推荐使用
+- **GLM 5.1**：国产智普清言大模型，优点稳定，性能和价格不突出，不推荐，适合备用
+- **Kimi k2.6**：国产月之暗面大模型，优点速度快，代码哗哗写，写小工具比较适合，适合快速产出
+- **MiniMax M2.7**：广告达人，不推荐，前端页面还不错，在opencode中是常驻免费大模型
 
 ### 图像生成模型
 
-* **GPT-4o-image**: 高质量图像生成
+- **GPT-image-2**: 高质量图像生成，米粒刻字
+  <Frame>
+    ![8778f973c95aa4826d73d3f218332f40](/images/8778f973c95aa4826d73d3f218332f40.png)
+  </Frame>
+
+- **Nano Banana 2**: 专业生图，比**_GPT-image-2_** 出的时间早，所以只有画质比**_GPT-image-2_** 好
 
 ### 视频生成模型
 
-* **Sora2**: 专业视频生成
+- **Seedance 2.0系列**: 工业级别视频生成模型，缺点就是贵，而且字节跳动天天涨价
+- **Veo 3.1**: 谷歌的Gemini模型
+- **Grok-4.2**: 马斯克的视频模型
 
 ## 第三步：发送请求
 
 ### 文字生成示例
 
-```bash theme={null}
+```bash
 curl -X POST https://claw.dualseason.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -51,7 +69,7 @@ curl -X POST https://claw.dualseason.com/v1/chat/completions \
 
 ### 图像生成示例
 
-```bash theme={null}
+```bash
 curl -X POST https://claw.dualseason.com/v1/images/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -65,7 +83,7 @@ curl -X POST https://claw.dualseason.com/v1/images/generations \
 
 ### 视频生成示例
 
-```bash theme={null}
+```bash
 curl -X POST https://claw.dualseason.com/v1/videos/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -81,7 +99,7 @@ curl -X POST https://claw.dualseason.com/v1/videos/generations \
 
 由于我们使用异步处理模式，您需要查询任务状态来获取结果：
 
-```bash theme={null}
+```bash
 curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
   -H "Authorization: Bearer YOUR_API_KEY"
 ```
@@ -95,4 +113,3 @@ curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
 <Card title="开发指南" icon="code" href="/development">
   了解如何在您的应用中集成API
 </Card>
-
