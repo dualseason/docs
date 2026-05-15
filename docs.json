@@ -55,8 +55,15 @@
     },
     "tabs": [
       {
+        "tab": "公司介绍",
+        "pages": [
+          "file"
+        ]
+      },
+      {
         "tab": "开始使用",
         "pages": [
+          "file-1",
           "quickstart",
           "untitled-page",
           "1",
