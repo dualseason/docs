@@ -57,7 +57,8 @@
       {
         "tab": "开始使用",
         "pages": [
-          "quickstart"
+          "quickstart",
+          "untitled-page"
         ]
       }
     ]
