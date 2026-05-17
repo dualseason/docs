@@ -1,0 +1,97 @@
+---
+title: "OpenCode 接入"
+description: "通过 npm 安装 OpenCode，并使用 OpenAI 兼容方式接入 Xcompute。"
+---
+
+OpenCode 支持自定义 provider 配置，所以它很适合通过 OpenAI 兼容方式接入 Xcompute。
+
+## 安装
+
+如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+```bash
+npm install -g opencode-ai
+```
+
+安装后验证：
+
+```bash
+opencode --version
+```
+
+## 配置 Xcompute
+
+推荐使用全局配置文件：`~/.config/opencode/opencode.json`
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "xcompute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Xcompute",
+      "options": {
+        "baseURL": "https://claw.dualseason.com/v1",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
+        "gpt-5": {
+          "name": "GPT-5"
+        },
+        "claude-sonnet-4-5-20250929": {
+          "name": "Claude Sonnet 4.5"
+        },
+        "gemini-2.5-pro": {
+          "name": "Gemini 2.5 Pro"
+        }
+      }
+    }
+  },
+  "model": "xcompute/gpt-5"
+}
+```
+
+然后设置环境变量：
+
+```bash
+export XCOMPUTE_API_KEY="YOUR_XCOMPUTE_API_KEY"
+```
+
+## 启动与验证
+
+```bash
+opencode
+```
+
+如果你能正常进入界面并开始新会话，说明 OpenCode 已经可以通过 Xcompute 调用模型。
+
+## 什么时候适合用 OpenCode
+
+1. 你想在同一套代码 Agent 工作流中切换不同模型。
+2. 你希望把多个开发工具的调用都统一到一个平台管理。
+3. 你想通过配置文件精细控制 provider、model 和权限策略。
+
+## 为什么推荐 OpenCode 这样配
+
+<Steps>
+  <Step title="走 OpenAI 兼容协议">
+    你只需要把 `baseURL` 指向 Xcompute 的 `/v1` 入口。
+  </Step>
+
+  <Step title="把密钥放到环境变量">
+    避免把真实密钥直接写死在配置文件里。
+  </Step>
+
+  <Step title="按工具拆分密钥">
+    建议给 OpenCode 单独一个 API Key，和 Claude Code、应用服务分开。
+  </Step>
+</Steps>
+
+<Columns cols={2}>
+  <Card title="控制台" icon="house" href="https://claw.dualseason.com/console">
+    管理 API Key、额度和调用记录。
+  </Card>
+  <Card title="在线调试" icon="terminal" href="https://jvzcscqk7u.apifox.cn">
+    在正式接入前先验证请求格式。
+  </Card>
+</Columns>

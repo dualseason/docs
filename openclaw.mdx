@@ -1,0 +1,72 @@
+---
+title: "OpenClaw 接入"
+description: "通过 npm 安装 OpenClaw，并在向导或配置里把模型调用切到 Xcompute。"
+---
+
+这里按官方项目名写作 `OpenClaw`。如果你习惯把它叫做 `CloudClaw`，对应的 npm 包名仍然是 `openclaw`。
+
+## 安装
+
+如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+```bash
+npm install -g openclaw
+```
+
+安装后验证：
+
+```bash
+openclaw --version
+```
+
+<Note>
+  OpenClaw 官方更推荐 Node 24，但 Node `22.16+` 也兼容。如果你这套文档想统一用 Node 22，当前也能正常接入。
+</Note>
+
+## 官方资源
+
+- 官方主页：[https://openclaw.ai](https://openclaw.ai)
+- 项目文档：[https://docs.openclaw.ai](https://docs.openclaw.ai)
+- GitHub：[https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
+
+## 接入 Xcompute 的推荐方式
+
+推荐先运行官方向导，再把模型提供方切到 Xcompute：
+
+<Steps>
+  <Step title="运行初始化向导">
+    ```bash
+    openclaw onboard
+    ```
+  </Step>
+
+  <Step title="选择 OpenAI 兼容或自定义 provider">
+    在向导里，把模型提供方切到支持自定义 `Base URL` 的方式。
+  </Step>
+
+  <Step title="填写 Xcompute 信息">
+    使用下面这组值：
+
+    - `Base URL`: `https://claw.dualseason.com/v1`
+    - `API Key`: 你的 Xcompute API Key
+    - `Model`: 你要使用的模型 ID，例如 `gpt-5` 或 `claude-sonnet-4-5-20250929`
+  </Step>
+
+  <Step title="打开控制台验证">
+    ```bash
+    openclaw dashboard
+    ```
+
+    控制台打开后，发一条测试消息确认是否已能正常调用 Xcompute。
+  </Step>
+</Steps>
+
+## 什么时候适合用 OpenClaw
+
+1. 你想把 AI 助手接到 Telegram、飞书、Discord 等聊天入口
+2. 你想在自托管环境里统一管理消息入口和模型调用
+3. 你希望不同渠道共用同一套 Xcompute 模型出口
+
+<Tip>
+  建议给 OpenClaw 单独分配一个 API Key，不要和应用服务、Claude Code、OpenCode 共用。
+</Tip>

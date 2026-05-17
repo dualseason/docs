@@ -1,0 +1,70 @@
+---
+title: "CodeDesk 接入"
+description: "安装 CodeDesk，并让它配合已经接入 Xcompute 的 Claude Code 或 OpenCode 使用。"
+---
+
+`CodeDesk` 是一个本地 Agent 守护进程，适合把你的开发机暴露成一个可被远程控制的工作节点。它本身不是模型网关，所以通常不直接填写 Xcompute 的模型配置。
+
+## 安装
+
+如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+```bash
+npm install -g codedesk
+```
+
+## 启动
+
+```bash
+codedesk start
+```
+
+如果你想限制扫描目录，可以这样启动：
+
+```bash
+codedesk start --scan-dir ~/code
+```
+
+查看状态：
+
+```bash
+codedesk status
+```
+
+## 和 Xcompute 的关系
+
+<Warning>
+  CodeDesk 更像控制层，不是模型提供层。要让它真正调用 Xcompute，关键是先把底层 CLI 配好。
+</Warning>
+
+推荐顺序：
+
+1. 先把 [Claude Code](/claude-code) 或 [OpenCode](/opencode) 接到 Xcompute
+2. 再启动 CodeDesk 管理这台机器
+3. 通过 CodeDesk 调用已经配置好的本地 Agent 工作流
+
+## 推荐组合
+
+<Columns cols={2}>
+  <Card title="CodeDesk + Claude Code" icon="terminal" href="/claude-code">
+    适合已经习惯终端编程工作流的用户。
+  </Card>
+  <Card title="CodeDesk + OpenCode" icon="code" href="/opencode">
+    适合希望走 OpenAI 兼容 provider 配置的用户。
+  </Card>
+</Columns>
+
+## 常见问题
+
+### 为什么我在 CodeDesk 里看不到 Xcompute 配置？
+
+因为 Xcompute 通常配在底层工具里，不是配在 CodeDesk 本身。
+
+### 哪个更适合先接？
+
+1. 想省事：先接 `Claude Code`
+2. 想自己定义 provider：先接 `OpenCode`
+
+<Tip>
+  如果你的目标是“远程控制一台已经能跑 AI 编程工具的机器”，CodeDesk 很合适；如果你的目标是“直接配置模型供应商”，那应该先看 Claude Code 或 OpenCode 的接入页。
+</Tip>

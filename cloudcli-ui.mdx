@@ -1,0 +1,68 @@
+---
+title: "CloudCLI UI（Claude Code UI）接入"
+description: "安装 CloudCLI UI，并让它基于已经接入 Xcompute 的 Claude Code 工作。"
+---
+
+`CloudCLI UI` 也常被叫做 `Claude Code UI`。它本身更像是 Claude Code、Cursor CLI、Codex、Gemini CLI 的图形界面，而不是单独的模型提供方。
+
+这意味着：
+
+1. 你先把 `Claude Code` 接到 Xcompute
+2. 再启动 `CloudCLI UI` 去管理这些会话
+
+## 安装
+
+如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+```bash
+npm install -g @cloudcli-ai/cloudcli
+```
+
+## 启动
+
+```bash
+cloudcli
+```
+
+默认会启动本地 Web UI。通常访问地址是：
+
+```text
+http://localhost:3001
+```
+
+## 和 Xcompute 的关系
+
+<Info>
+  CloudCLI UI 不直接保存 Xcompute 的 `Base URL` 和 `API Key`。它继承的是底层 CLI 的配置。
+</Info>
+
+所以推荐顺序是：
+
+<Steps>
+  <Step title="先配置 Claude Code">
+    按 [Claude Code 接入](/claude-code) 页面，把 Claude Code 先接到 Xcompute。
+  </Step>
+  <Step title="再安装并启动 CloudCLI UI">
+    启动后，它会自动发现本地已有的 Claude Code 会话。
+  </Step>
+  <Step title="在 UI 中选择 Claude Code">
+    进入项目后，优先选择已经配置好 Xcompute 的 Claude Code 作为底层运行时。
+  </Step>
+</Steps>
+
+## 推荐用法
+
+1. 本机开发时，用 Claude Code 负责真正的模型调用
+2. 需要图形界面、会话切换、移动端查看时，再打开 CloudCLI UI
+3. 如果你同时装了 OpenCode，也可以在 CloudCLI UI 里切换到 OpenCode 会话
+
+## 验证
+
+1. 打开 `http://localhost:3001`
+2. 进入一个已有项目
+3. 发送一条简单消息
+4. 如果能正常返回内容，说明底层 Claude Code 与 Xcompute 配合正常
+
+<Tip>
+  如果 CloudCLI UI 里看不到任何可用会话，通常不是 Xcompute 的问题，而是底层 CLI 还没先启动或还没先配置好。
+</Tip>

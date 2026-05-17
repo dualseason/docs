@@ -64,10 +64,28 @@
       },
       {
         "tab": "集成教程",
-        "pages": [
-          "1",
-          "untitled-page",
-          "open-code"
+        "groups": [
+          {
+            "group": "环境准备",
+            "pages": [
+              "node-setup"
+            ]
+          },
+          {
+            "group": "代码工具接入",
+            "pages": [
+              "claude-code",
+              "cloudcli-ui",
+              "codedesk",
+              "opencode"
+            ]
+          },
+          {
+            "group": "自托管助手",
+            "pages": [
+              "openclaw"
+            ]
+          }
         ]
       }
     ]

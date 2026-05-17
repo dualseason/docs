@@ -1,0 +1,110 @@
+---
+title: "环境准备：NVM、Node.js 22 和 npm"
+description: "先用 NVM 安装 Node.js 22，再用 npm 安装 Claude Code、CloudCLI、CodeDesk、OpenCode 和 OpenClaw。"
+---
+
+这一页是所有接入教程的前置步骤。你先准备好 `NVM`、`Node.js 22` 和 `npm`，后面的工具安装会顺很多。
+
+<Info>
+  Node.js 自带 `npm`。装好 Node.js 22 以后，不需要再单独安装 npm。
+</Info>
+
+## 第一步：安装 NVM
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    ```
+
+    安装完成后，重新打开终端，或者执行：
+
+    ```bash
+    source ~/.bashrc
+    ```
+
+    如果你使用的是 `zsh`，改成：
+
+    ```bash
+    source ~/.zshrc
+    ```
+  </Tab>
+
+  <Tab title="Windows">
+    Windows 建议安装 `nvm-windows`，然后在终端执行：
+
+    ```powershell
+    nvm install 22.22.2
+    nvm use 22.22.2
+    ```
+  </Tab>
+</Tabs>
+
+## 第二步：安装 Node.js 22
+
+<Tabs>
+  <Tab title="macOS / Linux">
+    ```bash
+    nvm install 22
+    nvm use 22
+    nvm alias default 22
+    ```
+  </Tab>
+
+  <Tab title="Windows">
+    ```powershell
+    nvm install 22.22.2
+    nvm use 22.22.2
+    ```
+  </Tab>
+</Tabs>
+
+## 第三步：验证 Node 和 npm
+
+```bash
+node -v
+npm -v
+```
+
+你应该能看到 Node 22 和 npm 版本号。
+
+## 第四步：安装常用接入工具
+
+```bash
+npm install -g @anthropic-ai/claude-code
+npm install -g @cloudcli-ai/cloudcli
+npm install -g codedesk
+npm install -g opencode-ai
+npm install -g openclaw
+```
+
+## 第五步：验证工具命令
+
+```bash
+claude --version
+cloudcli --help
+codedesk --help
+opencode --version
+openclaw --version
+```
+
+<Tip>
+  如果你主要是为了接入 Xcompute，推荐优先配置 `Claude Code` 或 `OpenCode`，然后再接 `CloudCLI` 或 `CodeDesk` 这类上层界面工具。
+</Tip>
+
+## 下一步
+
+<Columns cols={2}>
+  <Card title="Claude Code 接入" icon="terminal" href="/claude-code">
+    直接在终端里接入 Xcompute。
+  </Card>
+  <Card title="CloudCLI UI 接入" icon="monitor" href="/cloudcli-ui">
+    用图形界面管理 Claude Code 会话。
+  </Card>
+  <Card title="CodeDesk 接入" icon="smartphone" href="/codedesk">
+    通过本地守护进程远程控制开发机。
+  </Card>
+  <Card title="OpenCode 接入" icon="code" href="/opencode">
+    用 OpenAI 兼容方式接入开源代码 Agent。
+  </Card>
+</Columns>

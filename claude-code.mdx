@@ -1,0 +1,87 @@
+---
+title: "Claude Code 接入"
+description: "通过 npm 安装 Claude Code，并把它接到 Xcompute。"
+---
+
+这篇指南适合想在终端里直接使用 Xcompute 的开发者。你会完成 Claude Code 安装、配置和连通性验证。
+
+## 安装 Claude Code
+
+如果你还没有准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+安装后验证：
+
+```bash
+claude --version
+```
+
+## 配置 Xcompute
+
+推荐使用 `settings.json`，这样配置最稳定。
+
+<Steps>
+  <Step title="创建独立 API Key">
+    前往 [Xcompute API 密钥页面](https://claw.dualseason.com/console/token) 创建一个专门给 Claude Code 使用的密钥。
+  </Step>
+
+  <Step title="创建或编辑配置文件">
+    在 `~/.claude/settings.json` 中加入下面这段配置：
+
+    ```json
+    {
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://claw.dualseason.com",
+        "ANTHROPIC_AUTH_TOKEN": "YOUR_XCOMPUTE_API_KEY",
+        "ANTHROPIC_MODEL": "claude-sonnet-4-5-20250929"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="重新打开终端并启动 Claude Code">
+    保存配置后，重新打开终端，再运行 `claude`。
+  </Step>
+</Steps>
+
+## 可选：用环境变量配置
+
+如果你不想写 `settings.json`，也可以在当前终端中临时设置：
+
+```bash
+export ANTHROPIC_BASE_URL="https://claw.dualseason.com"
+export ANTHROPIC_AUTH_TOKEN="YOUR_XCOMPUTE_API_KEY"
+export ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+claude
+```
+
+## 验证是否接通
+
+```bash
+claude "你好，请用一句话介绍你自己"
+```
+
+如果能正常返回内容，说明 Claude Code 已经接到 Xcompute。
+
+## 建议模型
+
+1. 日常编码：`claude-sonnet-4-5-20250929`
+2. 复杂规划：`claude-opus-4-1-20250805`
+3. 快速问答：`claude-haiku-4-5-20251001`
+
+## 效果演示
+
+<Frame>
+  ![Image](/images/image-3.png)
+</Frame>
+
+<Frame>
+  ![Image](/images/image-4.png)
+</Frame>
+
+<Info>
+  建议不要把 Claude Code 和生产应用共用同一个密钥。按工具拆分 API Key，更方便限额管理和排查问题。
+</Info>
