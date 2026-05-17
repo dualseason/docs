@@ -12,6 +12,21 @@
     "light": "/logo/light.png",
     "dark": "/logo/dark.png"
   },
+  "api": {
+    "playground": {
+      "display": "interactive"
+    },
+    "url": "full",
+    "examples": {
+      "autogenerate": false
+    },
+    "mdx": {
+      "server": "https://api.apimart.ai",
+      "auth": {
+        "method": "bearer"
+      }
+    }
+  },
   "navbar": {
     "links": [
         {
