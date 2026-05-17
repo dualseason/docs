@@ -1,15 +1,34 @@
 ---
-title: "OpenClaw - 龙虾、数字员工"
+title: "OpenClaw 接入"
+description: "将 OpenClaw 连接到 Xcompute，统一使用你的模型和 API Key。"
 ---
 
-这篇文章介绍如何快速安装龙虾
+这篇指南介绍如何将 OpenClaw 接入 Xcompute，让你的自托管 AI 助手通过统一接口调用模型。
 
-**ℹ️  项目介绍**
+## 项目介绍
 
 OpenClaw 是一个开源、自托管的个人 AI 助手平台，将消息应用连接到运行在你自己硬件上的 AI 代理。专为开发者和高级用户设计，无需交出数据控制权即可拥有自主 AI 助手。
 
-- 官方主页：[**<u>https://openclaw.ai</u>**](https://openclaw.ai)
-- 项目文档：[**<u>https://docs.openclaw.ai</u>**](https://docs.openclaw.ai)
-- GitHub：[**<u>https://github.com/openclaw/openclaw</u>**](https://github.com/openclaw/openclaw)
+- 官方主页：[https://openclaw.ai](https://openclaw.ai)
+- 项目文档：[https://docs.openclaw.ai](https://docs.openclaw.ai)
+- GitHub：[https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
 
-OpenClaw 完全开源，你可以在 [**<u>OpenClaw 的 GitHub 仓库</u>**](https://github.com/openclaw/openclaw) 浏览源码、提交 Issue 或参与贡献。本教程涵盖安装、配置，以及将 OpenClaw 对接 Xcompute 的 API 的完整步骤。
+OpenClaw 完全开源。你可以在它的 GitHub 仓库中查看源码、提交 Issue，或按自己的需求进行二次开发。
+
+## 接入思路
+
+<Steps>
+  <Step title="在 Xcompute 创建 API Key">
+    先在控制台生成一个专门给 OpenClaw 使用的密钥，方便后续隔离额度和排查调用问题。
+  </Step>
+  <Step title="在 OpenClaw 中配置模型提供方">
+    将 OpenClaw 中默认的模型提供方切换为支持自定义接口的配置方式，并填入 Xcompute 的接口地址与 API Key。
+  </Step>
+  <Step title="验证对话或 Agent 调用">
+    完成配置后，先用一条简单测试消息验证模型是否能正常响应，再继续接入自动化任务或长期运行的 Agent。
+  </Step>
+</Steps>
+
+<Tip>
+  建议为 OpenClaw 单独使用一个 API Key，避免和生产应用混用，后续更容易做限额和调用审计。
+</Tip>

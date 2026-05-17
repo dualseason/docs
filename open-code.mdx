@@ -1,3 +1,35 @@
 ---
-title: "Open Code - 开源代码Agent工具"
+title: "OpenCode 接入"
+description: "将 OpenCode 这类开源代码 Agent 工具接入 Xcompute。"
 ---
+
+如果你正在使用 OpenCode 或其他支持自定义模型提供方的开源代码 Agent 工具，可以把默认接口替换为 Xcompute，统一管理模型和账单。
+
+## 适合什么时候接入
+
+1. 你想在同一套代码 Agent 工作流中切换不同模型。
+2. 你希望把多个开发工具的调用都统一到一个平台管理。
+3. 你需要为不同成员、不同项目拆分 API Key 和额度。
+
+## 配置思路
+
+<Steps>
+  <Step title="创建专用 API Key">
+    为 OpenCode 单独创建密钥，避免与线上业务或其他工具共用。
+  </Step>
+  <Step title="替换接口地址与凭证">
+    在 OpenCode 的提供方配置中填入 Xcompute 的接口地址和 API Key。
+  </Step>
+  <Step title="执行一次真实任务验证">
+    先用一个小型代码仓库做搜索、问答或编辑测试，确认模型、速度和费用符合预期。
+  </Step>
+</Steps>
+
+<Columns cols={2}>
+  <Card title="控制台" icon="house" href="https://claw.dualseason.com/console">
+    管理 API Key、额度和调用记录。
+  </Card>
+  <Card title="在线调试" icon="terminal" href="https://jvzcscqk7u.apifox.cn">
+    在正式接入前先验证请求格式。
+  </Card>
+</Columns>

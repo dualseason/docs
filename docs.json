@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "岭梦科技",
+  "name": "Xcompute",
   "colors": {
     "primary": "#2563EB",
     "light": "#3B82F6",
@@ -14,18 +14,18 @@
   },
   "navbar": {
     "links": [
-      {
-        "label": "控制台",
-        "href": "https://claw.dualseason.com/console"
-      },
-      {
-        "label": "在线调试",
-        "href": "https://jvzcscqk7u.apifox.cn"
-      },
-      {
-        "label": "模型定价",
-        "href": "https://claw.dualseason.com/pricing"
-      }
+        {
+          "label": "控制台",
+          "href": "https://claw.dualseason.com/console"
+        },
+        {
+          "label": "在线调试",
+          "href": "https://jvzcscqk7u.apifox.cn"
+        },
+        {
+          "label": "模型定价",
+          "href": "https://claw.dualseason.com/pricing"
+        }
     ],
     "primary": {
       "type": "button",
@@ -42,7 +42,7 @@
           "href": "https://claw.dualseason.com/console"
         },
         {
-          "anchor": "API Keys",
+          "anchor": "API 密钥",
           "icon": "key",
           "href": "https://claw.dualseason.com/console/token"
         },
@@ -55,18 +55,23 @@
     },
     "tabs": [
       {
-        "tab": "公司介绍",
+        "tab": "概览",
         "pages": [
           "file"
         ]
       },
       {
-        "tab": "开始使用",
+        "tab": "快速开始",
         "pages": [
           "file-1",
-          "quickstart",
-          "untitled-page",
+          "quickstart"
+        ]
+      },
+      {
+        "tab": "集成教程",
+        "pages": [
           "1",
+          "untitled-page",
           "open-code"
         ]
       }

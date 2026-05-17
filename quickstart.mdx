@@ -1,106 +1,114 @@
-## 第一步：获取API密钥
+---
+title: "快速接入 API"
+description: "用四个步骤完成 Xcompute 的首次接口调用。"
+---
 
-1. 访问 [API密钥管理页面](https://claw.dualseason.com/console/token)
-2. 登录您的账户
-3. 创建新的API密钥
-   <Frame>
-     ![Image](/images/image.png)
-   </Frame>
-4. 复制您的密钥
-   <Frame>
-     ![Image](/images/image-1.png)
-   </Frame>
+这份快速开始适合已经准备好接入代码的开发者。你将完成 API Key 创建、模型选择、第一次请求发送，以及异步任务状态查询。
 
-## 第二步：选择模型
+<Steps>
+  <Step title="获取 API Key">
+    1. 访问 [API 密钥管理页面](https://claw.dualseason.com/console/token)。
+    2. 登录你的账户。
+    3. 创建新的 API Key。
 
-打开模型广场，里面有的模型都能选择
+    <Frame>
+      ![API 密钥管理页面](/images/image.png)
+    </Frame>
 
-<Frame>
-  ![Image](/images/image-2.png)
-</Frame>
+    4. 复制生成的密钥并安全保存。
 
-### 文字生成模型
+    <Frame>
+      ![复制 API Key](/images/image-1.png)
+    </Frame>
+  </Step>
 
-- **GPT-5.5**: 目前最强大的对话和文本生成能力，并且兼具性价比的一款模型，适合写代码做任务
-- **Claude-opus-4-7**: Anthropic 的高性能对话模型，比上一代4-6要更加便宜，方案架构能力突出
-- **Gemini 3.1**: Google 的多模态大语言模型，优点和价格都不突出，不推荐使用
-- **GLM 5.1**：国产智普清言大模型，优点稳定，性能和价格不突出，不推荐，适合备用
-- **Kimi k2.6**：国产月之暗面大模型，优点速度快，代码哗哗写，写小工具比较适合，适合快速产出
-- **MiniMax M2.7**：广告达人，不推荐，前端页面还不错，在opencode中是常驻免费大模型
+  <Step title="选择模型">
+    打开模型广场，选择最符合你任务目标的模型。
 
-### 图像生成模型
+    <Frame>
+      ![模型广场](/images/image-2.png)
+    </Frame>
 
-- **GPT-image-2**: 高质量图像生成，米粒刻字
-- **Nano Banana 2**: 专业生图，比**_GPT-image-2_** 出的时间早，所以只有画质比**_GPT-image-2_** 好
+    推荐思路：
 
-### 视频生成模型
+    - 需要稳定的文本和代码生成，优先选择通用对话模型。
+    - 需要生图或视频能力，优先选择对应的多模态模型。
+    - 先小规模测试，再根据质量、速度和价格调整模型。
+  </Step>
 
-- **Seedance 2.0系列**: 工业级别视频生成模型，缺点就是贵，而且字节跳动天天涨价
-- **Veo 3.1**: 谷歌的Gemini模型
-- **Grok-4.2**: 马斯克的视频模型
+  <Step title="发送第一条请求">
+    下面的示例使用兼容 OpenAI 的接口格式。将 `YOUR_API_KEY` 替换为你的真实密钥即可。
 
-## 第三步：发送请求
+    <Tabs>
+      <Tab title="文本生成">
+        ```bash
+        curl -X POST https://claw.dualseason.com/v1/chat/completions \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "model": "gpt-4o",
+            "messages": [
+              {
+                "role": "user",
+                "content": "你好，请介绍一下你自己"
+              }
+            ]
+          }'
+        ```
+      </Tab>
+      <Tab title="图像生成">
+        ```bash
+        curl -X POST https://claw.dualseason.com/v1/images/generations \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "model": "gpt-4o-image",
+            "prompt": "一只可爱的熊猫",
+            "size": "1:1",
+            "n": 1
+          }'
+        ```
+      </Tab>
+      <Tab title="视频生成">
+        ```bash
+        curl -X POST https://claw.dualseason.com/v1/videos/generations \
+          -H "Authorization: Bearer YOUR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "model": "sora-2",
+            "prompt": "海浪拍打着海岸",
+            "duration": 15,
+            "aspect_ratio": "16:9"
+          }'
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
 
-### 文字生成示例
+  <Step title="查询异步任务状态">
+    图像和视频任务通常会异步处理。你可以用任务 ID 查询执行状态和最终结果。
 
-```bash
-curl -X POST https://claw.dualseason.com/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-4o",
-    "messages": [
-      {
-        "role": "user",
-        "content": "你好，请介绍一下你自己"
-      }
-    ]
-  }'
-```
+    ```bash
+    curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Step>
+</Steps>
 
-### 图像生成示例
-
-```bash
-curl -X POST https://claw.dualseason.com/v1/images/generations \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-4o-image",
-    "prompt": "一只可爱的熊猫",
-    "size": "1:1",
-    "n": 1
-  }'
-```
-
-### 视频生成示例
-
-```bash
-curl -X POST https://claw.dualseason.com/v1/videos/generations \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "sora-2",
-    "prompt": "海浪拍打着海岸",
-    "duration": 15,
-    "aspect_ratio": "16:9"
-  }'
-```
-
-## 第四步：查询任务状态
-
-由于我们使用异步处理模式，您需要查询任务状态来获取结果：
-
-```bash
-curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
+<Warning>
+  不要在前端代码、公开仓库或截图中暴露你的 API Key。建议按应用和环境拆分不同密钥。
+</Warning>
 
 ## 下一步
 
-<Card title="查看API文档" icon="book" href="/api-reference/introduction">
-  详细了解所有可用的API接口
-</Card>
-
-<Card title="开发指南" icon="code" href="/development">
-  了解如何在您的应用中集成API
-</Card>
+<Columns cols={3}>
+  <Card title="Claude Code 接入" icon="terminal" href="/1">
+    把 Xcompute 接入终端编程工作流。
+  </Card>
+  <Card title="OpenClaw 接入" icon="bot" href="/untitled-page">
+    将自托管 AI 助手接入 Xcompute。
+  </Card>
+  <Card title="OpenCode 接入" icon="code" href="/open-code">
+    在开源代码 Agent 工具里配置 Xcompute。
+  </Card>
+</Columns>
