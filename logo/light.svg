@@ -1,4 +1,6 @@
-<svg width="188" height="32" viewBox="0 0 188 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <image href="/logo/icon-light.png" x="0" y="2" width="28" height="28" />
-  <text x="36" y="21" font-family="Inter, ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#111827" letter-spacing="-0.02em">compute</text>
+<svg width="196" height="32" viewBox="0 0 196 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="2" width="28" height="28" rx="8" fill="#2563EB"/>
+  <path d="M9 10L21 22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M21 10L9 22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <text x="38" y="21" font-family="Inter, ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#111827" letter-spacing="-0.02em">compute</text>
 </svg>
