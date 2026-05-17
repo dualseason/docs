@@ -25,7 +25,7 @@ claude --version
 
 <Steps>
   <Step title="创建独立 API Key">
-    前往 [Xcompute API 密钥页面](https://claw.dualseason.com/console/token) 创建一个专门给 Claude Code 使用的密钥。
+    前往 [Xcompute API 密钥页面](https://xcompute.us/console/token) 创建一个专门给 Claude Code 使用的密钥。
   </Step>
 
   <Step title="创建或编辑配置文件">
@@ -34,7 +34,7 @@ claude --version
     ```json
     {
       "env": {
-        "ANTHROPIC_BASE_URL": "https://claw.dualseason.com",
+        "ANTHROPIC_BASE_URL": "https://xcompute.us",
         "ANTHROPIC_AUTH_TOKEN": "YOUR_XCOMPUTE_API_KEY",
         "ANTHROPIC_MODEL": "claude-sonnet-4-5-20250929"
       }
@@ -52,7 +52,7 @@ claude --version
 如果你不想写 `settings.json`，也可以在当前终端中临时设置：
 
 ```bash
-export ANTHROPIC_BASE_URL="https://claw.dualseason.com"
+export ANTHROPIC_BASE_URL="https://xcompute.us"
 export ANTHROPIC_AUTH_TOKEN="YOUR_XCOMPUTE_API_KEY"
 export ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
 claude

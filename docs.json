@@ -31,7 +31,7 @@
     "links": [
         {
           "label": "控制台",
-          "href": "https://claw.dualseason.com/console"
+          "href": "https://xcompute.us/console"
         },
         {
           "label": "在线调试",
@@ -39,13 +39,13 @@
         },
         {
           "label": "模型定价",
-          "href": "https://claw.dualseason.com/pricing"
+          "href": "https://xcompute.us/pricing"
         }
     ],
     "primary": {
       "type": "button",
       "label": "获取 API Key",
-      "href": "https://claw.dualseason.com/console/token"
+      "href": "https://xcompute.us/console/token"
     }
   },
   "navigation": {
@@ -54,17 +54,17 @@
         {
           "anchor": "控制台",
           "icon": "house",
-          "href": "https://claw.dualseason.com/console"
+          "href": "https://xcompute.us/console"
         },
         {
           "anchor": "API 密钥",
           "icon": "key",
-          "href": "https://claw.dualseason.com/console/token"
+          "href": "https://xcompute.us/console/token"
         },
         {
           "anchor": "模型定价",
           "icon": "dollar-sign",
-          "href": "https://claw.dualseason.com/pricing"
+          "href": "https://xcompute.us/pricing"
         }
       ]
     },
