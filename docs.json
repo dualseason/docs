@@ -9,8 +9,8 @@
   },
   "favicon": "/favicon.svg",
   "logo": {
-    "light": "/logo/light.png",
-    "dark": "/logo/dark.png"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "api": {
     "playground": {
@@ -21,7 +21,7 @@
       "autogenerate": false
     },
     "mdx": {
-      "server": "https://api.apimart.ai",
+      "server": "https://xcompute.us",
       "auth": {
         "method": "bearer"
       }
@@ -185,7 +185,7 @@
             "pages": [
               "claude-code",
               "cloudcli-ui",
-              "codedesk",
+              "codex",
               "opencode"
             ]
           },

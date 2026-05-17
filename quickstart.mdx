@@ -42,7 +42,7 @@ description: "用四个步骤完成 Xcompute 的首次接口调用。"
     <Tabs>
       <Tab title="文本生成">
         ```bash
-        curl -X POST https://claw.dualseason.com/v1/chat/completions \
+        curl -X POST https://xcompute.us/v1/chat/completions \
           -H "Authorization: Bearer YOUR_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{
@@ -58,7 +58,7 @@ description: "用四个步骤完成 Xcompute 的首次接口调用。"
       </Tab>
       <Tab title="图像生成">
         ```bash
-        curl -X POST https://claw.dualseason.com/v1/images/generations \
+        curl -X POST https://xcompute.us/v1/images/generations \
           -H "Authorization: Bearer YOUR_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{
@@ -71,7 +71,7 @@ description: "用四个步骤完成 Xcompute 的首次接口调用。"
       </Tab>
       <Tab title="视频生成">
         ```bash
-        curl -X POST https://claw.dualseason.com/v1/videos/generations \
+        curl -X POST https://xcompute.us/v1/videos/generations \
           -H "Authorization: Bearer YOUR_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{
@@ -89,7 +89,7 @@ description: "用四个步骤完成 Xcompute 的首次接口调用。"
     图像和视频任务通常会异步处理。你可以用任务 ID 查询执行状态和最终结果。
 
     ```bash
-    curl -X GET https://claw.dualseason.com/v1/tasks/YOUR_TASK_ID \
+    curl -X GET https://xcompute.us/v1/tasks/YOUR_TASK_ID \
       -H "Authorization: Bearer YOUR_API_KEY"
     ```
   </Step>
@@ -105,10 +105,13 @@ description: "用四个步骤完成 Xcompute 的首次接口调用。"
   <Card title="Claude Code 接入" icon="terminal" href="/claude-code">
     把 Xcompute 接入终端编程工作流。
   </Card>
+  <Card title="Codex 接入" icon="code" href="/codex">
+    通过 Codex CLI 接入 Xcompute。
+  </Card>
   <Card title="OpenClaw 接入" icon="bot" href="/openclaw">
     将自托管 AI 助手接入 Xcompute。
   </Card>
-  <Card title="OpenCode 接入" icon="code" href="/opencode">
+  <Card title="OpenCode 接入" icon="square-code" href="/opencode">
     在开源代码 Agent 工具里配置 Xcompute。
   </Card>
 </Columns>

@@ -9,7 +9,7 @@ api: 'POST /v1/messages'
 
 <RequestExample>
   ```bash cURL theme={null}
-  curl https://api.apimart.ai/v1/messages \
+  curl https://xcompute.us/v1/messages \
     -H "x-api-key: $API_KEY" \
     -H "anthropic-version: 2025-10-01" \
     -H "content-type: application/json" \
@@ -27,7 +27,7 @@ api: 'POST /v1/messages'
 
   client = anthropic.Anthropic(
       api_key="YOUR_API_KEY",
-      base_url="https://api.apimart.ai"
+      base_url="https://xcompute.us"
   )
 
   message = client.messages.create(
@@ -46,7 +46,7 @@ api: 'POST /v1/messages'
 
   const client = new Anthropic({
     apiKey: process.env.API_KEY,
-    baseURL: 'https://api.apimart.ai'
+    baseURL: 'https://xcompute.us'
   });
 
   const message = await client.messages.create({
@@ -73,7 +73,7 @@ api: 'POST /v1/messages'
   )
 
   func main() {
-      url := "https://api.apimart.ai/v1/messages"
+      url := "https://xcompute.us/v1/messages"
 
       payload := map[string]interface{}{
           "model": "claude-sonnet-4-5-20250929",
@@ -113,7 +113,7 @@ api: 'POST /v1/messages'
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/messages";
+          String url = "https://xcompute.us/v1/messages";
           String apiKey = System.getenv("API_KEY");
 
           String payload = """
@@ -149,7 +149,7 @@ api: 'POST /v1/messages'
   ```php PHP theme={null}
   <?php
 
-  $url = "https://api.apimart.ai/v1/messages";
+  $url = "https://xcompute.us/v1/messages";
   $apiKey = getenv('API_KEY');
 
   $payload = [
@@ -185,7 +185,7 @@ api: 'POST /v1/messages'
   require 'json'
   require 'uri'
 
-  url = URI("https://api.apimart.ai/v1/messages")
+  url = URI("https://xcompute.us/v1/messages")
   api_key = ENV['API_KEY']
 
   payload = {
@@ -215,7 +215,7 @@ api: 'POST /v1/messages'
   ```swift Swift theme={null}
   import Foundation
 
-  let url = URL(string: "https://api.apimart.ai/v1/messages")!
+  let url = URL(string: "https://xcompute.us/v1/messages")!
   let apiKey = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
 
   let payload: [String: Any] = [
@@ -260,7 +260,7 @@ api: 'POST /v1/messages'
   {
       static async Task Main(string[] args)
       {
-          var url = "https://api.apimart.ai/v1/messages";
+          var url = "https://xcompute.us/v1/messages";
           var apiKey = Environment.GetEnvironmentVariable("API_KEY");
 
           var payload = @"{
@@ -301,7 +301,7 @@ api: 'POST /v1/messages'
       curl = curl_easy_init();
 
       if(curl) {
-          const char *url = "https://api.apimart.ai/v1/messages";
+          const char *url = "https://xcompute.us/v1/messages";
           const char *payload = "{"
               "\"model\":\"claude-sonnet-4-5-20250929\","
               "\"max_tokens\":1024,"
@@ -341,7 +341,7 @@ api: 'POST /v1/messages'
 
   int main(int argc, const char * argv[]) {
       @autoreleasepool {
-          NSURL *url = [NSURL URLWithString:@"https://api.apimart.ai/v1/messages"];
+          NSURL *url = [NSURL URLWithString:@"https://xcompute.us/v1/messages"];
           NSString *apiKey = [NSProcessInfo processInfo].environment[@"API_KEY"];
           
           NSDictionary *payload = @{
@@ -392,7 +392,7 @@ api: 'POST /v1/messages'
   open Cohttp
   open Cohttp_lwt_unix
 
-  let url = "https://api.apimart.ai/v1/messages"
+  let url = "https://xcompute.us/v1/messages"
   let api_key = Sys.getenv "API_KEY"
 
   let payload = {|{
@@ -427,7 +427,7 @@ api: 'POST /v1/messages'
   import 'package:http/http.dart' as http;
 
   void main() async {
-    final url = Uri.parse('https://api.apimart.ai/v1/messages');
+    final url = Uri.parse('https://xcompute.us/v1/messages');
     final apiKey = Platform.environment['API_KEY'];
     
     final payload = {
@@ -459,7 +459,7 @@ api: 'POST /v1/messages'
   library(httr)
   library(jsonlite)
 
-  url <- "https://api.apimart.ai/v1/messages"
+  url <- "https://xcompute.us/v1/messages"
   api_key <- Sys.getenv("API_KEY")
 
   payload <- list(
@@ -878,7 +878,7 @@ import anthropic
 
 client = anthropic.Anthropic(
     api_key="YOUR_API_KEY",
-    base_url="https://api.apimart.ai"
+    base_url="https://xcompute.us"
 )
 
 message = client.messages.create(
@@ -1109,7 +1109,7 @@ import anthropic
 
 client = anthropic.Anthropic(
     api_key="YOUR_API_KEY",
-    base_url="https://api.apimart.ai"
+    base_url="https://xcompute.us"
 )
 
 with client.messages.stream(
@@ -1130,7 +1130,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 const client = new Anthropic({
   apiKey: process.env.API_KEY,
-  baseURL: 'https://api.apimart.ai'
+  baseURL: 'https://xcompute.us'
 });
 
 const stream = await client.messages.stream({

@@ -1,6 +1,6 @@
 ---
 title: "环境准备：NVM、Node.js 22 和 npm"
-description: "先用 NVM 安装 Node.js 22，再用 npm 安装 Claude Code、CloudCLI、CodeDesk、OpenCode 和 OpenClaw。"
+description: "先用 NVM 安装 Node.js 22，再用 npm 安装 Claude Code、CloudCLI、Codex、OpenCode 和 OpenClaw。"
 ---
 
 这一页是所有接入教程的前置步骤。你先准备好 `NVM`、`Node.js 22` 和 `npm`，后面的工具安装会顺很多。
@@ -73,7 +73,7 @@ npm -v
 ```bash
 npm install -g @anthropic-ai/claude-code
 npm install -g @cloudcli-ai/cloudcli
-npm install -g codedesk
+npm install -g @openai/codex
 npm install -g opencode-ai
 npm install -g openclaw
 ```
@@ -83,13 +83,13 @@ npm install -g openclaw
 ```bash
 claude --version
 cloudcli --help
-codedesk --help
+codex --help
 opencode --version
 openclaw --version
 ```
 
 <Tip>
-  如果你主要是为了接入 Xcompute，推荐优先配置 `Claude Code` 或 `OpenCode`，然后再接 `CloudCLI` 或 `CodeDesk` 这类上层界面工具。
+  如果你主要是为了接入 Xcompute，推荐优先配置 `Claude Code`、`Codex` 或 `OpenCode`，然后再接 `CloudCLI` 这类上层界面工具。
 </Tip>
 
 ## 下一步
@@ -101,8 +101,8 @@ openclaw --version
   <Card title="CloudCLI UI 接入" icon="monitor" href="/cloudcli-ui">
     用图形界面管理 Claude Code 会话。
   </Card>
-  <Card title="CodeDesk 接入" icon="smartphone" href="/codedesk">
-    通过本地守护进程远程控制开发机。
+  <Card title="Codex 接入" icon="code" href="/codex">
+    通过 OpenAI 的编程 Agent 接入 Xcompute。
   </Card>
   <Card title="OpenCode 接入" icon="code" href="/opencode">
     用 OpenAI 兼容方式接入开源代码 Agent。

@@ -1,0 +1,138 @@
+---
+title: "Codex 接入"
+description: "通过 Node.js 22 安装 Codex，并使用 Xcompute 的 Base URL 和 API Key 完成接入。"
+---
+
+Codex 是 OpenAI 的编程 Agent。配合 GPT-5.5 一类模型时，编程体验通常很强。很多人实际使用时会接中转站，所以这里直接按 Xcompute 的接入思路来写。
+
+<Warning>
+  这类接入方式会随着 Codex 版本变化而变化。核心思路不变：准备好 `Base URL` 和 `API Key`，再在本地配置文件里接入。
+</Warning>
+
+## 你需要准备的内容
+
+1. `Base URL`：`https://xcompute.us/v1`
+2. `API Key`：你的 Xcompute 密钥，格式一般以 `sk-` 开头
+
+## 第一步：安装 Node 环境
+
+如果你还没准备环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
+
+你也可以直接按下面的顺序做。
+
+### Linux / macOS
+
+先安装 `nvm`：
+
+```bash
+curl -o- https://gitee.com/mirrors/nvm-sh/raw/v0.39.7/install.sh | bash
+```
+
+然后安装 Node 22：
+
+```bash
+nvm install 22
+nvm use 22
+```
+
+<Info>
+  Node 22 是最后一代默认内置 npm、而且比较省事的选择。对 Codex 这类 CLI 工具来说比较方便。
+</Info>
+
+### Windows
+
+Windows 建议安装 `nvm-windows`：
+
+- 下载地址：[https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
+
+安装后再执行：
+
+```powershell
+nvm install 22
+nvm use 22
+```
+
+## 第二步：安装 Codex
+
+```bash
+npm install -g @openai/codex
+```
+
+## 第三步：先运行一次 Codex
+
+这一步很重要。你需要先执行一次：
+
+```bash
+codex
+```
+
+这样它才会在你的用户目录下生成 `.codex` 配置目录。
+
+常见位置：
+
+- Linux / macOS：`~/.codex`
+- Windows：`C:\Users\你的用户名\.codex`
+
+## 第四步：编辑 Codex 配置
+
+你重点关注 `.codex` 目录里的配置文件和认证文件。
+
+可以按下面这个思路配置：
+
+```toml
+model_provider = "OpenAI"
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "https://xcompute.us/v1"
+wire_api = "responses"
+requires_openai_auth = true
+```
+
+然后把 API Key 放进去，例如：
+
+```json
+{
+  "OPENAI_API_KEY": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+## 第五步：重新启动 Codex
+
+```bash
+codex
+```
+
+重新进入后，如果能正常工作，就说明已经通过 Xcompute 接好了。
+
+## 接入思路总结
+
+<Steps>
+  <Step title="先准备 Node 22 和 npm">
+    Codex CLI 依赖本地 Node 环境运行。
+  </Step>
+  <Step title="安装 Codex 并生成本地配置目录">
+    先执行一次 `codex`，让 `.codex` 目录生成出来。
+  </Step>
+  <Step title="把 OpenAI 基础地址切到 Xcompute">
+    核心就是把 `base_url` 配成 `https://xcompute.us/v1`，再填入你的 `OPENAI_API_KEY`。
+  </Step>
+</Steps>
+
+## 可选：桌面版
+
+如果你想试桌面版，也可以看官方入口：
+
+- [https://chatgpt.com/zh-Hans-CN/codex](https://chatgpt.com/zh-Hans-CN/codex)
+
+<Tip>
+  如果某个版本的配置格式变了，不要死抠旧字段名。你只要记住三个关键点就行：运行一次生成配置目录、找到 provider 配置、把 `Base URL` 和 `API Key` 改成 Xcompute 的值。
+</Tip>

@@ -13,14 +13,14 @@ api: 'GET /v1/user/balance'
 <RequestExample>
   ```bash cURL theme={null}
   curl --request GET \
-    --url 'https://api.apimart.ai/v1/user/balance' \
+    --url 'https://xcompute.us/v1/user/balance' \
     --header 'Authorization: Bearer <token>'
   ```
 
   ```python Python theme={null}
   import requests
 
-  API_BASE = 'https://api.apimart.ai'
+  API_BASE = 'https://xcompute.us'
   API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxx'
 
   headers = {
@@ -46,7 +46,7 @@ api: 'GET /v1/user/balance'
   ```
 
   ```javascript JavaScript theme={null}
-  const API_BASE = 'https://api.apimart.ai';
+  const API_BASE = 'https://xcompute.us';
   const API_KEY = 'sk-xxxxxxxxxxxxxxxxxxxxxx';
 
   async function getUserBalance() {
@@ -94,7 +94,7 @@ api: 'GET /v1/user/balance'
   }
 
   func main() {
-      url := "https://api.apimart.ai/v1/user/balance"
+      url := "https://xcompute.us/v1/user/balance"
 
       req, _ := http.NewRequest("GET", url, nil)
       req.Header.Set("Authorization", "Bearer <token>")
@@ -130,7 +130,7 @@ api: 'GET /v1/user/balance'
 
   public class Main {
       public static void main(String[] args) throws Exception {
-          String url = "https://api.apimart.ai/v1/user/balance";
+          String url = "https://xcompute.us/v1/user/balance";
 
           HttpClient client = HttpClient.newHttpClient();
           HttpRequest request = HttpRequest.newBuilder()
@@ -152,7 +152,7 @@ api: 'GET /v1/user/balance'
 
   $api_key = 'sk-xxxxxxxxxxxxxxxxxxxxxx';
 
-  $ch = curl_init('https://api.apimart.ai/v1/user/balance');
+  $ch = curl_init('https://xcompute.us/v1/user/balance');
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
       "Authorization: Bearer $api_key"
@@ -183,7 +183,7 @@ api: 'GET /v1/user/balance'
 
   api_key = 'sk-xxxxxxxxxxxxxxxxxxxxxx'
 
-  url = URI("https://api.apimart.ai/v1/user/balance")
+  url = URI("https://xcompute.us/v1/user/balance")
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
@@ -210,7 +210,7 @@ api: 'GET /v1/user/balance'
   import Foundation
 
   let apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxx"
-  let url = URL(string: "https://api.apimart.ai/v1/user/balance")!
+  let url = URL(string: "https://xcompute.us/v1/user/balance")!
 
   var request = URLRequest(url: url)
   request.httpMethod = "GET"
@@ -240,7 +240,7 @@ api: 'GET /v1/user/balance'
       static async Task Main(string[] args)
       {
           var apiKey = "sk-xxxxxxxxxxxxxxxxxxxxxx";
-          var url = "https://api.apimart.ai/v1/user/balance";
+          var url = "https://xcompute.us/v1/user/balance";
 
           using var client = new HttpClient();
           client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
