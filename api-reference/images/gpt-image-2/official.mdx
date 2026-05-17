@@ -3,13 +3,13 @@ title: 'GPT-Image-2 官方渠道 图像生成'
 api: 'POST /v1/images/generations'
 ---
 
->  - OpenAI 官方 `gpt-image-2` 模型，基于 `/v1/images/generations` 兼容协议
+- OpenAI 官方 `gpt-image-2` 模型，基于 `/v1/images/generations` 兼容协议
 - 异步处理模式，返回 `task_id` 用于后续查询
 - 文生图 / 图生图 / 局部重绘（mask）三合一
 - 新增 `resolution` 档位字段，支持 1K / 2K / 4K 分辨率选择
 - 支持 15 种比例，1K / 2K / 4K 档均可用
 - 单次最多生成 4 张图片，参考图最多 16 张
-- 与 `gpt-image-1.5-official` 接口 95% 对齐，迁移只需改模型名 
+- 与 `gpt-image-1.5-official` 接口 95% 对齐，迁移只需改模型名
 
 <RequestExample>
   ```bash cURL theme={null}

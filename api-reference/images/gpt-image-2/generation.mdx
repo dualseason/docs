@@ -3,12 +3,12 @@ title: 'GPT-Image-2 图像生成'
 api: 'POST /v1/images/generations'
 ---
 
->  - 异步处理模式，返回任务ID用于后续查询
+- 异步处理模式，返回任务ID用于后续查询
 - 基于 OpenAI Images 兼容协议，支持文生图 / 图生图
 - 支持 15 种图片比例，通过 `size` 字段传入
 - 通过 `resolution`（`1k` / `2k` / `4k`）控制实际输出像素档位
 - 参考图最多 16 张，支持 URL 与 base64 混填
-- 按分辨率档位（1K / 2K / 4K）计费 
+- 按分辨率档位（1K / 2K / 4K）计费
 
 <RequestExample>
   ```bash cURL theme={null}
