@@ -1,0 +1,524 @@
+# 虚拟人像素材
+
+>  - 私域虚拟人像素材提交接口
+- 支持批量提交，单次最多 20 个素材
+- 自动创建或复用素材组，返回任务 ID 用于状态查询
+- 审核通过的素材可直接用于 Seedance 2.0 视频生成 
+
+<RequestExample>
+  ```bash cURL（批量提交·新建素材组） theme={null}
+  curl --request POST \
+    --url https://claw.dualseason.com/v1/seedance2/private-avatar \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "group": {
+        "name": "virtual-avatar-group",
+        "description": "demo group"
+      },
+      "project_name": "default",
+      "asset_type": "Image",
+      "assets": [
+        {
+          "url": "https://example.com/avatar-a.png",
+          "name": "avatar-a"
+        },
+        {
+          "url": "https://example.com/avatar-b.png",
+          "name": "avatar-b"
+        }
+      ]
+    }'
+  ```
+
+  ```bash cURL（使用已有素材组） theme={null}
+  curl --request POST \
+    --url https://claw.dualseason.com/v1/seedance2/private-avatar \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "group_id": "group_xxx",
+      "project_name": "default",
+      "asset_type": "Image",
+      "assets": [
+        {
+          "url": "https://example.com/avatar-a.png",
+          "name": "avatar-a"
+        }
+      ]
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://claw.dualseason.com/v1/seedance2/private-avatar"
+
+  payload = {
+      "group": {
+          "name": "virtual-avatar-group",
+          "description": "demo group"
+      },
+      "project_name": "default",
+      "asset_type": "Image",
+      "assets": [
+          {
+              "url": "https://example.com/avatar-a.png",
+              "name": "avatar-a"
+          },
+          {
+              "url": "https://example.com/avatar-b.png",
+              "name": "avatar-b"
+          }
+      ]
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://claw.dualseason.com/v1/seedance2/private-avatar";
+
+  const payload = {
+    group: {
+      name: "virtual-avatar-group",
+      description: "demo group"
+    },
+    project_name: "default",
+    asset_type: "Image",
+    assets: [
+      {
+        url: "https://example.com/avatar-a.png",
+        name: "avatar-a"
+      },
+      {
+        url: "https://example.com/avatar-b.png",
+        name: "avatar-b"
+      }
+    ]
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": {
+      "id": "task_01K...",
+      "object": "seedance.avatar.asset.task",
+      "status": "processing",
+      "progress": 10,
+      "model": "doubao-seedance-2.0"
+    }
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 认证
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://claw.dualseason.com/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 请求参数
+
+<ParamField body="group" type="object">
+  素材组信息
+
+  不传 `group_id` 时，服务端会根据此字段自动创建 `AIGC` 类型素材组
+
+  <Expandable title="字段说明">
+    <ParamField body="name" type="string">
+      素材组名称
+    </ParamField>
+
+    <ParamField body="description" type="string">
+      素材组描述
+    </ParamField>
+  </Expandable>
+
+  示例：
+
+  ```json theme={null}
+  {
+    "group": {
+      "name": "virtual-avatar-group",
+      "description": "demo group"
+    }
+  }
+  ```
+
+  <Warning>
+    与 `group_id` 二选一使用，不可同时传入
+  </Warning>
+</ParamField>
+
+<ParamField body="group_id" type="string">
+  已有素材组 ID
+
+  传入时跳过素材组创建，直接向该素材组提交素材
+
+  <Warning>
+    与 `group` 二选一使用，不可同时传入
+  </Warning>
+</ParamField>
+
+<ParamField body="project_name" type="string" default="default">
+  项目名称
+
+  默认值：`default`
+</ParamField>
+
+<ParamField body="asset_type" type="string" default="Image">
+  素材类型
+
+  可选值：
+
+  * `Image` - 图片素材（默认）
+  * `Video` - 视频素材
+  * `Audio` - 音频素材
+
+  默认值：`Image`
+</ParamField>
+
+<ParamField body="assets" type="array">
+  素材列表，支持一次提交多个素材
+
+  <Warning>
+    单次最多提交 **20** 个素材
+  </Warning>
+
+  <Expandable title="字段说明">
+    <ParamField body="url" type="string" required>
+      素材 URL，需为公网可访问链接
+    </ParamField>
+
+    <ParamField body="name" type="string" required>
+      素材名称
+    </ParamField>
+  </Expandable>
+
+  示例：
+
+  ```json theme={null}
+  {
+    "assets": [
+      {
+        "url": "https://example.com/avatar-a.png",
+        "name": "avatar-a"
+      },
+      {
+        "url": "https://example.com/avatar-b.png",
+        "name": "avatar-b"
+      }
+    ]
+  }
+  ```
+</ParamField>
+
+<ParamField body="url" type="string">
+  单素材兼容写法：素材 URL
+
+  <Warning>
+    与 `assets` 数组二选一使用，适用于只提交一个素材的场景
+  </Warning>
+</ParamField>
+
+<ParamField body="name" type="string">
+  单素材兼容写法：素材名称
+
+  <Warning>
+    与 `assets` 数组二选一使用，适用于只提交一个素材的场景
+  </Warning>
+</ParamField>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，成功时为 200
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  任务信息
+
+  <Expandable title="字段说明">
+    <ResponseField name="id" type="string">
+      本地任务 ID，用于后续查询素材审核状态
+    </ResponseField>
+
+    <ResponseField name="object" type="string">
+      任务对象类型，固定为 `seedance.avatar.asset.task`
+    </ResponseField>
+
+    <ResponseField name="status" type="string">
+      任务初始状态，提交后为 `processing`
+    </ResponseField>
+
+    <ResponseField name="progress" type="integer">
+      任务进度（0 \~ 100）
+    </ResponseField>
+
+    <ResponseField name="model" type="string">
+      当前使用的模型名称
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：批量提交素材（自动创建素材组）
+
+不传 `group_id`，服务端自动创建 `AIGC` 类型素材组后提交素材。
+
+```json theme={null}
+{
+  "group": {
+    "name": "virtual-avatar-group",
+    "description": "demo group"
+  },
+  "project_name": "default",
+  "asset_type": "Image",
+  "assets": [
+    {
+      "url": "https://example.com/avatar-a.png",
+      "name": "avatar-a"
+    },
+    {
+      "url": "https://example.com/avatar-b.png",
+      "name": "avatar-b"
+    }
+  ]
+}
+```
+
+### 场景 2：向已有素材组追加素材
+
+传入 `group_id`，跳过素材组创建直接提交。
+
+```json theme={null}
+{
+  "group_id": "group_xxx",
+  "project_name": "default",
+  "asset_type": "Image",
+  "assets": [
+    {
+      "url": "https://example.com/avatar-a.png",
+      "name": "avatar-a"
+    }
+  ]
+}
+```
+
+### 场景 3：单素材兼容写法
+
+只提交一个素材时，可直接使用顶层 `url` 和 `name` 字段。
+
+```json theme={null}
+{
+  "group_id": "group_xxx",
+  "url": "https://example.com/avatar.png",
+  "asset_type": "Image",
+  "name": "avatar-1"
+}
+```
+
+## 查询审核结果
+
+素材提交后为异步审核任务，使用 [获取任务状态](/api-reference/tasks/status) 接口查询：
+
+```http theme={null}
+GET /v1/tasks/{id}
+```
+
+### 全部通过
+
+```json theme={null}
+{
+  "code": 200,
+  "data": {
+    "id": "task_01K...",
+    "status": "completed",
+    "progress": 100,
+    "result": {
+      "assets": [
+        {
+          "asset_id": "asset_a",
+          "asset_url": "asset://asset_a",
+          "status": "Active"
+        },
+        {
+          "asset_id": "asset_b",
+          "asset_url": "asset://asset_b",
+          "status": "Active"
+        }
+      ],
+      "usable_assets": [
+        {
+          "asset_id": "asset_a",
+          "asset_url": "asset://asset_a",
+          "status": "Active"
+        },
+        {
+          "asset_id": "asset_b",
+          "asset_url": "asset://asset_b",
+          "status": "Active"
+        }
+      ],
+      "failed_assets": []
+    }
+  }
+}
+```
+
+### 部分失败
+
+批量提交时，只要有一个素材审核失败，任务状态为 `failed`。已通过的素材仍可用，出现在 `result.usable_assets`。
+
+```json theme={null}
+{
+  "code": 200,
+  "data": {
+    "id": "task_01K...",
+    "status": "failed",
+    "progress": 100,
+    "result": {
+      "assets": [
+        {
+          "asset_id": "asset_a",
+          "asset_url": "asset://asset_a",
+          "status": "Active"
+        },
+        {
+          "asset_id": "asset_b",
+          "asset_url": "asset://asset_b",
+          "status": "Failed"
+        }
+      ],
+      "usable_assets": [
+        {
+          "asset_id": "asset_a",
+          "asset_url": "asset://asset_a",
+          "status": "Active"
+        }
+      ],
+      "failed_assets": [
+        {
+          "asset_id": "asset_b",
+          "asset_url": "asset://asset_b",
+          "status": "Failed"
+        }
+      ]
+    },
+    "error": {
+      "code": "task_failed",
+      "message": "部分素材审核失败"
+    }
+  }
+}
+```
+
+<Note>
+  * `result.usable_assets[].asset_url` 可直接用于 Seedance 2.0 视频生成
+  * `result.failed_assets` 中的素材需更换源文件或重新提交
+  * 单素材任务也会兼容返回 `result.asset_url`
+</Note>
+
+## 审核后使用素材
+
+审核通过后，将 `asset://...` URL 直接传入 [Seedance 2.0 视频生成](/api-reference/videos/doubao-seedance-2-0/generation) 接口：
+
+```json theme={null}
+{
+  "model": "doubao-seedance-2.0",
+  "prompt": "让人物在城市街道自然行走",
+  "image_urls": ["asset://asset_a"],
+  "duration": 5,
+  "resolution": "720p"
+}
+```
+
+<Note>
+  服务端识别到 `asset://` 前缀后，会直接提交官方生成任务，不会再次触发素材审核。
+</Note>

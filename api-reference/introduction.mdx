@@ -1,0 +1,49 @@
+---
+title: "API 参考"
+description: "查看 Xcompute 的文本、音频、图像、视频、上传、任务和账户接口。"
+---
+
+这里汇总了 Xcompute 当前可用的 API 接口文档。你可以按能力分类查看请求参数、返回结构和多语言调用示例。
+
+<Info>
+  本模块中的请求示例已统一使用 `https://claw.dualseason.com` 作为接口域名，便于你直接对照 Xcompute 接入。
+</Info>
+
+<Columns cols={3}>
+  <Card title="文本接口" icon="message-circle" href="/api-reference/texts/general/chat-completions">
+    包括通用对话、Claude Messages、OpenAI Responses 和 Gemini 原生格式。
+  </Card>
+  <Card title="图像接口" icon="image" href="/api-reference/images/gpt-image-2/generation">
+    包括 GPT Image、Gemini、Grok、Qwen、Seedream 等图像能力。
+  </Card>
+  <Card title="视频接口" icon="video" href="/api-reference/videos/veo3/generation">
+    包括 VEO、Sora、Kling、Wan、Doubao、Vidu 等视频生成接口。
+  </Card>
+  <Card title="音频接口" icon="mic" href="/api-reference/audios/tts">
+    包括语音识别和文本转语音接口。
+  </Card>
+  <Card title="任务与上传" icon="upload" href="/api-reference/tasks/status">
+    查询异步任务状态，并上传图片供图像或视频接口使用。
+  </Card>
+  <Card title="账户接口" icon="dollar-sign" href="/api-reference/account/token-balance">
+    查询 API Key 余额和账户余额。
+  </Card>
+</Columns>
+
+## 接入说明
+
+<Steps>
+  <Step title="获取 API Key">
+    前往 [API 密钥页面](https://claw.dualseason.com/console/token) 创建并复制你的密钥。
+  </Step>
+  <Step title="选择接口与模型">
+    根据你的业务类型选择文本、图像、视频或音频接口，并在请求中指定对应模型。
+  </Step>
+  <Step title="发送请求并轮询结果">
+    文本接口通常同步返回；图像和视频接口通常返回 `task_id`，需要再调用任务状态接口查询结果。
+  </Step>
+</Steps>
+
+<Tip>
+  如果你已经兼容 OpenAI 风格请求格式，优先从 `/v1/chat/completions`、`/v1/images/generations` 和 `/v1/videos/generations` 开始接入。
+</Tip>

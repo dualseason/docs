@@ -1,0 +1,293 @@
+# Kling v2.6 Motion Control 视频生成
+
+>  - Kling 动作控制模型（参考图 + 参考视频）
+- 动作控制模型，通过统一入口 `/v1/videos/generations` 调用
+- 支持 image / video 两种人物朝向，最大时长分别为 10s / 30s
+- 视频生成为异步任务，提交后返回 task_id 
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://claw.dualseason.com/v1/videos/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "kling-v2-6-motion-control",
+      "prompt": "保持人物面部特征一致，按参考视频完成转身挥手动作，电影感光影",
+      "image_url": "https://example.com/ref-image.png",
+      "video_url": "https://example.com/ref-video-8s.mp4",
+      "keep_original_sound": "yes",
+      "character_orientation": "image",
+      "mode": "std",
+      "watermark_info": {"enabled": false}
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  url = "https://claw.dualseason.com/v1/videos/generations"
+
+  payload = {
+      "model": "kling-v2-6-motion-control",
+      "prompt": "保持人物面部特征一致，按参考视频完成转身挥手动作，电影感光影",
+      "image_url": "https://example.com/ref-image.png",
+      "video_url": "https://example.com/ref-video-8s.mp4",
+      "keep_original_sound": "yes",
+      "character_orientation": "image",
+      "mode": "std",
+      "watermark_info": {"enabled": False}
+  }
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(url, json=payload, headers=headers)
+
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const url = "https://claw.dualseason.com/v1/videos/generations";
+
+  const payload = {
+    model: "kling-v2-6-motion-control",
+    prompt: "保持人物面部特征一致，按参考视频完成转身挥手动作，电影感光影",
+    image_url: "https://example.com/ref-image.png",
+    video_url: "https://example.com/ref-video-8s.mp4",
+    keep_original_sound: "yes",
+    character_orientation: "image",
+    mode: "std",
+    watermark_info: { enabled: false }
+  };
+
+  const headers = {
+    "Authorization": "Bearer <token>",
+    "Content-Type": "application/json"
+  };
+
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": [
+      {
+        "status": "submitted",
+        "task_id": "task_01J9HA7JPQ9A0Z6JZ3V8M9W6PZ"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "code": 400,
+      "message": "请求参数无效",
+      "type": "invalid_request_error"
+    }
+  }
+  ```
+
+  ```json 401 theme={null}
+  {
+    "error": {
+      "code": 401,
+      "message": "身份验证失败，请检查您的API密钥",
+      "type": "authentication_error"
+    }
+  }
+  ```
+
+  ```json 402 theme={null}
+  {
+    "error": {
+      "code": 402,
+      "message": "账户余额不足，请充值后再试",
+      "type": "payment_required"
+    }
+  }
+  ```
+
+  ```json 429 theme={null}
+  {
+    "error": {
+      "code": 429,
+      "message": "请求过于频繁，请稍后再试",
+      "type": "rate_limit_error"
+    }
+  }
+  ```
+
+  ```json 500 theme={null}
+  {
+    "error": {
+      "code": 500,
+      "message": "服务器内部错误，请稍后重试",
+      "type": "server_error"
+    }
+  }
+  ```
+</ResponseExample>
+
+## 认证
+
+<ParamField header="Authorization" type="string" required>
+  所有接口均需要使用 Bearer Token 进行认证
+
+  获取 API Key：
+
+  访问 [API Key 管理页面](https://claw.dualseason.com/console/token) 获取您的 API Key
+
+  使用时在请求头中添加：
+
+  ```
+  Authorization: Bearer YOUR_API_KEY
+  ```
+</ParamField>
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  视频生成模型名称：`kling-v3-motion-control` 或 `kling-v2-6-motion-control`
+</ParamField>
+
+<ParamField body="prompt" type="string">
+  文本提示词，用于补充动作、镜头和风格要求
+
+  可选但建议填写，描述越具体结果越稳定
+
+  示例：`"人物按参考视频动作起舞，动作连贯，写实风格"`
+</ParamField>
+
+<ParamField body="image_url" type="string" required>
+  参考图片 URL
+
+  需为公网可访问链接
+</ParamField>
+
+<ParamField body="video_url" type="string" required>
+  参考视频 URL
+
+  需为公网可访问直链，建议 mp4/mov 且不超过 100MB
+
+  <Warning>
+    服务端会探测 `video_url` 实际时长，最短为 3 秒；上限由 `character_orientation` 决定
+  </Warning>
+</ParamField>
+
+<ParamField body="keep_original_sound" type="string" default="yes">
+  是否保留参考视频原音轨
+
+  可选值：
+
+  * `yes`：保留原音轨（默认）
+  * `no`：不保留原音轨
+</ParamField>
+
+<ParamField body="character_orientation" type="string" required>
+  人物朝向控制方式
+
+  可选值：
+
+  * `image`：以参考图人物朝向为主（参考视频时长需 `3~10s`）
+  * `video`：以参考视频人物朝向为主（参考视频时长需 `3~30s`）
+</ParamField>
+
+<ParamField body="mode" type="string" required>
+  生成模式
+
+  可选值：
+
+  * `std`：标准模式（速度和质量均衡）
+  * `pro`：高质量模式（通常更耗时）
+</ParamField>
+
+<ParamField body="watermark_info" type="object">
+  水印控制对象（可选）
+
+  <Expandable title="watermark_info 字段">
+    <ParamField body="enabled" type="boolean" default="false">
+      是否添加水印
+
+      * `true`：添加水印
+      * `false`：不添加水印（默认）
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## 时长规则
+
+| 参数条件                            | 允许的参考视频时长  |
+| ------------------------------- | ---------- |
+| `character_orientation = image` | `3s ~ 10s` |
+| `character_orientation = video` | `3s ~ 30s` |
+
+<Note>
+  计费时长由服务端对 `video_url` 探测得到的真实时长决定，而非客户端估算值。
+</Note>
+
+## 响应
+
+<ResponseField name="code" type="integer">
+  响应状态码，成功时为 200
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  返回数据数组
+
+  <Expandable title="数组元素">
+    <ResponseField name="status" type="string">
+      任务状态，初始提交时为 `submitted`
+    </ResponseField>
+
+    <ResponseField name="task_id" type="string">
+      任务唯一标识符，用于查询任务状态和结果
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## 使用场景
+
+### 场景 1：image 朝向（10 秒内）
+
+```json theme={null}
+{
+  "model": "kling-v2-6-motion-control",
+  "prompt": "保持人物朝向与参考图一致，完成转身和挥手动作",
+  "image_url": "https://example.com/ref-image.png",
+  "video_url": "https://example.com/ref-video-8s.mp4",
+  "character_orientation": "image",
+  "mode": "std",
+  "keep_original_sound": "yes",
+  "watermark_info": {"enabled": false}
+}
+```
+
+### 场景 2：video 朝向（30 秒内）
+
+```json theme={null}
+{
+  "model": "kling-v2-6-motion-control",
+  "prompt": "跟随参考视频的人物朝向和节奏，保持动作连贯",
+  "image_url": "https://example.com/ref-image.png",
+  "video_url": "https://example.com/ref-video-12s.mp4",
+  "character_orientation": "video",
+  "mode": "pro",
+  "keep_original_sound": "no",
+  "watermark_info": {"enabled": false}
+}
+```
