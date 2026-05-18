@@ -183,6 +183,15 @@
               "codex",
               "opencode"
             ]
+          },
+          {
+            "group": "AI 应用与工作流平台",
+            "pages": [
+              "openclaw",
+              "comfyui",
+              "dify",
+              "n8n"
+            ]
           }
         ]
       }

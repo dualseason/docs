@@ -1,0 +1,96 @@
+---
+title: "ComfyUI 接入"
+description: "基于 ComfyUI 官方安装方式，讲清楚如何把 ComfyUI 工作流和 Xcompute API 结合起来。"
+---
+
+ComfyUI 是图像与视频工作流工具，强项是节点编排、本地模型和图像后处理。它和 Xcompute 的关系，不是“替代”，而是“组合”：
+
+1. `Xcompute` 负责调用远程模型
+2. `ComfyUI` 负责节点编排、批量工作流、后处理和本地增强
+
+## 先理解 ComfyUI 适合做什么
+
+ComfyUI 官方重点强调的是：
+
+1. 节点式图像和视频工作流
+2. 本地模型与外部模型混合编排
+3. 通过 API 和外部服务接入复杂内容生产链路
+
+## 官方安装方式
+
+### 方案一：桌面版或便携版
+
+如果你只是想快速开始，优先用官方桌面版或 Windows 便携版。
+
+- 官方项目页：[https://github.com/Comfy-Org/ComfyUI](https://github.com/Comfy-Org/ComfyUI)
+- 官方下载页：[https://www.comfy.org/download](https://www.comfy.org/download)
+
+### 方案二：手动安装
+
+适合 Linux / macOS / 有 Python 环境的用户。
+
+```bash
+git clone https://github.com/Comfy-Org/ComfyUI.git
+cd ComfyUI
+pip install -r requirements.txt
+python main.py
+```
+
+## Xcompute 怎么和 ComfyUI 配合
+
+这里要讲清楚一点：
+
+<Warning>
+  ComfyUI 官方的 Partner Nodes 更偏向接它自己的合作模型与账户体系，不适合直接当成 Xcompute 的通用接入口。
+</Warning>
+
+所以更推荐这两种方式：
+
+### 方式一：把 Xcompute 当外部生成服务
+
+你在 ComfyUI 外部先调用 Xcompute 的图像或视频接口，再把返回结果喂回 ComfyUI 继续做：
+
+1. 文生图
+2. 图生图
+3. 放大
+4. 风格化
+5. 拼接到更复杂的本地工作流里
+
+### 方式二：用 HTTP/API 节点接远程接口
+
+如果你的 ComfyUI 工作流里已经有 API 调用能力，可以直接请求：
+
+```bash
+POST https://xcompute.us/v1/images/generations
+```
+
+请求示例：
+
+```json
+{
+  "model": "gemini-3.1-flash-image-preview",
+  "prompt": "赛博朋克风格的城市夜景，霓虹灯闪烁",
+  "size": "16:9",
+  "resolution": "2K",
+  "n": 1
+}
+```
+
+## 推荐工作流
+
+1. 在 Xcompute 生成初稿图
+2. 通过任务状态接口拿到输出图 URL
+3. 将图片导入 ComfyUI
+4. 在 ComfyUI 里做局部修复、风格延展、放大或视频转换
+
+## 什么时候适合用 ComfyUI + Xcompute
+
+1. 你要做复杂图像工作流
+2. 你既想用远程大模型，也想保留本地后处理能力
+3. 你要做批量图像生产或图像到视频链路
+
+## 官方参考
+
+1. ComfyUI README
+2. ComfyUI install guide
+3. ComfyUI Partner Nodes / API Nodes docs

@@ -1,0 +1,91 @@
+---
+title: "n8n 接入"
+description: "基于 n8n 官方安装与 OpenAI 节点文档，把 n8n 工作流接到 Xcompute。"
+---
+
+n8n 是一个工作流自动化平台。它很适合把 Xcompute 接进：
+
+1. 自动化流程
+2. Agent 编排
+3. 表单、Webhook、数据库、消息通知联动
+4. AI 内容处理流水线
+
+<Frame>
+  <img src="https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png" alt="n8n 官方界面截图" />
+</Frame>
+
+<caption>*n8n 官方 README 截图*</caption>
+
+## 官方安装方式
+
+如果你想快速体验，官方推荐可以先用：
+
+```bash
+npx n8n
+```
+
+如果你想长期跑本地实例，也可以全局安装：
+
+```bash
+npm install -g n8n
+n8n
+```
+
+默认访问地址：
+
+```text
+http://localhost:5678
+```
+
+## 接入 Xcompute 的两种方式
+
+### 方式一：用 OpenAI 节点
+
+n8n 自带 OpenAI 节点。对于支持自定义 `Base URL` 的版本，你可以直接把它接到 Xcompute：
+
+- `Base URL`: `https://xcompute.us/v1`
+- `API Key`: 你的 Xcompute API Key
+
+### 方式二：用 HTTP Request 节点
+
+如果你当前版本的 OpenAI 节点不方便填自定义地址，最稳的方案就是直接用 `HTTP Request` 节点调用 Xcompute。
+
+例如：
+
+```bash
+POST https://xcompute.us/v1/chat/completions
+```
+
+请求体：
+
+```json
+{
+  "model": "gpt-5",
+  "messages": [
+    {
+      "role": "user",
+      "content": "请总结今天新增的工单内容"
+    }
+  ]
+}
+```
+
+## 推荐工作流
+
+1. `Webhook` 或业务触发器进入
+2. `Set` / `Code` 节点整理上下文
+3. `HTTP Request` 或 `OpenAI` 节点请求 Xcompute
+4. 解析返回结果
+5. 发回飞书、Telegram、邮件、数据库或下一条业务链路
+
+## 什么时候适合用 n8n
+
+1. 你要做 AI 自动化流程
+2. 你需要把 AI 输出接到很多第三方系统
+3. 你希望非纯工程团队也能看懂流程图
+
+## 官方参考
+
+1. n8n npm install docs
+2. n8n OpenAI node docs
+3. n8n AI / workflow docs

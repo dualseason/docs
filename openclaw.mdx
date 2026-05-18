@@ -1,11 +1,17 @@
 ---
 title: "OpenClaw 接入"
-description: "通过 npm 安装 OpenClaw，并在向导或配置里把模型调用切到 Xcompute。"
+description: "基于 OpenClaw 官方安装和配置方式，把自托管 AI 助手接到 Xcompute。"
 ---
 
-这里按官方项目名写作 `OpenClaw`。如果你习惯把它叫做 `CloudClaw`，对应的 npm 包名仍然是 `openclaw`。
+OpenClaw 是一个自托管 AI 助手网关。它可以把 Telegram、飞书、Discord、WhatsApp 等消息入口统一接到同一个 AI 后端。对 Xcompute 来说，它最适合作为“多渠道助手入口”。
 
-## 安装
+<Frame>
+  <img src="https://mintcdn.com/clawdhub/FaXdIfo7gPK_jSWb/whatsapp-openclaw.jpg?fit=max&auto=format&n=FaXdIfo7gPK_jSWb&q=85&s=b74a3630b0e971f466eff15fbdc642cb" alt="OpenClaw 官方示意图" />
+</Frame>
+
+<caption>*OpenClaw 官方文档中的控制界面示意图*</caption>
+
+## 官方安装方式
 
 如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
 
@@ -20,7 +26,7 @@ openclaw --version
 ```
 
 <Note>
-  OpenClaw 官方更推荐 Node 24，但 Node `22.16+` 也兼容。如果你这套文档想统一用 Node 22，当前也能正常接入。
+  OpenClaw 官方更推荐 `Node 24`，但 `Node 22.16+` 仍然兼容。如果你当前整个文档站统一基于 `Node 22`，也可以先跑通。
 </Note>
 
 ## 官方资源
@@ -31,7 +37,7 @@ openclaw --version
 
 ## 接入 Xcompute 的推荐方式
 
-推荐先运行官方向导，再把模型提供方切到 Xcompute：
+官方推荐先运行 `onboard` 向导。对 Xcompute 来说，最实用的做法是选择 OpenAI 兼容或自定义 provider，然后把基础地址切到 Xcompute。
 
 <Steps>
   <Step title="运行初始化向导">
@@ -61,6 +67,28 @@ openclaw --version
   </Step>
 </Steps>
 
+## 日常使用教程
+
+### 1. 查看网关状态
+
+```bash
+openclaw gateway status
+```
+
+### 2. 打开控制台
+
+```bash
+openclaw dashboard
+```
+
+### 3. 配置消息入口
+
+最常见的是 Telegram、飞书、Discord。建议先从一个最简单的渠道开始，不要一上来同时接很多渠道。
+
+### 4. 用专用密钥隔离渠道调用
+
+建议给 OpenClaw 单独分配一把 API Key，避免和应用服务、Claude Code、OpenCode 共用。
+
 ## 什么时候适合用 OpenClaw
 
 1. 你想把 AI 助手接到 Telegram、飞书、Discord 等聊天入口
@@ -70,3 +98,9 @@ openclaw --version
 <Tip>
   建议给 OpenClaw 单独分配一个 API Key，不要和应用服务、Claude Code、OpenCode 共用。
 </Tip>
+
+## 官方参考
+
+1. OpenClaw Getting started
+2. OpenClaw Gateway configuration
+3. OpenClaw channel docs
