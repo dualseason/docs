@@ -1,17 +1,35 @@
 ---
 title: "OpenCode 接入"
-description: "通过 npm 安装 OpenCode，并使用 OpenAI 兼容方式接入 Xcompute。"
+description: "基于 OpenCode 官方文档，用统一的 Node 环境安装 OpenCode，并通过自定义 provider 接入 Xcompute。"
 ---
 
-OpenCode 支持自定义 provider 配置，所以它很适合通过 OpenAI 兼容方式接入 Xcompute。
+OpenCode 是一个开源 AI 编程 Agent，支持终端、桌面和 IDE 扩展。它对自定义 provider 很友好，所以很适合拿来接 Xcompute。
 
-## 安装
+<Frame>
+  <img src="https://opencode.ai/docs/_astro/screenshot.CQjBbRyJ_1dLadc.webp" alt="OpenCode 官方截图" />
+</Frame>
+
+<caption>*OpenCode 官方文档中的终端界面截图*</caption>
+
+## 官方安装方式
 
 如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
 
-```bash
-npm install -g opencode-ai
-```
+OpenCode 官方推荐安装脚本，也支持 npm。
+
+<Tabs>
+  <Tab title="npm 安装（推荐本教程用这个）">
+    ```bash
+    npm install -g opencode-ai
+    ```
+  </Tab>
+
+  <Tab title="官方安装脚本">
+    ```bash
+    curl -fsSL https://opencode.ai/install | bash
+    ```
+  </Tab>
+</Tabs>
 
 安装后验证：
 
@@ -51,6 +69,23 @@ opencode --version
 }
 ```
 
+## 也可以用全局环境变量
+
+```bash
+export XCOMPUTE_API_KEY="YOUR_XCOMPUTE_API_KEY"
+opencode
+```
+
+## 初始化项目
+
+官方推荐在项目里第一次启动后执行：
+
+```text
+/init
+```
+
+它会分析项目并生成 `AGENTS.md`，后续会话更稳定。
+
 然后设置环境变量：
 
 ```bash
@@ -64,6 +99,34 @@ opencode
 ```
 
 如果你能正常进入界面并开始新会话，说明 OpenCode 已经可以通过 Xcompute 调用模型。
+
+## 日常使用教程
+
+### 1. 解释仓库
+
+```text
+How is authentication handled in this repo?
+```
+
+### 2. 做功能前先出计划
+
+OpenCode 官方文档推荐先切到计划模式，再讨论实现方案。
+
+```text
+先给我一个实现方案，再开始改代码
+```
+
+### 3. 让它直接改代码
+
+```text
+请为设置页增加一个登录校验，并复用 notes 路由里的实现方式
+```
+
+### 4. 回滚不满意的改动
+
+```text
+/undo
+```
 
 ## 什么时候适合用 OpenCode
 

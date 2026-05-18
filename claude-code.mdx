@@ -1,17 +1,52 @@
 ---
 title: "Claude Code 接入"
-description: "通过 npm 安装 Claude Code，并把它接到 Xcompute。"
+description: "基于官方安装方式和第三方 provider 接入能力，把 Claude Code 接到 Xcompute。"
 ---
 
-这篇指南适合想在终端里直接使用 Xcompute 的开发者。你会完成 Claude Code 安装、配置和连通性验证。
+这篇指南基于 Claude Code 官方文档整理，适合想在终端中直接使用 Xcompute 的开发者。内容分为三块：安装、接入、日常使用。
 
-## 安装 Claude Code
+<Frame>
+  ![Claude Code 界面示例](/images/image-3.png)
+</Frame>
+
+<caption>*Claude Code 在终端中的典型工作界面*</caption>
+
+## 先理解 Claude Code 是什么
+
+Claude Code 是 Anthropic 的编码 Agent。它能直接在终端里：
+
+1. 理解整个仓库结构
+2. 跨多个文件修改代码
+3. 运行命令、分析报错、给出修复方案
+4. 配合 `CLAUDE.md`、MCP、规则文件做持续化工作流
+
+## 安装方式
 
 如果你还没有准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
 
-```bash
-npm install -g @anthropic-ai/claude-code
-```
+官方更推荐原生安装脚本，但如果你想和 `Codex`、`OpenCode` 统一走 Node 环境，也可以直接用 npm。
+
+<Tabs>
+  <Tab title="npm 安装（推荐本教程用这个）">
+    ```bash
+    npm install -g @anthropic-ai/claude-code
+    ```
+  </Tab>
+
+  <Tab title="官方原生安装">
+    macOS / Linux / WSL:
+
+    ```bash
+    curl -fsSL https://claude.ai/install.sh | bash
+    ```
+
+    Windows PowerShell:
+
+    ```powershell
+    irm https://claude.ai/install.ps1 | iex
+    ```
+  </Tab>
+</Tabs>
 
 安装后验证：
 
@@ -19,9 +54,11 @@ npm install -g @anthropic-ai/claude-code
 claude --version
 ```
 
-## 配置 Xcompute
+## 接入 Xcompute
 
-推荐使用 `settings.json`，这样配置最稳定。
+Claude Code 官方支持第三方 provider，这也是我们接 Xcompute 的关键。
+
+推荐使用 `settings.json`，这样最稳定。
 
 <Steps>
   <Step title="创建独立 API Key">
@@ -43,11 +80,15 @@ claude --version
   </Step>
 
   <Step title="重新打开终端并启动 Claude Code">
-    保存配置后，重新打开终端，再运行 `claude`。
+    保存配置后，重新打开终端，再运行：
+
+    ```bash
+    claude
+    ```
   </Step>
 </Steps>
 
-## 可选：用环境变量配置
+## 可选：环境变量方式
 
 如果你不想写 `settings.json`，也可以在当前终端中临时设置：
 
@@ -72,16 +113,50 @@ claude "你好，请用一句话介绍你自己"
 2. 复杂规划：`claude-opus-4-1-20250805`
 3. 快速问答：`claude-haiku-4-5-20251001`
 
-## 效果演示
+## 日常怎么用
+
+### 1. 在项目目录中启动
+
+```bash
+cd your-project
+claude
+```
+
+### 2. 让它解释代码
+
+```text
+帮我解释一下这个仓库的认证流程
+```
+
+### 3. 让它修改代码
+
+```text
+请在这个项目里增加一个登录失败重试提示
+```
+
+### 4. 常用命令
+
+1. `/help`：查看帮助
+2. `/model`：切换模型
+3. `/clear`：清空当前界面
+4. `/exit`：退出
+
+## 配图示例
 
 <Frame>
-  ![Image](/images/image-3.png)
+  ![Claude Code 终端会话](/images/image-3.png)
 </Frame>
 
 <Frame>
-  ![Image](/images/image-4.png)
+  ![Claude Code 多步任务场景](/images/image-4.png)
 </Frame>
 
 <Info>
   建议不要把 Claude Code 和生产应用共用同一个密钥。按工具拆分 API Key，更方便限额管理和排查问题。
 </Info>
+
+## 官方参考
+
+1. Claude Code overview
+2. Claude Code setup
+3. Claude Code best practices

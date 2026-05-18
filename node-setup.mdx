@@ -1,23 +1,33 @@
 ---
 title: "环境准备：NVM、Node.js 22 和 npm"
-description: "先用 NVM 安装 Node.js 22，再用 npm 安装 Claude Code、CloudCLI、Codex、OpenCode 和 OpenClaw。"
+description: "先完成 Windows、macOS、Linux 的 NVM 和 Node.js 22 安装，再统一用 npm 安装 Claude Code、Codex 和 OpenCode。"
 ---
 
-这一页是所有接入教程的前置步骤。你先准备好 `NVM`、`Node.js 22` 和 `npm`，后面的工具安装会顺很多。
+这一页是整个集成教程的基础篇。你先把 `NVM`、`Node.js 22` 和 `npm` 安装好，再继续接入 `Claude Code`、`Codex` 和 `OpenCode`。
 
 <Info>
-  Node.js 自带 `npm`。装好 Node.js 22 以后，不需要再单独安装 npm。
+  `Node.js` 自带 `npm`。装好 `Node.js 22` 后，不需要再单独安装 npm。
 </Info>
+
+## 为什么先装 NVM
+
+推荐先装 `NVM`，原因很简单：
+
+1. 你后面可能会同时碰到 `Node 20`、`Node 22`、`Node 24` 的项目。
+2. `Claude Code`、`Codex`、`OpenCode` 这些 CLI 更新很快，切 Node 版本会比重装省事很多。
+3. Windows 和 macOS / Linux 的安装方式不同，提前统一思路会少踩坑。
 
 ## 第一步：安装 NVM
 
 <Tabs>
   <Tab title="macOS / Linux">
+    官方 `nvm` 推荐安装命令：
+
     ```bash
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
     ```
 
-    安装完成后，重新打开终端，或者执行：
+    安装完成后，重新打开终端。也可以手动加载：
 
     ```bash
     source ~/.bashrc
@@ -28,83 +38,120 @@ description: "先用 NVM 安装 Node.js 22，再用 npm 安装 Claude Code、Clo
     ```bash
     source ~/.zshrc
     ```
+
+    验证：
+
+    ```bash
+    command -v nvm
+    ```
   </Tab>
 
   <Tab title="Windows">
-    Windows 建议安装 `nvm-windows`，然后在终端执行：
+    Windows 不用官方 POSIX 版 `nvm`，而是使用 `nvm-windows`。
+
+    下载地址：
+
+    - [https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
+
+    安装完成后，打开 PowerShell，先验证：
 
     ```powershell
-    nvm install 22.22.2
-    nvm use 22.22.2
+    nvm version
     ```
+
+    如果能看到版本号，再继续下一步。
   </Tab>
 </Tabs>
 
 ## 第二步：安装 Node.js 22
 
+<Info>
+  这里统一推荐 `Node.js 22`。原因是它足够新、兼容性也好，适合作为这批 CLI 工具的统一基础环境。
+</Info>
+
 <Tabs>
   <Tab title="macOS / Linux">
+
     ```bash
     nvm install 22
     nvm use 22
     nvm alias default 22
     ```
+
+    验证：
+
+    ```bash
+    node -v
+    npm -v
+    ```
   </Tab>
 
   <Tab title="Windows">
+
     ```powershell
     nvm install 22.22.2
     nvm use 22.22.2
     ```
+
+    然后验证：
+
+    ```powershell
+    node -v
+    npm -v
+    ```
   </Tab>
 </Tabs>
 
-## 第三步：验证 Node 和 npm
+## 第三步：统一安装常用 CLI
 
-```bash
-node -v
-npm -v
-```
-
-你应该能看到 Node 22 和 npm 版本号。
-
-## 第四步：安装常用接入工具
+下面这三个是本次集成教程会重点讲到的工具：
 
 ```bash
 npm install -g @anthropic-ai/claude-code
-npm install -g @cloudcli-ai/cloudcli
 npm install -g @openai/codex
 npm install -g opencode-ai
-npm install -g openclaw
 ```
 
-## 第五步：验证工具命令
+## 第四步：验证 CLI 是否可用
 
 ```bash
 claude --version
-cloudcli --help
 codex --help
 opencode --version
-openclaw --version
 ```
 
 <Tip>
-  如果你主要是为了接入 Xcompute，推荐优先配置 `Claude Code`、`Codex` 或 `OpenCode`，然后再接 `CloudCLI` 这类上层界面工具。
+  如果某个命令报错，优先检查当前终端是否已经切到 `Node 22`，再检查全局 npm 安装路径是否生效。
 </Tip>
 
-## 下一步
+## 常见问题
+
+### 安装完 `nvm` 后提示 `command not found`
+
+通常是 shell 配置还没重新加载。
+
+- `bash`：`source ~/.bashrc`
+- `zsh`：`source ~/.zshrc`
+- Windows：重开一个 PowerShell 窗口
+
+### 为什么不直接安装系统 Node？
+
+可以，但后面切版本会很痛苦。你既然要同时跑多个 AI 编程工具，`NVM` 会更稳。
+
+### 为什么推荐 `Node 22`？
+
+因为它当前对这批 CLI 工具的兼容性最好，也比较适合做统一开发环境。
+
+## 下一步：进入具体接入
 
 <Columns cols={2}>
   <Card title="Claude Code 接入" icon="terminal" href="/claude-code">
-    直接在终端里接入 Xcompute。
-  </Card>
-  <Card title="CloudCLI UI 接入" icon="monitor" href="/cloudcli-ui">
-    用图形界面管理 Claude Code 会话。
+    用 Anthropic 官方 CLI 接入 Xcompute。
   </Card>
   <Card title="Codex 接入" icon="code" href="/codex">
-    通过 OpenAI 的编程 Agent 接入 Xcompute。
+    用 OpenAI 官方 Codex CLI 接入 Xcompute。
   </Card>
   <Card title="OpenCode 接入" icon="code" href="/opencode">
-    用 OpenAI 兼容方式接入开源代码 Agent。
+    用 OpenAI 兼容 provider 配置接入 Xcompute。
   </Card>
 </Columns>

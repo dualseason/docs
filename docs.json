@@ -171,24 +171,17 @@
         "tab": "集成教程",
         "groups": [
           {
-            "group": "环境准备",
+            "group": "基础环境",
             "pages": [
               "node-setup"
             ]
           },
           {
-            "group": "代码工具接入",
+            "group": "AI 编程工具接入",
             "pages": [
               "claude-code",
-              "cloudcli-ui",
               "codex",
               "opencode"
-            ]
-          },
-          {
-            "group": "自托管助手",
-            "pages": [
-              "openclaw"
             ]
           }
         ]
