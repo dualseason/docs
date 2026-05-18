@@ -11,6 +11,23 @@ OpenClaw 是一个自托管 AI 助手网关。它可以把 Telegram、飞书、D
 
 <caption>*OpenClaw 官方文档中的控制界面示意图*</caption>
 
+## 这篇文章适合谁
+
+如果你想做下面这些事情，这篇就适合你：
+
+1. 想把 AI 助手接到 Telegram、飞书、Discord 等聊天入口
+2. 想自己部署一个可长期运行的 AI 助手
+3. 想让所有消息入口统一走 Xcompute 的模型能力
+
+## 你最终会得到什么
+
+做完这篇以后，你会得到：
+
+1. 一个本地或服务器上的 OpenClaw 实例
+2. 一个已经接到 Xcompute 的模型后端
+3. 一个可以打开的控制台页面
+4. 一个可以继续扩展渠道接入的自托管 AI 助手底座
+
 ## 官方安装方式
 
 如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
@@ -29,6 +46,13 @@ openclaw --version
   OpenClaw 官方更推荐 `Node 24`，但 `Node 22.16+` 仍然兼容。如果你当前整个文档站统一基于 `Node 22`，也可以先跑通。
 </Note>
 
+## 开始前你要准备什么
+
+1. 一台能联网的电脑或服务器
+2. 已安装好的 `Node.js`
+3. 一把 Xcompute 的 API Key
+4. 你准备接入的消息渠道账号，例如 Telegram 或飞书
+
 ## 官方资源
 
 - 官方主页：[https://openclaw.ai](https://openclaw.ai)
@@ -38,6 +62,16 @@ openclaw --version
 ## 接入 Xcompute 的推荐方式
 
 官方推荐先运行 `onboard` 向导。对 Xcompute 来说，最实用的做法是选择 OpenAI 兼容或自定义 provider，然后把基础地址切到 Xcompute。
+
+## 第一步：先准备 Xcompute API Key
+
+1. 打开 [Xcompute API 密钥页面](https://xcompute.us/console/token)
+2. 创建一把新密钥
+3. 先把密钥保存到安全位置
+
+<Tip>
+  建议专门给 OpenClaw 单独创建一把密钥，不要和 Claude Code、Codex、OpenCode 共用。
+</Tip>
 
 <Steps>
   <Step title="运行初始化向导">
@@ -58,6 +92,10 @@ openclaw --version
     - `Model`: 你要使用的模型 ID，例如 `gpt-5` 或 `claude-sonnet-4-5-20250929`
   </Step>
 
+  <Step title="保存并完成初始化">
+    向导结束后，OpenClaw 会把配置写入本地，并准备启动 Gateway。
+  </Step>
+
   <Step title="打开控制台验证">
     ```bash
     openclaw dashboard
@@ -66,6 +104,31 @@ openclaw --version
     控制台打开后，发一条测试消息确认是否已能正常调用 Xcompute。
   </Step>
 </Steps>
+
+## 第二步：确认是否真的接通了
+
+你可以按下面的顺序确认：
+
+1. 运行 `openclaw gateway status`
+2. 打开 `openclaw dashboard`
+3. 在控制台里发一条测试消息
+4. 如果有回复，说明接通成功
+
+## 第三步：接消息渠道
+
+第一次使用时，建议你不要同时接很多平台。
+
+推荐顺序：
+
+1. 先接一个最简单的平台
+2. 验证消息能进、回复能出
+3. 再继续接第二个渠道
+
+最常见的起步方式：
+
+1. Telegram
+2. 飞书
+3. Discord
 
 ## 日常使用教程
 
@@ -88,6 +151,21 @@ openclaw dashboard
 ### 4. 用专用密钥隔离渠道调用
 
 建议给 OpenClaw 单独分配一把 API Key，避免和应用服务、Claude Code、OpenCode 共用。
+
+## 常见问题
+
+### 控制台能打开，但消息没回复
+
+先检查：
+
+1. Xcompute 的 API Key 是否有效
+2. `Base URL` 是否填成了 `https://xcompute.us/v1`
+3. 模型名称是否可用
+4. 你接入的渠道是否配置完成
+
+### 为什么建议先只接一个渠道
+
+因为非技术用户最容易在“模型问题”和“渠道问题”同时出现时搞不清是哪边出了错。先跑通一个渠道，排查最轻松。
 
 ## 什么时候适合用 OpenClaw
 

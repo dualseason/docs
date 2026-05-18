@@ -8,6 +8,12 @@ ComfyUI 是图像与视频工作流工具，强项是节点编排、本地模型
 1. `Xcompute` 负责调用远程模型
 2. `ComfyUI` 负责节点编排、批量工作流、后处理和本地增强
 
+<Frame>
+  <img src="https://mintcdn.com/dripart/NmGUk_QSXQXRVtZP/images/interface/setting/user.jpg?fit=max&auto=format&n=NmGUk_QSXQXRVtZP&q=85&s=066170b38e0b9ead026029685e00fa65" alt="ComfyUI 官方设置界面" />
+</Frame>
+
+<caption>*ComfyUI 官方文档中的设置界面截图*</caption>
+
 ## 先理解 ComfyUI 适合做什么
 
 ComfyUI 官方重点强调的是：
@@ -15,6 +21,14 @@ ComfyUI 官方重点强调的是：
 1. 节点式图像和视频工作流
 2. 本地模型与外部模型混合编排
 3. 通过 API 和外部服务接入复杂内容生产链路
+
+## 这篇文章适合谁
+
+如果你是下面这些场景，这篇很适合你：
+
+1. 想做批量出图或图像工作流
+2. 想把远程大模型和本地图像处理串起来
+3. 想把 Xcompute 作为生图入口，再在 ComfyUI 里继续做后处理
 
 ## 官方安装方式
 
@@ -35,6 +49,19 @@ cd ComfyUI
 pip install -r requirements.txt
 python main.py
 ```
+
+## 先理解一个关键点
+
+<Warning>
+  ComfyUI 并不像 Claude Code、Codex、OpenCode 那样，天然就是一个“文本模型客户端”。它更像一个图像工作流引擎。
+</Warning>
+
+所以你不要把它理解成“把 Base URL 填进去就完事”的工具。
+
+更准确的理解是：
+
+1. Xcompute 负责远程生成
+2. ComfyUI 负责工作流编排、后处理、节点连接
 
 ## Xcompute 怎么和 ComfyUI 配合
 
@@ -76,12 +103,53 @@ POST https://xcompute.us/v1/images/generations
 }
 ```
 
+## 非技术用户推荐做法
+
+如果你不是开发者，最推荐的做法不是自己拼 API 节点，而是这样：
+
+1. 先在 Xcompute 文生图
+2. 把图拿回来
+3. 导入 ComfyUI
+4. 再做高清放大、风格延展、修复、视频转换
+
+这会比你一开始就折腾复杂 API 工作流更容易成功。
+
 ## 推荐工作流
 
 1. 在 Xcompute 生成初稿图
 2. 通过任务状态接口拿到输出图 URL
 3. 将图片导入 ComfyUI
 4. 在 ComfyUI 里做局部修复、风格延展、放大或视频转换
+
+## 第一次使用建议
+
+### 路线 A：最省事
+
+1. 安装 ComfyUI
+2. 打开界面
+3. 用 Xcompute 先生成一张图片
+4. 拖进 ComfyUI
+5. 做一次最简单的放大或修图
+
+### 路线 B：进阶一点
+
+1. 在 ComfyUI 中搭一个图片处理工作流
+2. 用外部脚本或 API 节点请求 Xcompute
+3. 自动把结果喂给下一步节点
+
+## 常见问题
+
+### 为什么我不建议一开始就硬接 Partner Nodes
+
+因为 ComfyUI 官方 Partner Nodes 更偏它自己的账户体系和合作模型，对 Xcompute 这种外部服务并不是最直接的路径。
+
+### 非技术用户最容易卡在哪里
+
+1. Python 环境
+2. 模型文件路径
+3. 节点太复杂
+
+所以第一阶段建议先把它当“后处理台”来用，而不是一上来就当全自动 API 编排器。
 
 ## 什么时候适合用 ComfyUI + Xcompute
 

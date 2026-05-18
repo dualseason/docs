@@ -18,6 +18,24 @@ Dify 是一个 AI 应用与工作流平台，适合搭建：
 
 <caption>*Dify 官方 README 截图*</caption>
 
+## 这篇文章适合谁
+
+如果你想做下面这些事情，这篇很适合你：
+
+1. 搭一个企业内部可视化 AI 平台
+2. 做知识库问答
+3. 做工作流或 Agent 应用
+4. 让非研发人员也能参与 AI 应用搭建
+
+## 你最终会得到什么
+
+做完这篇以后，你会拥有：
+
+1. 一个能正常登录的 Dify 平台
+2. 一个已经接到 Xcompute 的模型提供商
+3. 一个最基础的测试应用
+4. 后续继续做知识库、Workflow、Agent 的基础环境
+
 ## 官方安装方式
 
 Dify 官方最推荐的是 `Docker Compose` 自部署。
@@ -35,6 +53,13 @@ docker compose up -d
 http://localhost/install
 ```
 
+## 安装前先准备什么
+
+1. 一台能运行 Docker 的机器
+2. 至少 2 核 CPU 和 4GB 内存
+3. 一把 Xcompute API Key
+4. 能访问 Web 管理界面的浏览器
+
 ## 接入 Xcompute
 
 Dify 官方模型提供商配置的核心思路是：
@@ -47,6 +72,16 @@ Dify 官方模型提供商配置的核心思路是：
 
 - `Base URL`: `https://xcompute.us/v1`
 - `API Key`: 你的 Xcompute API Key
+
+## 第一步：先部署 Dify
+
+先不要急着接模型，第一步先确认 Dify 平台本身可以打开。
+
+你成功的标志是：
+
+1. 能打开 `http://localhost/install`
+2. 能创建管理员账号
+3. 能进入后台首页
 
 ## 推荐配置顺序
 
@@ -68,11 +103,57 @@ Dify 官方模型提供商配置的核心思路是：
   </Step>
 </Steps>
 
+## 第二步：最适合非技术用户的操作顺序
+
+1. 先部署 Dify
+2. 先接 Xcompute 模型
+3. 先建一个最简单的 Chat 应用
+4. 先验证它能回复
+5. 再去做知识库或复杂工作流
+
+这样最容易排错。
+
 ## 配图参考
 
 <Frame>
   <img src="https://mintcdn.com/dify-6c0370d8/gyesM3ime6gTaYSO/images/use-dify/workspace/predefined-model-credential.png?fit=max&auto=format&n=gyesM3ime6gTaYSO&q=85&s=c5e7fae7edcb00ddce3def1b8caca031" alt="Dify 模型提供商配置示意图" />
 </Frame>
+
+<caption>*Dify 模型提供商配置界面示意图*</caption>
+
+## 第三步：创建第一个测试应用
+
+推荐先做最简单的聊天应用：
+
+1. 新建应用
+2. 选择 Chat 类型
+3. 绑定你刚配置好的模型
+4. 发一条测试消息
+
+如果它能回复，说明 Xcompute 接通成功。
+
+## 第四步：再往上叠能力
+
+跑通基础对话后，你再继续做：
+
+1. 知识库导入
+2. Workflow 编排
+3. Agent 应用
+4. API 对外调用
+
+## 常见问题
+
+### 为什么我不建议一上来就做复杂 Workflow
+
+因为非技术用户最容易在模型没配好时，就开始排查工作流问题。应该先确认模型能回，再继续做编排。
+
+### 怎么判断是 Dify 问题还是 Xcompute 问题？
+
+最简单的方法：
+
+1. 先去 API 参考页看请求格式
+2. 再到 Dify 里做最简单的 Chat 应用
+3. 如果最简单的都不通，就先查模型提供商配置
 
 ## 什么时候适合用 Dify
 
