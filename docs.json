@@ -70,7 +70,8 @@
         "pages": [
           "file",
           "file-1",
-          "quickstart"
+          "quickstart",
+          "hot-models-quickstart"
         ]
       },
       {
