@@ -1,13 +1,13 @@
 ---
 title: "热门模型使用快速接入"
-description: "快速接入 mart-image-2、veo3.1_fast 和 doubao-seedance-2-0，包含请求示例、参数说明与任务查询方式。"
+description: "快速接入 gpt-image-2、veo3.1_fast 和 doubao-seedance-2-0，包含请求示例、参数说明与任务查询方式。"
 ---
 
 这份文档适合已经拿到 API Key、准备直接写代码接入的开发者。
 
 本文聚焦 3 个常用模型：
 
-- `mart-image-2`：异步图像生成
+- `gpt-image-2`：异步图像生成
 - `veo3.1_fast`：异步视频生成
 - `doubao-seedance-2-0`：异步视频生成
 
@@ -62,9 +62,9 @@ Content-Type: application/json
 
 ---
 
-## 模型一：mart-image-2
+## 模型一：gpt-image-2
 
-`mart-image-2` 是异步图像生成模型。提交任务后，你需要通过 `/v1/tasks/{task_id}` 查询结果。
+`gpt-image-2` 是异步图像生成模型。提交任务后，你需要通过 `/v1/tasks/{task_id}` 查询结果。
 
 ### 1. 提交任务
 
@@ -82,7 +82,7 @@ curl --request POST \
   --header 'Authorization: Bearer YOUR_API_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
-    "model": "mart-image-2",
+    "model": "gpt-image-2",
     "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
     "n": 1,
     "size": "16:9",
@@ -94,7 +94,7 @@ curl --request POST \
 
 | 参数 | 类型 | 是否必填 | 说明 |
 | --- | --- | --- | --- |
-| `model` | string | 是 | 固定填写 `mart-image-2` |
+| `model` | string | 是 | 固定填写 `gpt-image-2` |
 | `prompt` | string | 是 | 图像描述文本 |
 | `n` | integer | 否 | 生成张数。建议填 `1` |
 | `size` | string | 否 | 图片比例，例如 `1:1`、`16:9`、`9:16` |
@@ -386,12 +386,12 @@ curl --request GET \
 
 如果你想先快速跑通，推荐顺序是：
 
-1. `mart-image-2`
+1. `gpt-image-2`
 2. `veo3.1_fast`
 3. `doubao-seedance-2-0`
 
 原因：
 
-- `mart-image-2` 请求体最简单
+- `gpt-image-2` 请求体最简单
 - `veo3.1_fast` 适合验证视频链路是否打通
 - `doubao-seedance-2-0` 功能更丰富，但更依赖上游视频资源状态
