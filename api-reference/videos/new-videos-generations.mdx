@@ -3,66 +3,528 @@ title: '视频生成'
 api: 'POST /v1/videos/generations'
 ---
 
-- 提交视频生成任务
-- 返回 `task_id` 后再查询状态
+- 视频生成接口
+- 提交后返回 `task_id`
 
-## 支持模型
+## 视频模型
 
-- `grok-imagine-1.0-video-apimart`
-- `veo3`
-- `veo3.1_fast`
-- `sora-2`
-- `sora-2-pro`
-- `doubao-seedance-1-5-pro`
-- `doubao-seedance-2-0`
-- `wan2.5`
-- `wan2.6`
-- `wan2.6/i2v-flash`
-- `wan2.7`
-- `wan2.7-r2v`
-- `wan2.7-videoedit`
-- `kling-v2-6`
-- `kling-v2-6-motion-control`
-- `kling-v3`
-- `kling-v3-omni`
+<Tabs>
+  <Tab title="Grok">
+    ### `grok-imagine-1.0-video-apimart`
+
+    - Grok 视频生成模型
+    - 适合短视频生成
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "grok-imagine-1.0-video-apimart",
+          "prompt": "一只狗在海滩上奔跑，阳光明媚，慢镜头",
+          "size": "16:9",
+          "duration": 6,
+          "quality": "720p"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `grok-imagine-1.0-video-apimart`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Veo">
+    ### `veo3`
+
+    - Veo 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "veo3",
+          "prompt": "海浪拍打着海岸，电影感镜头",
+          "duration": 8,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `veo3`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Veo Fast">
+    ### `veo3.1_fast`
+
+    - Veo 快速视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "veo3.1_fast",
+          "prompt": "海浪拍打着海岸，电影感镜头",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `veo3.1_fast`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Sora">
+    ### `sora-2`
+
+    - Sora 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "sora-2",
+          "prompt": "海浪拍打着海岸，电影感镜头",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `sora-2`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Sora Pro">
+    ### `sora-2-pro`
+
+    - Sora Pro 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "sora-2-pro",
+          "prompt": "海浪拍打着海岸，电影感镜头",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `sora-2-pro`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Seedance">
+    ### `doubao-seedance-2-0`
+
+    - Seedance 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "doubao-seedance-2-0",
+          "prompt": "一段自然流畅的宣传短片",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `doubao-seedance-2-0`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Seedance 快速">
+    ### `doubao-seedance-2.0-fast`
+
+    - Seedance 快速版视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "doubao-seedance-2.0-fast",
+          "prompt": "一段自然流畅的宣传短片",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `doubao-seedance-2.0-fast`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Seedance 头像">
+    ### `doubao-seedance-2.0-face`
+
+    - Seedance 真人头像视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "doubao-seedance-2.0-face",
+          "prompt": "真人讲话视频",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `doubao-seedance-2.0-face`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Seedance 头像快">
+    ### `doubao-seedance-2.0-fast-face`
+
+    - Seedance 真人头像快速版
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "doubao-seedance-2.0-fast-face",
+          "prompt": "真人讲话视频",
+          "duration": 6,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `doubao-seedance-2.0-fast-face`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Kling 2.6">
+    ### `kling-v2-6`
+
+    - 可灵 2.6 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "kling-v2-6",
+          "prompt": "一只金色的猫咪在阳光下的草地上奔跑",
+          "mode": "std",
+          "duration": 5,
+          "aspect_ratio": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `kling-v2-6`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Kling Motion">
+    ### `kling-v2-6-motion-control`
+
+    - 可灵 2.6 Motion Control 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "kling-v2-6-motion-control",
+          "prompt": "带动作控制的视频",
+          "duration": 5,
+          "aspect_ratio": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `kling-v2-6-motion-control`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Kling 3">
+    ### `kling-v3`
+
+    - 可灵 3.0 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "kling-v3",
+          "prompt": "一只金色的猫咪在草地上奔跑",
+          "mode": "std",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `kling-v3`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Kling 3 Omni">
+    ### `kling-v3-omni`
+
+    - 可灵 3 Omni 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "kling-v3-omni",
+          "prompt": "一只金色的猫咪在草地上奔跑",
+          "mode": "std",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `kling-v3-omni`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Kling O1">
+    ### `kling-video-o1`
+
+    - 可灵 Video O1 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "kling-video-o1",
+          "prompt": "一只金色的猫咪在草地上奔跑",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `kling-video-o1`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.5">
+    ### `wan2.5`
+
+    - Wan 2.5 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.5",
+          "prompt": "一段自然流畅的短视频",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.5`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.6">
+    ### `wan2.6`
+
+    - Wan 2.6 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.6",
+          "prompt": "一段自然流畅的短视频",
+          "duration": 5,
+          "aspect_ratio": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.6`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.6 I2V">
+    ### `wan2.6/i2v-flash`
+
+    - Wan 2.6 图生视频快速模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.6/i2v-flash",
+          "prompt": "让画面动起来",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.6/i2v-flash`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.7">
+    ### `wan2.7`
+
+    - Wan 2.7 视频生成模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.7",
+          "prompt": "一段自然流畅的短视频",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.7`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.7 R2V">
+    ### `wan2.7-r2v`
+
+    - Wan 2.7 参考图转视频模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.7-r2v",
+          "prompt": "把参考图动起来",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.7-r2v`。
+    </ParamField>
+  </Tab>
+
+  <Tab title="Wan 2.7 Edit">
+    ### `wan2.7-videoedit`
+
+    - Wan 2.7 视频编辑模型
+
+    <RequestExample>
+      ```bash cURL theme={null}
+      curl --request POST \
+        --url https://xcompute.us/v1/videos/generations \
+        --header 'Authorization: Bearer <token>' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "model": "wan2.7-videoedit",
+          "prompt": "修改视频风格",
+          "duration": 5,
+          "size": "16:9"
+        }'
+      ```
+    </RequestExample>
+
+    <ParamField body="model" type="string" required>
+      固定填写 `wan2.7-videoedit`。
+    </ParamField>
+  </Tab>
+</Tabs>
+
+## 任务查询
 
 <RequestExample>
   ```bash cURL theme={null}
-  curl --request POST \
-    --url https://xcompute.us/v1/videos/generations \
-    --header 'Authorization: Bearer <token>' \
-    --header 'Content-Type: application/json' \
-    --data '{
-      "model": "grok-imagine-1.0-video-apimart",
-      "prompt": "一只狗在海滩上奔跑，阳光明媚，慢镜头",
-      "size": "16:9",
-      "duration": 6,
-      "quality": "720p"
-    }'
+  curl --request GET \
+    --url 'https://xcompute.us/v1/tasks/YOUR_TASK_ID?language=zh' \
+    --header 'Authorization: Bearer <token>'
   ```
 </RequestExample>
 
-<ParamField body="model" type="string" required>
-  视频模型名。
+<ParamField path="task_id" type="string" required>
+  任务 ID。
 </ParamField>
-
-<ParamField body="prompt" type="string" required>
-  视频内容描述，支持中英文。
-</ParamField>
-
-<ParamField body="duration" type="integer">
-  视频时长，单位秒，必须传数字。
-</ParamField>
-
-<ResponseExample>
-  ```json 200 theme={null}
-  {
-    "code": 200,
-    "data": {
-      "id": "task_01JNXXXXXXXXXXXXXXXXXX",
-      "status": "submitted",
-      "progress": 0
-    }
-  }
-  ```
-</ResponseExample>

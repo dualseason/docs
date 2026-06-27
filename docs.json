@@ -86,14 +86,6 @@
             ]
           },
           {
-            "group": "账户接口",
-            "pages": [
-              "api-reference/account/new-user-self",
-              "api-reference/account/new-user-login",
-              "api-reference/account/new-models"
-            ]
-          },
-          {
             "group": "文本接口",
             "pages": [
               "api-reference/texts/general/new-chat-completions"
