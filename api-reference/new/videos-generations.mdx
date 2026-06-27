@@ -1,0 +1,48 @@
+---
+title: '视频生成'
+api: 'POST /v1/videos/generations'
+---
+
+- 提交视频生成任务
+- 返回 `task_id` 后再查询状态
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/videos/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "grok-imagine-1.0-video-apimart",
+      "prompt": "一只狗在海滩上奔跑，阳光明媚，慢镜头",
+      "size": "16:9",
+      "duration": 6,
+      "quality": "720p"
+    }'
+  ```
+</RequestExample>
+
+<ParamField body="model" type="string" required>
+  视频模型名。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  视频内容描述，支持中英文。
+</ParamField>
+
+<ParamField body="duration" type="integer">
+  视频时长，单位秒，必须传数字。
+</ParamField>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": {
+      "id": "task_01JNXXXXXXXXXXXXXXXXXX",
+      "status": "submitted",
+      "progress": 0
+    }
+  }
+  ```
+</ResponseExample>

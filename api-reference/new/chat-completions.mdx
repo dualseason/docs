@@ -1,0 +1,43 @@
+---
+title: '通用对话接口'
+api: 'POST /v1/chat/completions'
+---
+
+- 统一的对话 API 接口，支持所有文本生成模型
+- 通过 `model` 参数选择不同的 AI 模型
+- 兼容 OpenAI Chat Completions API 格式
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/chat/completions \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-4o",
+      "messages": [
+        {
+          "role": "user",
+          "content": "你好，请介绍一下你自己"
+        }
+      ]
+    }'
+  ```
+</RequestExample>
+
+<ParamField body="model" type="string" required>
+  模型名，例如 `gpt-4o`。
+</ParamField>
+
+<ParamField body="messages" type="array" required>
+  对话消息数组。
+</ParamField>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "chatcmpl_xxx",
+    "object": "chat.completion"
+  }
+  ```
+</ResponseExample>

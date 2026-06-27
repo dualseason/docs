@@ -1,0 +1,32 @@
+---
+title: '模型列表'
+api: 'GET /v1/models'
+---
+
+- 获取当前 API Key 可用模型列表
+- 新项目优先使用这个接口
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request GET \
+    --url https://xcompute.us/v1/models \
+    --header 'Authorization: Bearer <token>'
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "success": true,
+    "object": "list",
+    "data": [
+      {
+        "id": "gpt-4o",
+        "object": "model",
+        "created": 1626777600,
+        "owned_by": "openai"
+      }
+    ]
+  }
+  ```
+</ResponseExample>

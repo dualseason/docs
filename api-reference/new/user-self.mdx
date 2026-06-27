@@ -1,0 +1,26 @@
+---
+title: '用户信息'
+api: 'GET /api/user/self'
+---
+
+- 获取当前用户信息、余额和权限
+- 常用于控制台首页和个人中心
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request GET \
+    --url https://xcompute.us/api/user/self \
+    --header 'Authorization: Bearer <token>'
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "quota": 100,
+    "used_quota": 20,
+    "request_count": 12,
+    "group": "default"
+  }
+  ```
+</ResponseExample>

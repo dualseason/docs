@@ -1,0 +1,29 @@
+---
+title: '任务查询'
+api: 'GET /v1/tasks/{task_id}'
+---
+
+- 查询异步任务状态
+- 常用于图像、视频和素材审核任务
+
+<ParamField path="task_id" type="string" required>
+  任务 ID。
+</ParamField>
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request GET \
+    --url 'https://xcompute.us/v1/tasks/YOUR_TASK_ID?language=zh' \
+    --header 'Authorization: Bearer <token>'
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "task_01JNXXXXXXXXXXXXXXXXXX",
+    "status": "completed",
+    "progress": 100
+  }
+  ```
+</ResponseExample>
