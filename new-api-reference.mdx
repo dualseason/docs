@@ -1,13 +1,9 @@
 ---
 title: "新版接口总览"
-description: "整理 Xcompute 新版 new-api 服务的登录、模型、余额、调用、任务和管理接口。旧版 API 参考后续会逐步汰换。"
+description: "整理 Xcompute 新版 new-api 服务的登录、模型、余额、调用、任务和管理接口。"
 ---
 
 这份文档整理当前新版 new-api 服务的主要接口。你可以优先按这里的接口接入新业务。
-
-<Warning>
-  旧版 `API 参考（旧接口，待汰换）` 仍可查看历史模型接口文档，但后续会逐步汰换。新接入建议优先使用本文标注的新版接口。
-</Warning>
 
 ## 基础信息
 
@@ -285,17 +281,3 @@ curl --request POST \
 | `GET` | `/api/home_page_content` | 无 | 获取首页内容 |
 | `GET` | `/api/pricing` | 按导航配置 | 获取定价信息 |
 | `GET` | `/api/rankings` | 按导航配置 | 获取榜单信息 |
-
-## 旧接口汰换说明
-
-旧版 `API 参考（旧接口，待汰换）` 中的模型文档仍可作为历史参考。后续建议按以下方式迁移：
-
-1. 模型列表统一迁移到 `GET /v1/models`。
-2. 用户余额优先使用 `GET /api/user/self` 或 `GET /api/usage/token/`。
-3. 文本调用优先使用 `POST /v1/chat/completions` 或 `POST /v1/responses`。
-4. 视频任务优先使用 `POST /v1/videos/generations` 和 `GET /v1/videos/{task_id}`。
-5. 控制台管理统一使用 `/api/...` 下的新版接口。
-
-<Tip>
-  如果你是新项目，不建议再依赖旧版 API 参考中的单模型页面。优先使用新版统一接口，再通过 `model` 参数选择具体模型。
-</Tip>

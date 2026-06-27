@@ -11,7 +11,7 @@ description: "单独查看 Grok 视频生成的接入方式、请求示例、任
   - 提交生成任务：`POST /v1/videos/generations`
   - 查询任务状态：`GET /v1/tasks/{task_id}`
 
-  详细字段定义见 [Grok Imagine 1.0 视频生成](/api-reference/videos/grok-imagine/generation) 和 [获取任务状态](/api-reference/tasks/status)。
+  详细字段定义见 [新版接口总览](/new-api-reference) 和 [获取任务状态](/api-reference/tasks/status)。
 </Info>
 
 ## 接入前准备
@@ -75,7 +75,7 @@ curl --request GET \
   如果你传入参考图，建议先确认图片 URL 可直接访问。这样更容易避免任务提交失败。
 </Tip>
 
-## 什么时候看详细 API 参考
+## 什么时候看新版接口总览
 
 如果你需要这些内容，直接进入 API 参考页：
 
@@ -85,8 +85,8 @@ curl --request GET \
 - 任务状态字段说明
 
 <Columns cols={2}>
-  <Card title="Grok 视频 API 参考" icon="square-terminal" href="/api-reference/videos/grok-imagine/generation">
-    查看 Grok 视频生成接口的完整参数、请求示例和响应结构。
+  <Card title="新版接口总览" icon="square-terminal" href="/new-api-reference">
+    查看统一入口、兼容接口和迁移说明。
   </Card>
   <Card title="任务状态查询" icon="refresh-cw" href="/api-reference/tasks/status">
     查看异步任务查询接口的状态字段、结果结构和语言参数说明。
