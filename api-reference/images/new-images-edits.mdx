@@ -1,0 +1,109 @@
+---
+title: '图片修改'
+api: 'POST /v1/images/edits'
+---
+
+- 图片修改接口
+- 通过 OpenAI 中转
+- 目前仅支持 `gpt-image-2`
+
+## 说明
+
+- 这是基于参考图做图片修改的接口
+- 参考图可用于单图修改或多图融合
+- 图片链接有效期请自行尽快保存结果
+
+## 支持模型
+
+- `gpt-image-2`
+
+## 参数字段
+
+<ParamField body="model" type="string" default="gpt-image-2" required>
+  固定填写 `gpt-image-2`。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图片修改描述，说明你希望怎么改。
+</ParamField>
+
+<ParamField body="image_urls" type="array" required>
+  参考图片 URL 数组。
+
+  <Expandable title="示例说明">
+    * 传 1 张：单图修改
+    * 传 2 张及以上：多参考图融合修改
+    * 参考图最多 `16` 张
+    * 每张都应是公网可访问的稳定图片 URL
+  </Expandable>
+
+  <Warning>
+    参考图片最多支持 `16` 张。
+  </Warning>
+</ParamField>
+
+<ParamField body="mask_url" type="string">
+  遮罩图 URL，用于局部重绘。
+
+  * 需要和 `image_urls` 一起使用
+  * 遮罩图尺寸需与首张参考图一致
+</ParamField>
+
+<ParamField body="size" type="string" default="1:1">
+  图片比例。
+
+  可选值包括 `1:1`、`3:2`、`2:3`、`4:3`、`3:4`、`5:4`、`4:5`、`16:9`、`9:16`、`2:1`、`1:2`、`3:1`、`1:3`、`21:9`、`9:21`。
+</ParamField>
+
+<ParamField body="resolution" type="string" default="1k">
+  分辨率档位。
+
+  可选值：`1k`、`2k`、`4k`。
+</ParamField>
+
+<ParamField body="quality" type="string" default="auto">
+  图片质量。
+
+  可选值：`auto`、`low`、`medium`、`high`。
+</ParamField>
+
+<ParamField body="background" type="string" default="auto">
+  背景模式。
+
+  可选值：`auto`、`opaque`、`transparent`。
+</ParamField>
+
+<ParamField body="output_format" type="string" default="png">
+  输出格式。
+
+  可选值：`png`、`jpeg`、`webp`。
+</ParamField>
+
+<ParamField body="output_compression" type="integer">
+  输出压缩强度，范围 `0-100`。
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  生成图片张数，范围 `1 ~ 4`。
+</ParamField>
+
+## 调用方法
+
+直接调用 `POST /v1/images/edits`，`model` 写 `gpt-image-2`，`image_urls` 里放参考图片即可。
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/edits \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "把背景改成沙漠日落，保留主体人物",
+    "image_urls": [
+      "https://example.com/original.png"
+    ],
+    "n": 1,
+    "size": "1:1",
+    "resolution": "2k"
+  }'
+```

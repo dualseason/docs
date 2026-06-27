@@ -102,7 +102,8 @@
           {
             "group": "图片接口",
             "pages": [
-              "api-reference/images/new-images-generations"
+              "api-reference/images/new-images-generations",
+              "api-reference/images/new-images-edits"
             ]
           },
           {
