@@ -70,9 +70,7 @@
         "pages": [
           "file",
           "file-1",
-          "quickstart",
-          "hot-models-quickstart",
-          "grok-video-guide"
+          "quickstart"
         ]
       },
       {
