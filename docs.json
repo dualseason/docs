@@ -76,7 +76,14 @@
         ]
       },
       {
-        "tab": "API 参考",
+        "tab": "新版接口",
+        "icon": "plug",
+        "pages": [
+          "new-api-reference"
+        ]
+      },
+      {
+        "tab": "API 参考（旧接口，待汰换）",
         "icon": "square-terminal",
         "groups": [
           {

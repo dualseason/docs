@@ -1,0 +1,301 @@
+---
+title: "新版接口总览"
+description: "整理 Xcompute 新版 new-api 服务的登录、模型、余额、调用、任务和管理接口。旧版 API 参考后续会逐步汰换。"
+---
+
+这份文档整理当前新版 new-api 服务的主要接口。你可以优先按这里的接口接入新业务。
+
+<Warning>
+  旧版 `API 参考（旧接口，待汰换）` 仍可查看历史模型接口文档，但后续会逐步汰换。新接入建议优先使用本文标注的新版接口。
+</Warning>
+
+## 基础信息
+
+| 项目 | 说明 |
+| --- | --- |
+| Base URL | `https://xcompute.us` |
+| 控制台接口前缀 | `/api` |
+| 模型调用接口前缀 | `/v1`、`/v1beta` |
+| 控制台鉴权 | 登录后的 session，或用户 access token |
+| 模型调用鉴权 | `Authorization: Bearer sk-...` |
+
+控制台接口主要给网页后台和用户中心使用。模型调用接口主要给代码、第三方客户端和 AI 工具使用。
+
+## 鉴权方式
+
+### 控制台登录态
+
+你可以先调用登录接口，服务端会写入 session。后续访问 `/api/user/self`、`/api/token/` 等控制台接口时复用登录态。
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/api/user/login \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD"
+  }'
+```
+
+登录成功返回用户基础信息。如果账号启用了 2FA，会返回 `require_2fa: true`，需要继续调用 2FA 验证接口。
+
+### API Key 鉴权
+
+模型调用接口使用 API Key。
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+API Key 一般用于 `/v1/chat/completions`、`/v1/models`、`/v1/videos/generations` 等接口。
+
+## 登录与账号接口
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/api/user/register` | 无 | 注册账号 |
+| `POST` | `/api/user/login` | 无 | 账号密码登录 |
+| `POST` | `/api/user/login/2fa` | 临时登录态 | 完成 2FA 登录 |
+| `POST` | `/api/user/passkey/login/begin` | 无 | 开始 Passkey 登录 |
+| `POST` | `/api/user/passkey/login/finish` | 无 | 完成 Passkey 登录 |
+| `GET` | `/api/user/logout` | 登录态 | 退出登录 |
+| `GET` | `/api/user/self` | 登录态 | 获取当前用户信息、余额和权限 |
+| `PUT` | `/api/user/self` | 登录态 | 更新当前用户资料或偏好 |
+| `DELETE` | `/api/user/self` | 登录态 | 删除当前用户 |
+| `GET` | `/api/user/token` | 登录态 | 生成用户 access token |
+
+`/api/user/self` 是前端最常用的用户信息接口。它会返回 `quota`、`used_quota`、`request_count`、`group`、`role`、`permissions` 等字段。
+
+## 模型列表接口
+
+### 新版 OpenAI 兼容模型列表
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/v1/models` | API Key | 获取当前 API Key 可用模型列表 |
+| `GET` | `/v1/models/{model}` | API Key | 查询单个模型信息 |
+| `GET` | `/v1beta/models` | API Key | Gemini 原生格式模型列表 |
+| `GET` | `/v1beta/openai/models` | API Key | Gemini OpenAI 兼容模型列表 |
+
+示例：
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/v1/models \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+返回结构示例：
+
+```json
+{
+  "success": true,
+  "object": "list",
+  "data": [
+    {
+      "id": "gpt-4o",
+      "object": "model",
+      "created": 1626777600,
+      "owned_by": "openai"
+    }
+  ]
+}
+```
+
+### 控制台模型列表
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/api/models` | 登录态 | 获取控制台展示用模型映射 |
+| `GET` | `/api/user/models` | 登录态 | 获取当前用户可用模型名列表 |
+| `GET` | `/api/user/self/cloudcli-models` | 登录态 | 获取 CloudCLI 可用模型列表 |
+| `GET` | `/api/channel/models` | 管理员 | 获取所有内置模型元信息 |
+| `GET` | `/api/token/{id}/models` | 登录态 | 获取指定 API Key 可用模型 |
+
+## 余额与用量接口
+
+### 用户余额
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/api/user/self` | 登录态 | 获取用户余额、已用额度和请求次数 |
+| `GET` | `/api/data/self` | 登录态 | 获取当前用户额度消耗统计 |
+| `GET` | `/api/data/flow/self` | 登录态 | 获取当前用户流量消耗统计 |
+
+`/api/user/self` 返回的关键字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `quota` | 当前剩余额度 |
+| `used_quota` | 已使用额度 |
+| `request_count` | 请求次数 |
+| `group` | 当前用户分组 |
+
+### API Key 用量
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/api/usage/token/` | API Key | 查询当前 API Key 的额度和限制 |
+
+示例：
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/api/usage/token/ \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+返回的 `data` 包含 `total_granted`、`total_used`、`total_available`、`unlimited_quota`、`model_limits`、`expires_at` 等字段。
+
+### OpenAI dashboard 兼容余额接口
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/dashboard/billing/credit_grants` | API Key | 查询可用额度、已用额度和总额度 |
+| `GET` | `/v1/dashboard/billing/credit_grants` | API Key | 同上，带 `/v1` 前缀 |
+| `GET` | `/dashboard/billing/subscription` | API Key | 查询订阅额度上限和有效期 |
+| `GET` | `/v1/dashboard/billing/subscription` | API Key | 同上，带 `/v1` 前缀 |
+| `GET` | `/dashboard/billing/usage` | API Key | 查询使用量 |
+| `GET` | `/v1/dashboard/billing/usage` | API Key | 同上，带 `/v1` 前缀 |
+
+这些接口主要用于兼容旧客户端或 OpenAI dashboard 风格工具。
+
+## 模型调用接口
+
+### 文本与多模态
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/v1/chat/completions` | API Key | OpenAI Chat Completions 兼容接口 |
+| `POST` | `/v1/completions` | API Key | OpenAI Completions 兼容接口 |
+| `POST` | `/v1/responses` | API Key | OpenAI Responses 兼容接口 |
+| `POST` | `/v1/responses/compact` | API Key | Responses 压缩接口 |
+| `POST` | `/v1/messages` | API Key | Claude Messages 兼容接口 |
+| `GET` | `/v1/realtime` | API Key | OpenAI Realtime WebSocket 接口 |
+
+Chat Completions 示例：
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/chat/completions \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-4o",
+    "messages": [
+      {
+        "role": "user",
+        "content": "你好，请介绍一下你自己"
+      }
+    ]
+  }'
+```
+
+### 图像、音频和向量
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/v1/images/generations` | API Key | 图像生成 |
+| `POST` | `/v1/images/edits` | API Key | 图像编辑 |
+| `POST` | `/v1/edits` | API Key | 兼容图像编辑入口 |
+| `POST` | `/v1/embeddings` | API Key | 向量生成 |
+| `POST` | `/v1/rerank` | API Key | 重排序 |
+| `POST` | `/v1/audio/transcriptions` | API Key | 音频转录 |
+| `POST` | `/v1/audio/translations` | API Key | 音频翻译 |
+| `POST` | `/v1/audio/speech` | API Key | 文字转语音 |
+
+## 视频、任务和素材接口
+
+### 视频任务
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/v1/videos/generations` | API Key | 提交视频生成任务 |
+| `POST` | `/v1/video/generations` | API Key | 提交视频生成任务，兼容单数路径 |
+| `POST` | `/v1/videos` | API Key | OpenAI 视频创建兼容入口 |
+| `GET` | `/v1/videos/{task_id}` | API Key | 查询视频任务 |
+| `GET` | `/v1/video/generations/{task_id}` | API Key | 查询视频任务，兼容单数路径 |
+| `GET` | `/v1/tasks/{task_id}` | 登录态或 API Key | 查询任务状态 |
+| `GET` | `/v1/videos/{task_id}/content` | 登录态或 API Key | 获取视频内容代理 |
+| `GET` | `/v1/images/{task_id}/content` | 登录态或 API Key | 获取图片内容代理 |
+| `POST` | `/v1/videos/{video_id}/remix` | API Key | 视频 remix |
+
+### 异步图像任务
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/v1/images/generations/async` | API Key | 提交异步图像任务 |
+| `GET` | `/v1/images/generations/{task_id}` | 登录态或 API Key | 查询异步图像任务 |
+
+### 素材管理
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `POST` | `/v1/assets/upload` | API Key | 上传素材 |
+| `POST` | `/v1/assets/upload-with-token` | API Key 或上传 token | 上传素材 |
+| `GET` | `/v1/assets` | API Key | 获取素材列表 |
+| `GET` | `/v1/assets/{id}` | API Key | 获取素材详情 |
+| `DELETE` | `/v1/assets/{id}` | API Key | 删除素材 |
+
+## Token 管理接口
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/api/token/` | 登录态 | 获取当前用户 API Key 列表 |
+| `GET` | `/api/token/search` | 登录态 | 搜索 API Key |
+| `GET` | `/api/token/{id}` | 登录态 | 获取指定 API Key 信息 |
+| `GET` | `/api/token/{id}/models` | 登录态 | 获取指定 API Key 可用模型 |
+| `POST` | `/api/token/{id}/key` | 登录态 | 查看完整 API Key |
+| `POST` | `/api/token/` | 登录态 | 创建 API Key |
+| `POST` | `/api/token/batch/create` | 登录态 | 批量创建 API Key |
+| `PUT` | `/api/token/` | 登录态 | 更新 API Key 配置 |
+| `DELETE` | `/api/token/{id}` | 登录态 | 删除 API Key |
+| `POST` | `/api/token/batch` | 登录态 | 批量删除 API Key |
+| `POST` | `/api/token/batch/keys` | 登录态 | 批量查看完整 API Key |
+
+## 管理接口
+
+这些接口主要给管理员后台使用。
+
+| 模块 | 常用路径 | 说明 |
+| --- | --- | --- |
+| 用户管理 | `/api/user/`、`/api/user/search`、`/api/user/{id}` | 管理用户、代理、绑定和用户 token |
+| 渠道管理 | `/api/channel/`、`/api/channel/models`、`/api/channel/update_balance` | 管理上游渠道、模型、余额和连通性测试 |
+| 模型元数据 | `/api/models/`、`/api/models/search`、`/api/models/missing` | 管理模型元数据、缺失模型和定价导入导出 |
+| 系统设置 | `/api/option/` | 查看和更新系统设置 |
+| 日志 | `/api/log/`、`/api/log/self` | 查看平台日志和用户调用日志 |
+| 数据统计 | `/api/data/`、`/api/data/users`、`/api/data/flow` | 查看额度和流量统计 |
+| 兑换码 | `/api/redemption/` | 管理兑换码 |
+| 分组 | `/api/group/`、`/api/prefill_group/` | 管理用户组和预填分组 |
+| 订阅 | `/api/subscription/`、`/api/subscription/admin/` | 管理订阅套餐和用户订阅 |
+| 商店 | `/api/store/products`、`/api/store/orders` | 商品和订单接口 |
+| 部署 | `/api/deployments/` | 模型部署管理 |
+
+## 公共信息接口
+
+| 方法 | 路径 | 鉴权 | 用途 |
+| --- | --- | --- | --- |
+| `GET` | `/api/status` | 无 | 获取系统状态、登录开关、OAuth 配置和前端设置 |
+| `GET` | `/api/setup` | 无 | 获取初始化状态 |
+| `POST` | `/api/setup` | 无 | 初始化系统 |
+| `GET` | `/api/notice` | 无 | 获取公告 |
+| `GET` | `/api/user-agreement` | 无 | 获取用户协议 |
+| `GET` | `/api/privacy-policy` | 无 | 获取隐私政策 |
+| `GET` | `/api/about` | 无 | 获取关于内容 |
+| `GET` | `/api/home_page_content` | 无 | 获取首页内容 |
+| `GET` | `/api/pricing` | 按导航配置 | 获取定价信息 |
+| `GET` | `/api/rankings` | 按导航配置 | 获取榜单信息 |
+
+## 旧接口汰换说明
+
+旧版 `API 参考（旧接口，待汰换）` 中的模型文档仍可作为历史参考。后续建议按以下方式迁移：
+
+1. 模型列表统一迁移到 `GET /v1/models`。
+2. 用户余额优先使用 `GET /api/user/self` 或 `GET /api/usage/token/`。
+3. 文本调用优先使用 `POST /v1/chat/completions` 或 `POST /v1/responses`。
+4. 视频任务优先使用 `POST /v1/videos/generations` 和 `GET /v1/videos/{task_id}`。
+5. 控制台管理统一使用 `/api/...` 下的新版接口。
+
+<Tip>
+  如果你是新项目，不建议再依赖旧版 API 参考中的单模型页面。优先使用新版统一接口，再通过 `model` 参数选择具体模型。
+</Tip>
