@@ -108,6 +108,25 @@
             "group": "视频接口",
             "pages": [
               "api-reference/videos/new-videos-generations",
+              "api-reference/videos/grok-imagine/generation",
+              "api-reference/videos/veo3/generation",
+              "api-reference/videos/veo3/generation-official",
+              "api-reference/videos/veo3/remix",
+              "api-reference/videos/sora-2/generation",
+              "api-reference/videos/doubao-seedance-1-5-pro/generation",
+              "api-reference/videos/doubao-seedance-2-0/generation",
+              "api-reference/videos/doubao-seedance-2-0/private-avatar",
+              "api-reference/videos/doubao-seedance-2-0/real-avatar",
+              "api-reference/videos/kling-v2-6/generation",
+              "api-reference/videos/kling-v2-6/kling-v2-6-motion-control-generation",
+              "api-reference/videos/kling-v3/generation",
+              "api-reference/videos/kling-v3-omni/generation",
+              "api-reference/videos/kling-video-o1/generation"
+            ]
+          },
+          {
+            "group": "任务接口",
+            "pages": [
               "api-reference/tasks/new-status"
             ]
           }
