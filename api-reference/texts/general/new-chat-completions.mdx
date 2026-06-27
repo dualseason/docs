@@ -9,11 +9,14 @@ api: 'POST /v1/chat/completions'
 
 ## 支持模型
 
-- `gpt-4o`
-- `gpt-5`
-- `claude-sonnet-4-5-20250929`
-- `claude-opus-4-1-20250805`
-- `claude-haiku-4-5-20251001`
+- `claude-opus-4-8`
+- `claude-opus-4-7`
+- `claude-opus-4-6`
+- `claude-sonnet-4-6`
+- `claude-haiku-4-5`
+- `gpt-5.5-pro`
+- `gpt-5.5`
+- `gpt-5.4`
 
 <RequestExample>
   ```bash cURL theme={null}
@@ -34,7 +37,7 @@ api: 'POST /v1/chat/completions'
 </RequestExample>
 
 <ParamField body="model" type="string" required>
-  模型名，例如 `gpt-4o`。
+  模型名，例如 `claude-opus-4-8`。
 </ParamField>
 
 <ParamField body="messages" type="array" required>

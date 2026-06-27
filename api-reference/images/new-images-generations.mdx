@@ -4,22 +4,25 @@ api: 'POST /v1/images/generations'
 ---
 
 - 图像生成接口
-- 支持文生图与部分多模态输入
+- 该接口通过 OpenAI 中转
+- 目前仅支持 `gpt-image-2`
+
+## 说明
+
+- 官方 `1k` 图像通常需要 `60-90s`
+- 实际生图耗时 `1-5 分钟` 都属于正常情况
+- `4k` 高质量通常是最慢的
+
+## 计费
+
+- 目前仅按次付费
+- 单次价格约 `0.03 USD`
+- 折合大约 `2` 毛钱左右
+- 价格会随 OpenAI 对中国风控和封号情况波动
 
 ## 支持模型
 
 - `gpt-image-2`
-- `gpt-image-1`
-- `gemini-2.5-flash`
-- `gemini-3-pro`
-- `gemini-3.1-flash`
-- `imagen-4.0-apimart`
-- `qwen-image`
-- `seedream-4`
-- `seedream-4.5`
-- `seedream-5-lite`
-- `z-image-turbo`
-- `grok-imagine`
 
 <RequestExample>
   ```bash cURL theme={null}
@@ -38,7 +41,7 @@ api: 'POST /v1/images/generations'
 </RequestExample>
 
 <ParamField body="model" type="string" required>
-  图像模型名。
+  固定填写 `gpt-image-2`。
 </ParamField>
 
 <ParamField body="prompt" type="string" required>
@@ -48,6 +51,24 @@ api: 'POST /v1/images/generations'
 <ParamField body="size" type="string">
   图片比例，例如 `16:9`、`1:1`。
 </ParamField>
+
+## 调用方法
+
+直接调用 `POST /v1/images/generations`，请求体里把 `model` 写成 `gpt-image-2` 即可。
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
+    "n": 1,
+    "size": "16:9",
+    "resolution": "2k"
+  }'
+```
 
 <ResponseExample>
   ```json 200 theme={null}
