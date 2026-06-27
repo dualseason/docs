@@ -3,14 +3,39 @@ title: '文字转语音'
 api: 'POST /v1/audio/speech'
 ---
 
-- 支持多种语音模型和音色选择
-- 输出高质量音频格式：opus、aac、flac、wav、pcm
+- 文字转语音接口
+- 输出高质量音频格式
 - 最大输入文本 4096 个字符
 
 ## 支持模型
 
 - `gpt-4o-mini-tts`
-- `whisper-1`
+
+## 参数字段
+
+<ParamField body="model" type="string" default="gpt-4o-mini-tts" required>
+  固定填写 `gpt-4o-mini-tts`。
+</ParamField>
+
+<ParamField body="input" type="string" required>
+  要转换成语音的文本内容。
+</ParamField>
+
+<ParamField body="voice" type="string" required>
+  音色名称。
+
+  可选值：`alloy`、`echo`、`fable`、`onyx`、`nova`、`shimmer`。
+</ParamField>
+
+<ParamField body="response_format" type="string" default="wav">
+  输出格式。
+
+  可选值：`wav`、`opus`、`aac`、`flac`、`pcm`。
+</ParamField>
+
+<ParamField body="speed" type="number" default="1.0">
+  播放速度，范围 `0.25 ~ 4.0`。
+</ParamField>
 
 <RequestExample>
   ```bash cURL theme={null}
@@ -29,23 +54,6 @@ api: 'POST /v1/audio/speech'
   ```
 </RequestExample>
 
-<ParamField body="model" type="string" required>
-  语音模型名。
-</ParamField>
-
-<ParamField body="input" type="string" required>
-  要转换成语音的文本。
-</ParamField>
-
-<ParamField body="voice" type="string" required>
-  音色名称。
-</ParamField>
-
-<ResponseExample>
-  ```json 200 theme={null}
-  {
-    "id": "speech_01JNXXXXXXXXXXXXXXXXXX",
-    "status": "completed"
-  }
-  ```
-</ResponseExample>
+<Note>
+  成功时返回二进制音频数据流，可以直接保存为音频文件或播放。
+</Note>

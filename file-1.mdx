@@ -1,13 +1,25 @@
 ---
 title: "新手指南"
-description: "先理解 Xcompute 的使用方式，再完成 API Key 创建与首次调用。"
+description: "先理解 Dualseason / Xcompute 的使用方式，再完成 API Key 创建与首次调用。"
 ---
 
-跟着这份指南，你可以先理解 Xcompute 的工作方式，再完成首次接入。
+跟着这份指南，你可以先理解 Dualseason / Xcompute 的工作方式，再完成首次接入。
 
 ## 先理解 Xcompute 在做什么
 
 Xcompute 的核心能力，是把多种 AI 模型统一到一套调用方式里。你不需要分别对接不同厂商，也不需要为每个工具维护不同配置。
+
+## 先分清三个站点
+
+| 站点 | 域名 | 说明 |
+| --- | --- | --- |
+| 国际站 | `xcompute.us` | 香港服务器，适合国际网络直连。 |
+| 国际加速入口 | `intl.dualseason.com` | 国内访问国际站的加速转发入口。 |
+| 国内站 | `xcompute.dualseason.com` | 国内独立站点，与国际站完全隔离。 |
+
+<Tip>
+  `intl.dualseason.com` 只负责加速国际站，不会混用国内站的账号、数据或计费。
+</Tip>
 
 <Info>
   如果你的应用已经兼容 OpenAI 接口协议，通常只需要替换 `Base URL` 和 `API Key`，就可以开始迁移。
