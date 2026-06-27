@@ -31,7 +31,7 @@
     "links": [
         {
           "label": "控制台",
-          "href": "https://xcompute.us/console"
+          "href": "https://xcompute.us/dashboard/overview"
         },
         {
           "label": "模型定价",
@@ -41,7 +41,7 @@
     "primary": {
       "type": "button",
       "label": "获取 API Key",
-      "href": "https://xcompute.us/console/token"
+      "href": "https://xcompute.us/keys"
     }
   },
   "navigation": {
@@ -50,12 +50,12 @@
         {
           "anchor": "控制台",
           "icon": "house",
-          "href": "https://xcompute.us/console"
+          "href": "https://xcompute.us/dashboard/overview"
         },
         {
           "anchor": "API 密钥",
           "icon": "key",
-          "href": "https://xcompute.us/console/token"
+          "href": "https://xcompute.us/keys"
         },
         {
           "anchor": "模型定价",
