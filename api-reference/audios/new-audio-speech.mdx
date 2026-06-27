@@ -1,0 +1,46 @@
+---
+title: '文字转语音'
+api: 'POST /v1/audio/speech'
+---
+
+- 支持多种语音模型和音色选择
+- 输出高质量音频格式：opus、aac、flac、wav、pcm
+- 最大输入文本 4096 个字符
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/audio/speech \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-4o-mini-tts",
+      "input": "今天天气真好,适合出去散步。",
+      "voice": "alloy",
+      "response_format": "opus",
+      "speed": 1.0
+    }' \
+    --output speech.opus
+  ```
+</RequestExample>
+
+<ParamField body="model" type="string" required>
+  语音模型名。
+</ParamField>
+
+<ParamField body="input" type="string" required>
+  要转换成语音的文本。
+</ParamField>
+
+<ParamField body="voice" type="string" required>
+  音色名称。
+</ParamField>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "speech_01JNXXXXXXXXXXXXXXXXXX",
+    "status": "completed"
+  }
+  ```
+</ResponseExample>

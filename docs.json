@@ -88,22 +88,34 @@
           {
             "group": "账户接口",
             "pages": [
-              "api-reference/new/user-self",
-              "api-reference/new/user-login",
-              "api-reference/new/models"
+              "api-reference/account/new-user-self",
+              "api-reference/account/new-user-login",
+              "api-reference/account/new-models"
             ]
           },
           {
             "group": "文本接口",
             "pages": [
-              "api-reference/new/chat-completions"
+              "api-reference/texts/general/new-chat-completions"
+            ]
+          },
+          {
+            "group": "图片接口",
+            "pages": [
+              "api-reference/images/new-images-generations"
+            ]
+          },
+          {
+            "group": "音频接口",
+            "pages": [
+              "api-reference/audios/new-audio-speech"
             ]
           },
           {
             "group": "视频接口",
             "pages": [
-              "api-reference/new/videos-generations",
-              "api-reference/new/tasks-status"
+              "api-reference/videos/new-videos-generations",
+              "api-reference/tasks/new-status"
             ]
           }
         ]

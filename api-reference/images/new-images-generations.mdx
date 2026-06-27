@@ -1,0 +1,48 @@
+---
+title: '图像生成'
+api: 'POST /v1/images/generations'
+---
+
+- 图像生成接口
+- 支持文生图与部分多模态输入
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/images/generations \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-image-2",
+      "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
+      "n": 1,
+      "size": "16:9",
+      "resolution": "2k"
+    }'
+  ```
+</RequestExample>
+
+<ParamField body="model" type="string" required>
+  图像模型名。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图像描述文本。
+</ParamField>
+
+<ParamField body="size" type="string">
+  图片比例，例如 `16:9`、`1:1`。
+</ParamField>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": 200,
+    "data": {
+      "id": "task_01JNXXXXXXXXXXXXXXXXXX",
+      "status": "submitted",
+      "progress": 0
+    }
+  }
+  ```
+</ResponseExample>
