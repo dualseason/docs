@@ -1,0 +1,119 @@
+---
+title: "Codex的安装与配置"
+---
+
+## **1. 了解codex是什么？有什么用处？**
+
+Codex 是 OpenAI 公司推出的AI编程智能体（Coding Agent），简称说明：能听得懂人话，按照你的指令行事，会自己修改代码的AI。
+
+用处：分为两大类为“程序员用”与“非程序员用”，“程序员用”：①用看得懂、简单直白的中文回答你他干了什么，②按照你的需求来操控你的电脑进行数据修改与代码编写，③他可以支持多任务操作，就是可以开多个窗口一起工作；“非程序员用”：①帮你整理桌面文件排列整齐，②辅助你完成每日工作需求，大幅度减轻你的工作压力，③帮你需要成品时，可以叫codex帮你生成一个，简单又快捷。
+
+## **2. 如何安装codex呢？**
+
+### **①“程序员用”偏向于CLI（命令行格式）的codex**
+
+### **1.Mac系统：①使用npm方式安装(要是没有npm，就去下载一个node，node里面自带npm，node下载地址（有VPN就能连接）：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）**
+
+```text
+#npm下载方式
+npm install -g @openai/codex
+```
+
+②使用Homebrew下载方式（缺点：没有homebrew使用不了）
+
+```text
+#检查brew版本
+brew -v
+#brew安装法
+brew insatll --cask codex
+```
+
+### **[2.Windows](http://2.Windows)系统：①WSL下载方式（Powershell为管理员系统）**
+
+```text
+#poweshell中输入
+wsl --install -d Ubuntu-24.04
+```
+
+重进入一次再输入（node下载链接：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）
+
+```text
+#安装 Node.js（用 nvm 最方便）（如果不想这样安装，就去上面Mac系统的node网址下载）
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+#
+source ~/.bashrc   # 或 ~/.zshrc
+#把nvm版本调为22
+nvm install 22
+#安装 Codex
+npm install -g @openai/codex
+```
+
+### **3.Linux系统：①npm安装法（没有npm就去node下载，node下载网址：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）**
+
+```text
+#npm安装codex
+npm install -g @openai/codex
+```
+
+##### **②二进制离线法**
+
+```text
+# x86_64
+curl -L https://github.com/openai/codex/releases/download/rust-v0.131.0/codex-x86_64-unknown-linux-musl.tar.gz | tar -xz
+sudo mv codex /usr/local/bin/
+# ARM64（如树莓派、AWS Graviton）
+# 换文件名 codex-aarch64-unknown-linux-musl.tar.gz 即可
+```
+
+当你安装完codex（CLI形式）以后就要检查是否安装上了
+
+```text
+#检查版本
+codex --version
+```
+
+如果弹出版本号（[0.xxx](http://0.xxx).0）即可
+
+如果你需要codex时，在CLI（命令行形式）输入codex，首次运行会有两个选项：1.ChatGpt帐号（这个推荐新手，但有限额度）2.OpenAI API key(需要收费，适合程序员开发者，但也可以通过ccswtich解决)
+
+### **②“非程序员”偏向于桌面端版本，不需要在CLI界面输入，打开程序即用**
+
+1. Mac系统和windows系统直接官网下载（最省事，打不开记得开VPN，VPN即为翻墙网络，windows推荐系统为win10及win10以上的系统）：[<u>https://chatgpt.com/zh-Hans-CN/download/</u>](https://chatgpt.com/zh-Hans-CN/download/)
+
+2. Linux系统：
+
+直到打开codex桌面端以后
+
+<Frame>
+  <Frame>
+    ![Image](/images/image-19.png)
+  </Frame>
+</Frame>
+
+可以看见这就是需要登录的界面，而我们选择红色箭头所指的登录方式
+
+<Frame>
+  ![Image](/images/image-20.png)
+</Frame>
+
+而现在我们输入我们获得的key即可登入
+
+## 3.配置Codex
+
+这次我们选择使用CC Switch来配置Codex，那么首先我们先来认识一下CC Switch是什么，CC Switch 是一款面向 AI 编程 CLI 用户的跨平台桌面配置管理工具。他能有效管理Claude Code、Codex、Geini CLI、OpenCode、OpenClaw等等的AI使用工具并查看各AI工具使用了多少token（API流量），简称：CC Switch是一位管家，负责看管与配置你手里的AI工具。
+
+**首先先下载一个CC Switch，下载CC Switch的网址：[<u>https://github.com/farion1231/cc-switch/releases</u>](https://github.com/farion1231/cc-switch/releases)**
+
+下载完成后打开会到这个界面
+
+<Frame>
+  ![Image](/images/image-21.png)
+</Frame>
+
+既然我们要配置codex，我们就要点击上面列表选项的从左往右的第3个（上面两个是官网自带的，不能使用，下面两个是我自己配置的）
+
+<Frame>
+  ![9ed1f43087008d870e8f6f91cc4c3353](/images/9ed1f43087008d870e8f6f91cc4c3353.png)
+</Frame>
+
+接下来我教你如何一步步配置codex，我们接下来点击右上角橙色的“＋”号
