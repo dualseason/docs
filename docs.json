@@ -70,7 +70,9 @@
         "pages": [
           "file",
           "file-1",
-          "quickstart"
+          "quickstart",
+          "cc-switch",
+          "kelivo"
         ]
       },
       {
