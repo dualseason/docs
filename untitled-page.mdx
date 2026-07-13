@@ -1,137 +1,183 @@
 ---
-title: "Codex的安装与配置"
+title: "Codex 的安装与配置"
 ---
 
-## **1. 了解codex是什么？有什么用处？**
+## 1. 了解 Codex 是什么？有什么用处？
 
-Codex 是 OpenAI 公司推出的AI编程智能体（Coding Agent），简称说明：能听得懂人话，按照你的指令行事，会自己修改代码的AI。
+Codex 是 OpenAI 推出的 AI 编程智能体（Coding Agent）—— 能听懂人话，按你的指令行事，会自己修改代码的 AI。
 
-用处：分为两大类为“程序员用”与“非程序员用”，“程序员用”：①用看得懂、简单直白的中文回答你他干了什么，②按照你的需求来操控你的电脑进行数据修改与代码编写，③他可以支持多任务操作，就是可以开多个窗口一起工作；“非程序员用”：①帮你整理桌面文件排列整齐，②辅助你完成每日工作需求，大幅度减轻你的工作压力，③帮你需要成品时，可以叫codex帮你生成一个，简单又快捷。
+**用处**分为两大类：
 
-## **2. 如何安装codex呢？**
+**程序员用：**
+- 用看得懂的中文回答他做了什么
+- 按你的需求操控电脑进行数据修改与代码编写
+- 支持多任务操作，可开多个窗口一起工作
 
-### **①“程序员用”偏向于CLI（命令行格式）的codex**
+**非程序员用：**
+- 帮你整理桌面文件
+- 辅助完成每日工作，减轻工作压力
+- 需要成品时，叫 Codex 帮你生成一个，简单快捷
 
-### **1.Mac系统：①使用npm方式安装(要是没有npm，就去下载一个node，node里面自带npm，node下载地址（有VPN就能连接）：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）**
+## 2. 如何安装 Codex
 
-```text
-#npm下载方式
+### ① 程序员用 — CLI（命令行格式）
+
+#### Mac 系统
+
+**方式一：npm 安装**（如果没有 npm，先安装 Node.js，自带 npm）
+
+<Frame>
+  <img src="/images/image-19.png" alt="Node.js 下载页面" />
+</Frame>
+
+Node.js 下载地址（需 VPN）：[https://nodejs.org/en](https://nodejs.org/en)
+
+```bash
 npm install -g @openai/codex
 ```
 
-②使用Homebrew下载方式（缺点：没有homebrew使用不了）
+**方式二：Homebrew 安装**
 
-```text
-#检查brew版本
+```bash
 brew -v
-#brew安装法
-brew insatll --cask codex
+brew install --cask codex
 ```
 
-### **[2.Windows](http://2.Windows)系统：①WSL下载方式（Powershell为管理员系统）**
+#### Windows 系统
 
-```text
-#poweshell中输入
+**WSL 安装方式**（以管理员身份运行 PowerShell）：
+
+```powershell
 wsl --install -d Ubuntu-24.04
 ```
 
-重进入一次再输入（node下载链接：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）
+重启进入 WSL 后，安装 Node.js 和 Codex：
 
-```text
-#安装 Node.js（用 nvm 最方便）（如果不想这样安装，就去上面Mac系统的node网址下载）
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-#
 source ~/.bashrc   # 或 ~/.zshrc
-#把nvm版本调为22
 nvm install 22
-#安装 Codex
 npm install -g @openai/codex
 ```
 
-### **3.Linux系统：①npm安装法（没有npm就去node下载，node下载网址：[<u>https://nodejs.org/en</u>](https://nodejs.org/en)）**
+#### Linux 系统
 
-```text
-#npm安装codex
+**方式一：npm 安装**
+
+```bash
 npm install -g @openai/codex
 ```
 
-##### **②二进制离线法**
+**方式二：二进制离线安装**
 
-```text
+```bash
 # x86_64
 curl -L https://github.com/openai/codex/releases/download/rust-v0.131.0/codex-x86_64-unknown-linux-musl.tar.gz | tar -xz
 sudo mv codex /usr/local/bin/
-# ARM64（如树莓派、AWS Graviton）
-# 换文件名 codex-aarch64-unknown-linux-musl.tar.gz 即可
+
+# ARM64（树莓派、AWS Graviton 等）
+# 将文件名中的 x86_64 替换为 aarch64 即可
 ```
 
-当你安装完codex（CLI形式）以后就要检查是否安装上了
+安装完成后验证：
 
-```text
-#检查版本
+```bash
 codex --version
 ```
 
-如果弹出版本号（[0.xxx](http://0.xxx).0）即可
+如果弹出版本号（如 `0.xxx.0`）即安装成功。
 
-如果你需要codex时，在CLI（命令行形式）输入codex，首次运行会有两个选项：1.ChatGpt帐号（这个推荐新手，但有限额度）2.OpenAI API key(需要收费，适合程序员开发者，但也可以通过ccswtich解决)
+首次在终端输入 `codex` 运行，会有两个选项：
+1. **ChatGPT 账号** — 推荐新手，有免费额度
+2. **OpenAI API Key** — 适合开发者，可通过 CC Switch 中转
 
-### **②“非程序员”偏向于桌面端版本，不需要在CLI界面输入，打开程序即用**
+### ② 非程序员用 — 桌面端版本
 
-1. Mac系统和windows系统直接官网下载（最省事，打不开记得开VPN，VPN即为翻墙网络，windows推荐系统为win10及win10以上的系统）：[<u>https://chatgpt.com/zh-Hans-CN/download/</u>](https://chatgpt.com/zh-Hans-CN/download/)
+打开即用，无需命令行操作。
 
-2. Linux系统：
-
-直到打开codex桌面端以后
-
-<Frame>
-  <Frame>
-    ![Image](/images/image-19.png)
-  </Frame>
-</Frame>
-
-可以看见这就是需要登录的界面，而我们选择红色箭头所指的登录方式
+| 系统 | 下载方式 |
+| --- | --- |
+| Mac / Windows | 官网下载（需 VPN，Windows 推荐 Win10+） |
+| Linux | 暂不支持桌面端 |
 
 <Frame>
-  ![Image](/images/image-20.png)
+  <img src="/images/image-19.png" alt="Codex 桌面版下载页面" />
 </Frame>
 
-而现在我们输入我们获得的key即可登入
+下载地址：[https://chatgpt.com/zh-Hans-CN/download/](https://chatgpt.com/zh-Hans-CN/download/)
 
-## 3.配置Codex
-
-这次我们选择使用CC Switch来配置Codex，那么首先我们先来认识一下CC Switch是什么，CC Switch 是一款面向 AI 编程 CLI 用户的跨平台桌面配置管理工具。他能有效管理Claude Code、Codex、Geini CLI、OpenCode、OpenClaw等等的AI使用工具并查看各AI工具使用了多少token（API流量），简称：CC Switch是一位管家，负责看管与配置你手里的AI工具。
-
-**首先先下载一个CC Switch，下载CC Switch的网址：[<u>https://github.com/farion1231/cc-switch/releases</u>](https://github.com/farion1231/cc-switch/releases)**
-
-下载完成后打开会到这个界面
+打开 Codex 桌面端后，会看到登录界面：
 
 <Frame>
-  ![Image](/images/image-21.png)
+  <img src="/images/image-20.png" alt="Codex 登录界面" />
 </Frame>
 
-既然我们要配置codex，我们就要点击上面列表选项的从左往右的第3个（上面两个是官网自带的，不能使用，下面两个是我自己配置的）
+按红色箭头所指方式登录，输入你获得的 API Key 即可：
 
 <Frame>
-  ![9ed1f43087008d870e8f6f91cc4c3353](/images/9ed1f43087008d870e8f6f91cc4c3353.png)
+  <img src="/images/image-21.png" alt="API Key 登录入口" />
 </Frame>
 
-接下来我教你如何一步步配置codex，我们接下来点击右上角橙色的“＋”号，接下来向下滑动页面，到下面这个页面意味着我们开始配置
+## 3. 配置 Codex
+
+这里我们使用 **CC Switch** 来配置 Codex。
+
+### 什么是 CC Switch？
+
+<Info>
+  CC Switch 是一款面向 AI 编程 CLI 用户的跨平台桌面配置管理工具。它能管理 Claude Code、Codex、Gemini CLI、OpenCode、OpenClaw 等 AI 工具，并查看各工具的 Token 用量。简单说：CC Switch 是一位管家，负责看管与配置你手里的 AI 工具。
+</Info>
+
+**下载 CC Switch**：[https://github.com/farion1231/cc-switch/releases](https://github.com/farion1231/cc-switch/releases)
+
+下载完成后打开，进入主界面：
 
 <Frame>
-  ![8df0d5be7717ec139fa0c894e56982c2](/images/8df0d5be7717ec139fa0c894e56982c2.png)
+  <img src="/images/image-21.png" alt="CC Switch 主界面" />
 </Frame>
 
-其中供应商名称可随意填写，但API key和请求地址需要在API创建令牌以后可以获取到。然后API key是填入以sk-形式的密钥，API请求地址是那个中转站的网址以https://xxx.com/v1的形式填入请求地址的，最后我们点击添加即可完成配置这个步骤。
-
-## 4.Codex的使用
-
-CLI形式的Codex：我们打开终端，然后输入Codex打开Codex面板，会出现两个选项，我们直接按control（确定）键，即可打开
+要配置 Codex，点击列表中从左往右的第 3 个（上面两个为官网自带，不能使用；下面两个为自定义配置）：
 
 <Frame>
-  ![71c5d09c6bd91a897aa8bb50d301c188](/images/71c5d09c6bd91a897aa8bb50d301c188.png)
+  <img src="/images/9ed1f43087008d870e8f6f91cc4c3353.png" alt="CC Switch 供应商列表" />
 </Frame>
 
-直接输入你想要Codex做的事情即可。
+### 配置步骤
 
-桌面端：登录进入以后直接对Codex说话即可。
+<Steps>
+  <Step title="添加新供应商">
+    点击右上角的橙色 **"+"** 号，向下滑动页面开始配置：
+
+    <Frame>
+      <img src="/images/8df0d5be7717ec139fa0c894e56982c2.png" alt="CC Switch 配置表单" />
+    </Frame>
+  </Step>
+
+  <Step title="填写信息">
+    | 字段 | 说明 |
+    | --- | --- |
+    | **供应商名称** | 可随意填写 |
+    | **API Key** | 以 `sk-` 开头的密钥 |
+    | **请求地址** | 中转站地址，格式为 `https://xxx.com/v1` |
+  </Step>
+
+  <Step title="保存">
+    填写完成后点击 **添加** 即可完成配置。
+  </Step>
+</Steps>
+
+## 4. Codex 的使用
+
+### CLI 版
+
+打开终端，输入 `codex` 打开面板，按 `Control`（确定）键确认即可进入：
+
+<Frame>
+  <img src="/images/71c5d09c6bd91a897aa8bb50d301c188.png" alt="Codex CLI 面板" />
+</Frame>
+
+直接输入你想要 Codex 做的事情即可。
+
+### 桌面版
+
+登录进入后，直接对 Codex 说话即可。
