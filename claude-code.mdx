@@ -176,7 +176,7 @@ claude config list   # 查看当前配置
   "env": {
     "ANTHROPIC_BASE_URL": "https://xcompute.us",
     "ANTHROPIC_AUTH_TOKEN": "YOUR_XCOMPUTE_API_KEY",
-    "ANTHROPIC_MODEL": "claude-sonnet-4-5-20250929"
+    "ANTHROPIC_MODEL": "claude-sonnet-5"
   }
 }
 ```
@@ -206,9 +206,9 @@ export ANTHROPIC_BASE_URL=https://intl.dualseason.com
 
 | 模型 | 特点 | 适用场景 |
 | --- | --- | --- |
-| `claude-sonnet-4-5-20250929` | 速度与质量平衡 | 日常开发推荐 |
-| `claude-opus-4-1-20250805` | 最强推理能力 | 复杂架构、疑难 bug |
-| `claude-haiku-4-5-20251001` | 轻量快速 | 快速问答
+| `claude-sonnet-5` | 速度与质量平衡 | 日常开发推荐 |
+| `claude-opus-4-8` | 最强推理能力 | 复杂架构、疑难 bug |
+| `claude-fable-5` | 推理增强 | 复杂推理任务
 
 ### 验证连接
 
@@ -231,18 +231,18 @@ claude "你好，请用一句话介绍你自己"
 
 ```bash
 # 启动时指定模型
-claude --model claude-opus-4-1-20250805
+claude --model claude-opus-4-8
 
 # 运行时切换（在 Claude Code 界面中）
-/model claude-sonnet-4-5-20250929
+/model claude-sonnet-5
 ```
 
 推荐创建别名（写入 `~/.zshrc` 或 `~/.bashrc`）：
 
 ```bash
-alias cc-sonnet='claude --model claude-sonnet-4-5-20250929'
-alias cc-opus='claude --model claude-opus-4-1-20250805'
-alias cc-quick='claude --model claude-haiku-4-5-20251001'
+alias cc-sonnet='claude --model claude-sonnet-5'
+alias cc-opus='claude --model claude-opus-4-8'
+alias cc-quick='claude --model claude-fable-5'
 ```
 
 ### 代理设置
@@ -422,7 +422,7 @@ curl https://xcompute.us/v1/messages \
   -H "x-api-key: $ANTHROPIC_AUTH_TOKEN" \
   -H "content-type: application/json" \
   -H "anthropic-version: 2023-06-01" \
-  -d '{"model": "claude-sonnet-4-5-20250929", "max_tokens": 10, "messages": [{"role": "user", "content": "Hi"}]}'
+  -d '{"model": "claude-sonnet-5", "max_tokens": 10, "messages": [{"role": "user", "content": "Hi"}]}'
 ```
 
 <Warning>
@@ -437,7 +437,7 @@ Error: Model not found / Model not available
 
 ```bash
 # 1. 确认模型名称完整
-echo $ANTHROPIC_MODEL   # 应包含完整日期，如 claude-sonnet-4-5-20250929
+echo $ANTHROPIC_MODEL   # 应输出 claude-sonnet-5 等
 
 # 2. 清除模型配置，使用默认
 unset ANTHROPIC_MODEL
@@ -450,9 +450,9 @@ claude config remove model
 
 | 错误写法 | 正确写法 |
 | --- | --- |
-| `claude-sonnet-4` | `claude-sonnet-4-5-20250929` |
-| `claude-4-opus` | `claude-opus-4-1-20250805` |
-| `claude-4` | `claude-sonnet-4-5-20250929` |
+| `claude-sonnet-4` | `claude-sonnet-5` |
+| `claude-4-opus` | `claude-opus-4-8` |
+| `claude-4` | `claude-sonnet-5` |
 
 ### 网络超时
 
@@ -496,7 +496,7 @@ unset HTTPS_PROXY
 | --- | --- | --- | --- |
 | API 地址 | `ANTHROPIC_BASE_URL` | `claude config set anthropicBaseUrl` | `https://xcompute.us` |
 | API 密钥 | `ANTHROPIC_AUTH_TOKEN` | `claude config set apiKey` | `sk-xxx` |
-| 模型 | `ANTHROPIC_MODEL` | `claude config set model` | `claude-sonnet-4-5-20250929` |
+| 模型 | `ANTHROPIC_MODEL` | `claude config set model` | `claude-sonnet-5` |
 | HTTP 代理 | `HTTP_PROXY` | — | `http://127.0.0.1:7890` |
 | HTTPS 代理 | `HTTPS_PROXY` | — | `http://127.0.0.1:7890` |
 | 超时 | `CLAUDE_CODE_TIMEOUT` | — | `180000`（毫秒） |
