@@ -1,146 +1,151 @@
 ---
 title: "OpenCode 接入"
-description: "基于 OpenCode 官方文档，用统一的 Node 环境安装 OpenCode，并通过自定义 provider 接入 Xcompute。"
+description: "保姆级指南：从零开始安装 OpenCode 并配置 Xcompute API 中转站，实现低成本使用 Claude、GPT、Gemini 等主流大模型。"
 ---
 
-OpenCode 是一个开源 AI 编程 Agent，支持终端、桌面和 IDE 扩展。它对自定义 provider 很友好，所以很适合拿来接 Xcompute。
+OpenCode 是一个开源 AI 编程 Agent，可在终端（Terminal）、桌面应用和 IDE 插件中使用，支持 75+ 种 LLM 提供商。它对自定义 provider 很友好，是接入 Xcompute 中转站的理想选择。
 
 <Frame>
   <img src="https://opencode.ai/docs/_astro/screenshot.CQjBbRyJ_1dLadc.webp" alt="OpenCode 官方截图" />
 </Frame>
 
-<caption>*OpenCode 官方文档中的终端界面截图*</caption>
+## 核心特性
 
-## 这篇文章会带你完成什么
+| 特性 | 说明 |
+| --- | --- |
+| 多模型支持 | 支持 OpenAI、Anthropic、Google、DeepSeek 等 75+ 提供商 |
+| 终端 UI | 精美的 TUI 界面，支持 WezTerm、Alacritty、Ghostty、Kitty 等现代终端 |
+| 会话管理 | 多会话并行、历史记录、压缩、分享 |
+| MCP 集成 | 支持 Model Context Protocol，可接入外部工具 |
+| Plan/Build 模式 | Plan 模式只分析规划，Build 模式执行修改，Tab 键切换 |
+| 隐私优先 | 不存储代码或上下文，数据仅在本地与 LLM 间传输 |
 
-1. 安装 OpenCode
-2. 创建全局配置文件
-3. 把 Xcompute 注册成自定义 provider
-4. 理解 OpenCode 的核心概念（Agent / Plan / Ask 模式）
-5. 启动会话并完成第一次使用
-6. 配置 MCP 服务器扩展工具能力
+## 与其他工具对比
 
-## 核心概念
+| 对比维度 | OpenCode | Cursor | GitHub Copilot | Claude Code |
+| --- | --- | --- | --- | --- |
+| 开源 | 完全开源 | 闭源 | 闭源 | 闭源 |
+| 模型自由度 | 75+ 提供商随意切换 | 内置模型为主 | OpenAI 模型 | Anthropic 模型 |
+| 费用 | 免费（自付 API 费用） | \$20/月起 | \$10/月起 | \$20/月起 |
+| 自定义 API | 原生支持 | 有限支持 | 不支持 | 不支持 |
+| MCP 支持 | 完整支持 | 支持 | 不支持 | 支持 |
+| 隐私保护 | 不存储代码 | 云端处理 | 云端处理 | 不存储 |
 
-OpenCode 有三种交互模式，理解它们有助于更好地使用：
+**核心优势：** OpenCode 原生支持通过 `@ai-sdk/openai-compatible` 适配器接入任何兼容 OpenAI 协议的 API，正是接入 Xcompute 的关键。
 
-| 模式 | 说明 | 适用场景 |
-| --- | --- | --- |
-| **Agent** | 自主编码模式，可调用工具读写文件、执行命令 | 需要 AI 自动完成编码任务时 |
-| **Plan** | 计划模式，AI 会分析需求并给出实施方案 | 复杂功能开发前先出方案 |
-| **Ask** | 问答模式，纯对话，不调用工具 | 代码审查、知识问答、技术讨论 |
+## 安装 OpenCode
 
-切换方式：在会话中输入 `/agent`、`/plan`、`/ask` 即可切换。
-
-### Sub-agent（子代理）
-
-OpenCode 内部使用多种专门的子代理来处理不同任务：
-
-- **Codex**：核心编程代理，负责代码编写、调试、重构
-- **Planner**：负责分解复杂任务、制定执行计划
-- **Browser**：负责网页浏览和信息收集
-- 以及其他专用代理
-
-这些子代理由 OpenCode 自动管理和调度，无需手动配置。如果你为某个模型配置了 `maxTokens` 参数，确保该值足够大，以便子代理能完成复杂任务。
-
-## 官方安装方式
-
-如果你还没准备 Node 环境，先看 [环境准备：NVM、Node.js 22 和 npm](/node-setup)。
-
-OpenCode 官方推荐安装脚本，也支持 npm。此外也可以通过 Homebrew 安装。
+### macOS / Linux
 
 <Tabs>
-  <Tab title="npm 安装（推荐本教程用这个）">
-    ```bash
-    npm install -g opencode-ai
-    ```
-  </Tab>
-
-  <Tab title="官方安装脚本">
+  <Tab title="一键脚本（推荐）">
     ```bash
     curl -fsSL https://opencode.ai/install | bash
     ```
   </Tab>
-
-  <Tab title="Homebrew 安装">
+  <Tab title="Homebrew">
     ```bash
-    brew install opencode
+    brew install anomalyco/tap/opencode
+    ```
+  </Tab>
+  <Tab title="npm">
+    ```bash
+    npm install -g opencode-ai
+    ```
+  </Tab>
+  <Tab title="Arch Linux">
+    ```bash
+    sudo pacman -S opencode
     ```
   </Tab>
 </Tabs>
 
-安装后验证：
+### Docker
+
+```bash
+docker run -it --rm ghcr.io/anomalyco/opencode
+```
+
+### Windows（推荐 WSL）
+
+OpenCode 原生不支持 Windows。推荐使用 WSL：
+
+```powershell
+# PowerShell（管理员权限）
+wsl --install
+# 重启后进入 WSL 终端执行一键安装
+curl -fsSL https://opencode.ai/install | bash
+```
+
+### 从源码编译
+
+```bash
+git clone https://github.com/anomalyco/opencode.git && cd opencode
+go build -o opencode .
+sudo mv opencode /usr/local/bin/
+```
+
+### 验证安装
 
 ```bash
 opencode --version
 ```
 
-如果能看到版本号，就说明安装阶段已经完成。
-
 ### 安装后提示「command not found」？
 
-npm 全局安装的路径可能不在 `PATH` 中。运行以下命令查看并修正：
+npm 全局安装路径可能不在 `PATH` 中：
 
 ```bash
-# 查看 npm 全局 bin 路径
 npm bin -g
-
-# 将其加入 shell 配置（以 bash 为例）
 echo 'export PATH="$(npm bin -g):$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## 模型配置对照
+## 核心概念
 
-Xcompute 上的模型定价会不定期调整，以下为当前价格参考：
+### 三种交互模式
 
-**GPT 系列：**
-
-| 模型 | 模型 ID | 实际输入 ($/1M tokens) | 实际输出 ($/1M tokens) |
-| --- | --- | --- | --- |
-| GPT 5.6 Sol | `gpt-5.6-sol` | \$0.45 | \$2.70 |
-| GPT 5.6 Terra | `gpt-5.6-terra` | \$0.225 | \$1.35 |
-| GPT 5.6 Luna | `gpt-5.6-luna` | \$0.09 | \$0.54 |
-| GPT 5.5 | `gpt-5.5` | \$0.45 | \$2.70 |
-| GPT 5.4 | `gpt-5.4` | \$0.23 | \$1.35 |
-
-**Claude 系列：**
-
-| 模型 | 模型 ID | Kiro 输入 ($/1M) | Kiro 输出 ($/1M) |
-| --- | --- | --- | --- |
-| Claude Fable 5 | `claude-fable-5` | \$1.80 | \$9.00 |
-| Claude Sonnet 5 | `claude-sonnet-5` | \$0.54 | \$2.70 |
-| Claude Opus 4.8 | `claude-opus-4-8` | \$0.90 | \$4.50 |
-
-**其他系列：**
-
-| 模型 | 模型 ID | 输入 ($/1M tokens) | 输出 ($/1M tokens) |
-| --- | --- | --- | --- |
-| Gemini 3.5 Flash | `gemini-3.5-flash` | \$1.5 | \$9 |
-| Gemini 3.1 Pro High | `gemini-3.1-pro-high` | \$4 | \$18 |
-| DeepSeek V4 Flash | `deepseek-v4-flash` | \$0.07 | \$0.14 |
-| DeepSeek V4 Pro | `deepseek-v4-pro` | \$0.22 | \$0.44 |
-| Kimi K2.5 | `kimi-k2.5` | \$0.30 | \$1.50 |
-| Qwen 3.5 Plus | `qwen3.5-plus` | \$0.20 | \$1.20 |
-| Grok 4.3 | `grok-4.3` | \$1.25 | \$2.50 |
-| Grok 4.5 | `grok-4.5` | \$2 | \$6 |
-
-完整定价请参考 [模型定价页面](/api-reference/models)。
-
-### 模型切换时机分析
-
-| 场景 | 推荐模型 | 理由 |
+| 模式 | 说明 | 适用场景 |
 | --- | --- | --- |
-| 日常编码、重构、调试 | `gpt-5.6-sol` | 综合能力强，价格适中 |
-| 简单任务、快速问答 | `gpt-5.5` | 轻量快速，成本低 |
-| 大段文档/代码审查 | `claude-sonnet-5` | 超长上下文，分析精准 |
-| 深度架构设计 | `gpt-5.6-sol` 或 `claude-opus-4-8` | 推理能力强 |
-| 修图、界面美化 | `gemini-3.5-flash` | 审美好，情商高 |
-| 预算敏感 | `deepseek-v4-flash` 或 `gpt-5.4` | 价格极低 |
+| **Agent (Build)** | 自主编码模式，可调用工具读写文件、执行命令 | 需要 AI 自动完成编码任务 |
+| **Plan** | 计划模式，AI 分析需求并给出实施方案 | 复杂功能开发前先出方案 |
+| **Ask** | 问答模式，纯对话，不调用工具 | 代码审查、知识问答 |
 
-## 配置 Xcompute
+切换方式：按 `Tab` 键或在会话中输入 `/agent`、`/plan`、`/ask`。
 
-推荐使用全局配置文件：`~/.config/opencode/opencode.json`
+### Sub-agent
+
+OpenCode 内部使用多种子代理处理不同任务：Codex（编程）、Planner（任务分解）、Browser（网页浏览）等，由 OpenCode 自动调度。
+
+## Xcompute API 对接配置（核心章节）
+
+### Xcompute API 概览
+
+| 项目 | 信息 |
+| --- | --- |
+| Base URL（OpenAI 协议） | `https://xcompute.us/v1` |
+| Base URL（Anthropic 协议） | `https://xcompute.us`（不加 /v1） |
+| 加速入口（OpenAI） | `https://intl.dualseason.com/v1` |
+| 加速入口（Anthropic） | `https://intl.dualseason.com` |
+
+### 配置文件位置
+
+OpenCode 支持两级配置：
+
+| 级别 | 路径 | 适用场景 |
+| --- | --- | --- |
+| 全局配置 | `~/.config/opencode/opencode.json` | 所有项目通用 |
+| 项目配置 | `./opencode.json`（项目根目录） | 特定项目专用 |
+
+首先创建配置目录：
+
+```bash
+mkdir -p ~/.config/opencode
+```
+
+### 方式一：OpenAI 兼容协议（推荐）
+
+适用于 GPT、Gemini、DeepSeek 等所有兼容 OpenAI 协议的模型：
 
 ```json
 {
@@ -160,17 +165,8 @@ Xcompute 上的模型定价会不定期调整，以下为当前价格参考：
         "gpt-5.5": {
           "name": "GPT 5.5"
         },
-        "claude-sonnet-5": {
-          "name": "Claude Sonnet 5"
-        },
-        "claude-opus-4-8": {
-          "name": "Claude Opus 4.8"
-        },
         "gemini-3.5-flash": {
           "name": "Gemini 3.5 Flash"
-        },
-        "gemini-3.1-pro-high": {
-          "name": "Gemini 3.1 Pro High"
         },
         "deepseek-v4-flash": {
           "name": "DeepSeek V4 Flash"
@@ -182,17 +178,49 @@ Xcompute 上的模型定价会不定期调整，以下为当前价格参考：
 }
 ```
 
-### 生产环境配置示例
+### 方式二：Anthropic 协议（用于 Claude 模型）
 
-针对团队协作或多项目管理场景，推荐这种更完善的配置：
+覆盖官方 Anthropic provider 的 baseURL：
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
-    "xcompute": {
+    "anthropic": {
+      "options": {
+        "baseURL": "https://xcompute.us",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5 (via Xcompute)"
+        },
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8 (via Xcompute)"
+        },
+        "claude-fable-5": {
+          "name": "Claude Fable 5 (via Xcompute)"
+        }
+      }
+    }
+  },
+  "model": "anthropic/claude-sonnet-5"
+}
+```
+
+**重要区别：** Anthropic 协议 Base URL 不加 `/v1`，OpenAI 协议必须加 `/v1`。
+
+### 方式三：完整推荐配置（所有模型统一走 OpenAI 协议）
+
+把所有模型都放在 OpenAI 兼容 provider 下，无需区分协议：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "xcompute-gpt": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Xcompute",
+      "name": "Xcompute GPT",
       "options": {
         "baseURL": "https://xcompute.us/v1",
         "apiKey": "{env:XCOMPUTE_API_KEY}"
@@ -206,183 +234,208 @@ Xcompute 上的模型定价会不定期调整，以下为当前价格参考：
           "name": "GPT 5.5",
           "maxTokens": 32768
         },
+        "gpt-5.4": {
+          "name": "GPT 5.4",
+          "maxTokens": 32768
+        }
+      }
+    },
+    "xcompute-claude": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Xcompute Claude",
+      "options": {
+        "baseURL": "https://xcompute.us/v1",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
         "claude-sonnet-5": {
           "name": "Claude Sonnet 5",
+          "maxTokens": 65536
+        },
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8",
+          "maxTokens": 65536
+        },
+        "claude-fable-5": {
+          "name": "Claude Fable 5",
+          "maxTokens": 65536
+        }
+      }
+    },
+    "xcompute-gemini": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Xcompute Gemini",
+      "options": {
+        "baseURL": "https://xcompute.us/v1",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
+        "gemini-3.5-flash": {
+          "name": "Gemini 3.5 Flash",
+          "maxTokens": 65536
+        },
+        "gemini-3.1-pro-high": {
+          "name": "Gemini 3.1 Pro High",
+          "maxTokens": 65536
+        }
+      }
+    },
+    "xcompute-other": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Xcompute Other",
+      "options": {
+        "baseURL": "https://xcompute.us/v1",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash",
+          "maxTokens": 65536
+        },
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro",
+          "maxTokens": 65536
+        },
+        "kimi-k2.5": {
+          "name": "Kimi K2.5",
+          "maxTokens": 65536
+        },
+        "qwen3.5-plus": {
+          "name": "Qwen 3.5 Plus",
           "maxTokens": 65536
         },
         "grok-4.3": {
           "name": "Grok 4.3",
           "maxTokens": 65536
-        },
-        "deepseek-v4-flash": {
-          "name": "DeepSeek V4 Flash",
-          "maxTokens": 65536
         }
       }
     }
   },
-  "model": "xcompute/gpt-5.6-sol",
+  "model": "xcompute-claude/claude-sonnet-5"
+}
+```
+
+按提供商分组后，在 `/models` 面板中一目了然。你也可以只保留一个 `xcompute` provider 把所有模型放一起。
+
+### 使用环境变量管理 API Key（推荐）
+
+```bash
+# 临时设置
+export XCOMPUTE_API_KEY="YOUR_API_KEY"
+
+# 永久设置
+echo 'export XCOMPUTE_API_KEY="YOUR_API_KEY"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+在配置文件中用 `{env:XCOMPUTE_API_KEY}` 引用，避免 API Key 明文写入文件。
+
+### 隐藏不需要的模型（blacklist）
+
+```json
+{
+  "provider": {
+    "xcompute": {
+      "whitelist": ["gpt-5.6-sol", "claude-sonnet-5"]
+    }
+  }
+}
+```
+
+或使用 `blacklist` 排除不用的模型。
+
+### 测试 API 连通性
+
+```bash
+curl -H "Authorization: Bearer $XCOMPUTE_API_KEY" https://xcompute.us/v1/models
+```
+
+## 多提供商配置
+
+你可以同时配置 Xcompute 和官方 API，灵活切换：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "xcompute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Xcompute",
+      "options": {
+        "baseURL": "https://xcompute.us/v1",
+        "apiKey": "{env:XCOMPUTE_API_KEY}"
+      },
+      "models": {
+        "gpt-5.6-sol": { "name": "GPT 5.6 Sol (Xcompute)" },
+        "claude-sonnet-5": { "name": "Claude Sonnet 5 (Xcompute)" }
+      }
+    },
+    "anthropic": {
+      "options": { "apiKey": "{env:ANTHROPIC_API_KEY}" }
+    },
+    "openai": {
+      "options": { "apiKey": "{env:OPENAI_API_KEY}" }
+    }
+  },
+  "model": "xcompute/gpt-5.6-sol"
+}
+```
+
+通过 `enabled_providers` 和 `disabled_providers` 控制可用提供商：
+
+```json
+{
+  "enabled_providers": ["xcompute", "anthropic"],
+  "disabled_providers": ["openai"]
+}
+```
+
+## 按任务分配模型（自定义 Agent）
+
+为不同任务类型分配不同模型：
+
+```json
+{
+  "agent": {
+    "code-reviewer": {
+      "description": "审查代码质量和安全性",
+      "model": "xcompute-claude/claude-sonnet-5",
+      "prompt": "你是一个代码审查专家。关注安全性、性能和可维护性。"
+    },
+    "quick-ask": {
+      "description": "快速回答编程问题",
+      "model": "xcompute-gpt/gpt-5.5",
+      "prompt": "简洁回答编程问题，提供代码示例。"
+    }
+  }
+}
+```
+
+会话中用 `/agent code-reviewer` 或 `/agent quick-ask` 切换。
+
+## 权限控制
+
+```json
+{
   "permissions": {
     "mode": "bySession",
     "rules": [
-      {
-        "match": "src/**/*.ts",
-        "allow": ["read", "write", "edit"]
-      },
-      {
-        "match": "package.json",
-        "allow": ["read", "write"]
-      }
+      { "match": "src/**/*.ts", "allow": ["read", "write", "edit"] },
+      { "match": "package.json", "allow": ["read", "write"] }
     ]
   }
 }
 ```
 
-### 配置文件放在哪里
-
-推荐放在：
-
-- macOS / Linux：`~/.config/opencode/opencode.json`
-- Windows：用户目录对应的 `opencode` 配置目录
-
-## 或者，直接用全局环境变量
-
-```bash
-export XCOMPUTE_API_KEY="YOUR_XCOMPUTE_API_KEY"
-opencode
-```
-
-如果你只是先想测试一下是否能接通，用这种方式最快。
-
-### 环境变量支持
-
-- `OPENCODE_API_KEY`：作用于所有 provider
-- 自定义变量名（如 `XCOMPUTE_API_KEY`）：在配置中用 `{env:变量名}` 引用
-- `OPENCODE_MODEL`：指定默认模型
-
-## 初始化项目
-
-官方推荐在项目里第一次启动后执行：
-
-```text
-/init
-```
-
-它会分析项目并生成 `AGENTS.md`，给 AI 一份项目指南。后续会话中 OpenCode 会自动读取 `AGENTS.md` 作为系统提示，帮助它理解你的代码风格和项目规范。
-
-### AGENTS.md 应该包含什么
-
-- **项目概述**：做什么的、技术栈、目录结构
-- **开发规范**：命名风格、测试要求、commit 格式
-- **编码约定**：状态管理方案、API 风格、组件设计模式
-- **构建测试命令**：测试、构建、lint 配置
-- **风格偏好**：代码风格、注释规范、UI 组件库等
-
-**注意事项：**
-
-- 使用纯文本或 Markdown 格式，`/init` 会自动生成初版
-- OpenCode 还支持 `AGENTS.local.md`（本地覆盖，不提交到 Git）和 `AGENTS.custom.md`（用户级全局参考）
-- 如果项目下没有 `AGENTS.md`，OpenCode 会使用 `.opencode/instructions.md`
-
-## 启动与验证
-
-```bash
-opencode
-```
-
-如果你能正常进入界面并开始新会话，说明 OpenCode 已经可以通过 Xcompute 调用模型。
-
-## 第一次正式使用
-
-### 1. 进入项目目录
-
-```bash
-cd your-project
-```
-
-### 2. 启动 OpenCode
-
-```bash
-opencode
-```
-
-### 3. 先让它解释项目
-
-```text
-请先告诉我这个项目是做什么的
-```
-
-### 4. 再让它出计划
-
-```text
-先给我一个修改方案，不要直接改代码
-```
-
-### 5. 确认后再让它执行
-
-```text
-方案可以，开始修改
-```
-
-## 日常使用教程
-
-### 解释仓库
-
-```text
-How is authentication handled in this repo?
-```
-
-### 做功能前先出计划
-
-OpenCode 官方文档推荐先切到计划模式，再讨论实现方案。
-
-```text
-先给我一个实现方案，再开始改代码
-```
-
-### 让它直接改代码
-
-```text
-请为设置页增加一个登录校验，并复用 notes 路由里的实现方式
-```
-
-### 回滚不满意的改动
-
-```text
-/undo
-```
-
-### 提交规范的 commit
-
-结合 OpenCode 与 Git 工作流，推荐的工作流程：
-
-```text
-1. /plan 分析需要修改的文件
-2. AI 给出方案后，确认执行
-3. 修改完成后，运行测试：/run npm test
-4. 提交代码：/run git add -A && git commit -m "feat: xxx"
-5. 如果有 lint：/run npm run lint --fix
-```
-
-## 常用命令速查
-
-| 命令 | 作用 |
+| 模式 | 行为 |
 | --- | --- |
-| `/init` | 生成 `AGENTS.md` 项目说明文件 |
-| `/agent` | 切换到 Agent 模式（自主编码） |
-| `/plan` | 切换到 Plan 模式（先出方案） |
-| `/ask` | 切换到 Ask 模式（纯问答） |
-| `/undo` | 撤销上一步操作 |
-| `/diff` | 查看当前修改的 diff |
-| `/chat` | 纯对话模式（不调用工具） |
-| `/run <command>` | 在终端中执行命令 |
-| `/search <query>` | 搜索项目代码 |
-| `/context` | 查看当前上下文信息 |
-| `/model` | 查看和切换当前模型 |
+| `byTool` | 每次调工具都要确认 |
+| `bySession` | 每轮会话开始确认一次（推荐） |
+| `acceptAll` | 自动授权所有工具调用 |
 
-## MCP 服务器配置（进阶）
+## MCP 服务器配置
 
-OpenCode 支持通过 MCP（Model Context Protocol）协议连接外部工具，获得更强能力。MCP 服务器在 `~/.config/opencode/opencode.json` 中配置：
+OpenCode 支持通过 MCP 协议连接外部工具：
 
 ```json
 {
@@ -394,9 +447,7 @@ OpenCode 支持通过 MCP（Model Context Protocol）协议连接外部工具，
     "github": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "<YOUR_GITHUB_TOKEN>"
-      }
+      "env": { "GITHUB_TOKEN": "{env:GITHUB_TOKEN}" }
     },
     "playwright": {
       "command": "npx",
@@ -410,135 +461,98 @@ OpenCode 支持通过 MCP（Model Context Protocol）协议连接外部工具，
 }
 ```
 
-### 常用 MCP 服务器
+## 常用命令速查
 
-| 服务器 | 用途 | 启动命令 |
-| --- | --- | --- |
-| Filesystem | 受控的文件读写访问 | `npx -y @modelcontextprotocol/server-filesystem <path>` |
-| GitHub | PR、Issue、代码搜索 | `npx -y @modelcontextprotocol/server-github` |
-| Playwright | 浏览器自动化操作 | `npx -y @playwright/mcp` |
-| Sequential Thinking | 深度推理和多步思考 | `npx -y @modelcontextprotocol/server-sequential-thinking` |
+| 命令 | 功能 |
+| --- | --- |
+| `/init` | 初始化项目，生成 `AGENTS.md` |
+| `/models` | 查看和切换模型 |
+| `/session` | 查看会话列表 |
+| `/new` | 新建会话 |
+| `/compact` | 压缩当前会话（节省 token） |
+| `/share` | 分享会话链接 |
+| `/undo` | 撤销上一步操作 |
+| `/diff` | 查看当前修改的 diff |
+| `/run <command>` | 在终端中执行命令 |
+| `/agent` | 选择 Agent |
+| Tab | 切换 Plan / Build 模式 |
+| @ | 模糊搜索文件引用 |
 
-## 配置文件完整参考
+## 启动与使用
 
-| 配置项 | 类型 | 说明 | 必填 |
-| --- | --- | --- | --- |
-| `$schema` | string | 配置文件 JSON Schema 地址 | 否 |
-| `model` | string | 默认使用的模型，格式 `provider/modelId` | 是 |
-| `provider` | object | 模型提供商配置 | 是 |
-| `provider.<name>.npm` | string | SDK npm 包名 | 是 |
-| `provider.<name>.name` | string | 提供商显示名称 | 否 |
-| `provider.<name>.options.baseURL` | string | API 地址 | 是 |
-| `provider.<name>.options.apiKey` | string | API Key，支持 `{env:VAR}` 引用环境变量 | 是 |
-| `provider.<name>.models` | object | 模型列表，key 为模型 ID，value 包含 `name` 和可选的 `maxTokens` | 是 |
-| `permissions.mode` | string | 权限模式：`acceptAll` / `byTool` / `bySession` | 否 |
-| `permissions.rules` | array | 自定义文件路径权限规则 | 否 |
-| `mcpServers` | object | MCP 外部工具服务配置 | 否 |
+### 初始化项目
 
-## OpenCode vs ChatGPT
+```bash
+opencode
+```
 
-| 维度 | OpenCode | ChatGPT（桌面版） |
-| --- | --- | --- |
-| API 接入 | 支持自定义 `baseURL` 和 provider | 仅官方 API，无法中转 |
-| 使用方式 | CLI / IDE 扩展 / 桌面 | 桌面应用 / 网页 |
-| 文件读写 | 原生支持，自动读写项目文件 | 需要手动上传或复制粘贴 |
-| 终端执行 | `/run` 命令直接在项目终端执行 | 不支持 |
-| 配置文件 | JSON 配置，精细控制模型、权限、MCP | 无配置文件 |
-| 多模型管理 | 一个配置多个模型，随时切换 | 需要切换对话 |
-| 适用场景 | 编程开发、代码重构、项目维护 | 日常问答、文档写作 |
+进入界面后先执行 `/init`，OpenCode 会自动分析项目结构并生成 `AGENTS.md`（项目级 AI 指南）。
+
+### 日常使用流程
+
+1. **Plan 模式先出方案**：按 Tab 切换到 Plan 模式，描述需求
+2. **确认方案后执行**：切回 Build 模式，让 AI 改代码
+3. **查看 diff**：`/diff` 确认修改内容
+4. **不满意可回退**：`/undo`
+5. **提交代码**：`/run git add -A && git commit -m "feat: xxx"`
+
+### 使用模型选择加速入口
+
+如遇延迟，切换 Base URL 到加速入口：
+
+```bash
+# 测试哪个入口更快
+curl -o /dev/null -s -w "%{time_total}\n" https://xcompute.us/v1/models
+curl -o /dev/null -s -w "%{time_total}\n" https://intl.dualseason.com/v1/models
+```
 
 ## 常见问题
 
-### 为什么 OpenCode 很适合接中转站？
-
-因为它本身就支持自定义 provider 和 `baseURL`，比很多只支持官方 API 的客户端更灵活。
-
-### 为什么推荐先执行 `/init`？
-
-因为它会自动帮你生成项目级说明文件 `AGENTS.md`，后续会话中 AI 能更准确地理解你的代码风格和项目结构。
-
-### 如何指定默认模型？
-
-```json
-"model": "xcompute/gpt-5.6-sol"
-```
-
-或通过环境变量：
+### 配置文件格式错误？
 
 ```bash
-export OPENCODE_MODEL="xcompute/gpt-5.6-sol"
+# 验证 JSON 格式
+cat ~/.config/opencode/opencode.json | python3 -m json.tool
 ```
 
-### 如何切换模型？
+提示：如需注释，将文件保存为 `opencode.jsonc`（JSONC 格式）。
 
-在会话中直接输入 `/model` 查看可选模型列表，然后输入 `/model xcompute/gpt-5.5` 即可切换。
+### 模型连接失败？
 
-### 提示「insufficient balance」？
+```bash
+# 测试 API 连通性
+curl -H "Authorization: Bearer $XCOMPUTE_API_KEY" https://xcompute.us/v1/models
 
-Xcompute 账户余额不足，去 [控制台](https://xcompute.us/dashboard/overview) 充值。
+# 检查代理设置
+env | grep -i proxy
+```
 
-### 提示「model not found」？
+常见原因：API Key 错误、Base URL 格式不对（OpenAI 协议要加 `/v1`）、网络问题。
 
-检查配置中的模型 ID 是否正确。完整模型列表请参考 [模型定价](/api-reference/models) 页面。
+### 适配器未找到（Cannot find module）？
 
-### 提示 API Key 错误？
+确认 Node.js 环境正常。OpenCode 会自动下载 `@ai-sdk/openai-compatible`，无需手动安装。
 
-检查 `~/.config/opencode/opencode.json` 中的 `apiKey` 配置，或确认环境变量 `XCOMPUTE_API_KEY` 已正确设置。注意：环境变量设置后需要重新启动 opencode 才能生效。
+### 响应速度慢？
+
+- 切换到加速入口 `https://intl.dualseason.com/v1`
+- 增加 `timeout` 值：`"timeout": 600000`
+- 使用更快的模型（如 `gpt-5.5`、`deepseek-v4-flash`）
 
 ### 如何升级 OpenCode？
 
 ```bash
 npm update -g opencode-ai
+# 或
+brew upgrade anomalyco/tap/opencode
 ```
-
-### 如何同时管理多个项目的配置？
-
-在项目目录下创建 `.opencode/opencode.json`，OpenCode 会自动合并全局和项目级配置。项目级配置只需要设置 `model`、`permissions` 等项目相关字段即可。
 
 ### 如何在 IDE 中使用？
 
-- **VS Code**：在扩展市场搜索 "OpenCode" 安装
-- **JetBrains**：在插件市场搜索 "OpenCode" 安装
+- **VS Code**：扩展市场搜索 "OpenCode" 安装
+- **JetBrains**：插件市场搜索 "OpenCode" 安装
 
-IDE 扩展共享 `~/.config/opencode/opencode.json`，无需额外配置即可使用 Xcompute。
-
-### 安装后提示「command not found」？
-
-npm 全局安装路径可能不在 `PATH` 中。运行 `npm bin -g` 查看路径并加入 shell 配置。
-
-### MCP 服务器连接失败？
-
-检查 MCP 服务器的 `command` 和 `args` 配置是否正确，以及相关依赖是否已安装。确保网络能访问 MCP 服务器的资源。
-
-## 什么时候适合用 OpenCode
-
-1. 你想在同一套代码 Agent 工作流中切换不同模型。
-2. 你希望把多个开发工具的调用都统一到一个平台管理。
-3. 你想通过配置文件精细控制 provider、model 和权限策略。
-
-## 为什么推荐 OpenCode 这样配
-
-<Steps>
-  <Step title="走 OpenAI 兼容协议">
-    你只需要把 `baseURL` 指向 Xcompute 的 `/v1` 入口。OpenCode 的 provider 机制天然支持这种自定义接入。
-  </Step>
-
-  <Step title="把密钥放到环境变量">
-    避免把真实密钥直接写死在配置文件里。借助 `{env:变量名}` 语法，配置文件中无明文密钥。
-  </Step>
-
-  <Step title="按工具拆分密钥">
-    建议给 OpenCode 单独一个 API Key，和 Claude Code、应用服务分开，方便分别查看用量和限额。
-  </Step>
-
-  <Step title="理解三种交互模式">
-    Agent 模式改代码、Plan 模式出方案、Ask 模式问问题。按需切换，事半功倍。
-  </Step>
-
-  <Step title="善用 AGENTS.md">
-    花 5 分钟写好项目说明，后续每个会话都能享受更精准的代码理解。这是性价比最高的一步。
-  </Step>
-</Steps>
+IDE 扩展共享 `~/.config/opencode/opencode.json`，无需额外配置。
 
 <Columns cols={2}>
   <Card title="控制台" icon="house" href="https://xcompute.us/dashboard/overview">
