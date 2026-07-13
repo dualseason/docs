@@ -1,13 +1,221 @@
 ---
-title: "移动端平替Claude、Codex"
+AIGC:
+  Label: "1"
+  ContentProducer: "001191110102MACQD9K64018705"
+  ProduceID: "1168115141182544_0/project_7661880082130157843-files/kelivo-page-content.md"
+  ReservedCode1: ""
+  ContentPropagator: "001191110102MACQD9K64028705"
+  PropagateID: "1168115141182544#1783925111308"
+  ReservedCode2: ""
+title: "移动端平替 Claude、Codex - Kelivo"
 ---
 
-<Frame>
-  ![Image](/images/image-13.png)
-</Frame>
-
-[https://github.com/Chevey339/kelivo/releases/tag/v1.1.17](https://github.com/Chevey339/kelivo/releases/tag/v1.1.17)
+> Kelivo 是一款基于 Flutter 开发的跨平台 AI 聊天客户端，支持 Android、iOS、HarmonyOS、Windows、macOS 和 Linux。通过自定义供应商，你可以在手机或桌面设备上使用 Xcompute 提供的 Claude、GPT 等模型。
 
 <Frame>
-  ![Image](/images/image-14.png)
+  ![Kelivo 移动端界面](/images/image-13.png)
 </Frame>
+
+## 为什么选择 Kelivo？
+
+- **跨平台使用**：支持 Android、iOS、HarmonyOS、Windows、macOS 和 Linux
+- **多供应商支持**：支持 OpenAI、Google Gemini、Anthropic 等主流供应商
+- **Material You 设计**：支持 Android 12+ 动态主题色和深色模式
+- **多模态输入**：支持图片、文本文档、PDF 和 Word 文档
+- **语音服务**：支持系统 TTS、OpenAI、Google Gemini 和 ElevenLabs
+- **联网搜索**：集成 Bing、DuckDuckGo、Tavily、Brave、SearXNG 等搜索引擎
+- **MCP 工具**：支持 Model Context Protocol，并内置 fetch 工具
+- **配置迁移**：支持聊天记录备份、恢复和二维码分享供应商配置
+- **中英双语**：提供中文和英文界面
+
+---
+
+## 下载安装
+
+| 平台 | 下载方式 |
+| --- | --- |
+| **Android** | [GitHub Releases 下载 APK](https://github.com/Chevey339/kelivo/releases/latest) |
+| **iOS** | [App Store](https://apps.apple.com/us/app/kelivo/id6752122930)、[TestFlight](https://testflight.apple.com/join/erbGGykR) 或 GitHub Releases |
+| **HarmonyOS** | [kelivo-ohos 项目](https://github.com/Chevey339/kelivo-ohos) |
+| **Windows** | [GitHub Releases 下载安装程序或 ZIP](https://github.com/Chevey339/kelivo/releases/latest) |
+| **macOS** | [GitHub Releases 下载 DMG](https://github.com/Chevey339/kelivo/releases/latest) |
+| **Linux** | [GitHub Releases 下载 AppImage、DEB、RPM 或压缩包](https://github.com/Chevey339/kelivo/releases/latest) |
+
+<Card title="下载最新版 Kelivo" icon="download" href="https://github.com/Chevey339/kelivo/releases/latest">
+  打开 GitHub Releases，选择与你的系统和设备架构匹配的安装包。
+</Card>
+
+<Frame>
+  ![Kelivo Release 安装包](/images/image-14.png)
+</Frame>
+
+---
+
+## 对接 Xcompute API
+
+### 第一步：获取 Xcompute API Key
+
+1. 注册并登录 [Xcompute](https://xcompute.us)
+2. 进入 [API 密钥页面](https://xcompute.us/keys)
+3. 点击 **创建新密钥**
+4. 根据要使用的模型选择渠道分组
+5. 复制以 `sk-` 开头的 API Key
+
+| 使用场景 | 建议渠道 |
+| --- | --- |
+| GPT 模型 | GPT 福利渠道 0.9 折 |
+| Claude 日常使用 | Kiro 渠道 1.8 折 |
+| Claude 高质量或蒸馏需求 | 官 Key 渠道 4.9 折 |
+
+<Warning>
+  API Key 相当于账号密码。请勿公开、分享或提交到代码仓库。
+</Warning>
+
+### 第二步：添加供应商
+
+1. 打开 Kelivo
+2. 进入 **设置** > **供应商管理**
+3. 点击 **添加供应商**
+4. 选择 OpenAI 兼容的供应商类型
+5. 填写名称、Base URL 和 API Key
+
+| 字段 | 值 |
+| --- | --- |
+| **名称** | `Xcompute`，也可以自定义 |
+| **Base URL** | `https://api.xcompute.us/v1` |
+| **API Key** | Xcompute API Key |
+
+国内访问国际站时，可以使用加速入口：
+
+```text
+https://intl.dualseason.com/v1
+```
+
+### 第三步：添加模型
+
+**Claude 系列：**
+
+| 模型名称 | 模型 ID | 说明 |
+| --- | --- | --- |
+| Claude Fable 5 | `claude-fable-5` | 高强度推理和复杂任务 |
+| Claude Sonnet 5 | `claude-sonnet-5` | 质量与成本平衡 |
+| Claude Opus 4.8 | `claude-opus-4-8` | Claude Opus 工作流 |
+
+**GPT 系列：**
+
+| 模型名称 | 模型 ID | 说明 |
+| --- | --- | --- |
+| GPT 5.5 | `gpt-5.5` | 复杂对话和 Agent 任务 |
+| GPT 5.4 | `gpt-5.4` | 日常对话和成本控制 |
+
+### 第四步：开始对话
+
+1. 返回聊天主页并新建对话
+2. 点击模型选择器
+3. 选择刚添加的 Xcompute 模型
+4. 输入消息并发送
+
+---
+
+## 使用技巧
+
+### 自定义助手
+
+1. 进入 **助手管理**
+2. 点击 **新建助手**
+3. 设置系统提示词
+4. 选择默认模型和供应商
+5. 保存助手
+
+### 多模态输入
+
+- **图片分析**：拍照或从相册选择图片
+- **文档处理**：上传 PDF、Word 或文本文档
+- **语音输入**：使用语音转文字快速输入问题
+
+模型是否支持图片、文件和工具调用，取决于当前模型及上游渠道能力。
+
+### 联网搜索
+
+在对话设置中开启联网搜索，并配置 Bing、Tavily、Brave、SearXNG 等搜索引擎。部分搜索服务需要单独的 API Key。
+
+### 二维码分享配置
+
+1. 在供应商管理中导出配置
+2. 生成二维码
+3. 在另一台设备上扫描并导入
+
+<Warning>
+  分享配置前确认二维码是否包含 API Key。不要在公开群聊、网页或截图中发布带有密钥的二维码。
+</Warning>
+
+### 数据备份
+
+Kelivo 支持聊天记录备份和恢复。如果启用 WebDAV、S3 或其他远程备份，请同时保护备份服务的访问凭据。
+
+---
+
+## 渠道选择参考
+
+| 渠道 | Claude 模型 | GPT 模型 | 标示折扣 |
+| --- | --- | --- | --- |
+| GPT 福利渠道 | - | 支持 | 0.9 折 |
+| Kiro 渠道 | 支持 | - | 1.8 折 |
+| 官 Key 渠道 | 支持 | - | 4.9 折 |
+
+实际可用模型和价格可能调整，请以 [Xcompute 模型定价](https://xcompute.us/pricing) 页面为准。
+
+---
+
+## 常见问题
+
+### API Key 保存在哪里？
+
+供应商配置保存在设备本地。启用远程备份或通过二维码导出配置时，应确认备份和二维码中是否包含密钥。
+
+### 国内网络能使用吗？
+
+可以。将 Base URL 设置为 `https://intl.dualseason.com/v1`，通过加速入口访问国际站。
+
+### 支持 HarmonyOS 吗？
+
+支持。HarmonyOS 版本由 [kelivo-ohos](https://github.com/Chevey339/kelivo-ohos) 项目单独维护。
+
+### 如何切换模型？
+
+在对话界面点击当前模型名称，然后选择已配置的模型。
+
+### 支持后台生成吗？
+
+Android 版本支持后台生成，可以在设置中启用。
+
+### 请求失败如何排查？
+
+1. 确认 Base URL 包含 `/v1`
+2. 确认 API Key 正确、未过期且账户有余额
+3. 确认模型 ID 与 Xcompute 可用模型一致
+4. 国内网络尝试切换到加速入口
+5. 暂时关闭联网搜索或 MCP 工具，排除外部服务错误
+
+---
+
+## 相关链接
+
+- **Kelivo GitHub**：[https://github.com/Chevey339/kelivo](https://github.com/Chevey339/kelivo)
+- **最新版本下载**：[https://github.com/Chevey339/kelivo/releases/latest](https://github.com/Chevey339/kelivo/releases/latest)
+- **App Store**：[https://apps.apple.com/us/app/kelivo/id6752122930](https://apps.apple.com/us/app/kelivo/id6752122930)
+- **TestFlight**：[https://testflight.apple.com/join/erbGGykR](https://testflight.apple.com/join/erbGGykR)
+- **HarmonyOS 版本**：[https://github.com/Chevey339/kelivo-ohos](https://github.com/Chevey339/kelivo-ohos)
+- **问题反馈**：[GitHub Issues](https://github.com/Chevey339/kelivo/issues)
+- **开源协议**：AGPL-3.0
+
+## 更多教程
+
+- [CodexHub 对接 Xcompute API 教程](/codexhub)
+- [Codex++ 对接 Xcompute API 教程](/codex-plus-plus)
+- [Codex 的安装与配置](/untitled-page)
+- [Xcompute API 文档](/file)
+
+---
+
+> 本内容由 Coze AI 生成，请遵循相关法律法规及《人工智能生成合成内容标识办法》使用与传播。
