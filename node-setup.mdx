@@ -167,6 +167,54 @@ description: "先完成 Windows、macOS、Linux 的 NVM 和 Node.js 22 安装，
   </Tab>
 </Tabs>
 
+### NVM 常用命令速查
+
+安装好 NVM 后，以下命令会经常用到：
+
+| 命令 | 说明 | 示例 |
+| --- | --- | --- |
+| `nvm install <version>` | 安装指定版本 | `nvm install 22` |
+| `nvm use <version>` | 切换到指定版本 | `nvm use 22` |
+| `nvm ls` / `nvm list` | 列出已安装版本 | `nvm ls` |
+| `nvm ls-remote` | 列出可安装版本 | `nvm ls-remote` |
+| `nvm alias default <version>` | 设置默认版本 | `nvm alias default 22` |
+| `nvm uninstall <version>` | 卸载版本 | `nvm uninstall 20` |
+| `nvm current` | 查看当前版本 | `nvm current` |
+
+### 配置 npm 镜像源（国内用户推荐）
+
+如果你在国内访问 npm 官方源较慢，可以切换到淘宝镜像：
+
+```bash
+npm config set registry https://registry.npmmirror.com
+npm config get registry   # 验证
+```
+
+如需切换回官方源：
+
+```bash
+npm config set registry https://registry.npmjs.org
+```
+
+### 配置代理（如需）
+
+如果你需要通过 HTTP 代理访问网络：
+
+```bash
+npm config set proxy http://127.0.0.1:7890
+npm config set https-proxy http://127.0.0.1:7890
+```
+
+NVM 安装 Node.js 时也支持镜像下载：
+
+```bash
+# macOS / Linux
+export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node
+
+# Windows (nvm-windows)
+nvm node_mirror https://npmmirror.com/mirrors/node/
+```
+
 ## 第三步：统一安装常用 CLI
 
 下面这三个是本次集成教程会重点讲到的工具：
@@ -203,6 +251,28 @@ opencode --version
 
 只要这三项都正常，后面的接入教程基本就可以继续了。
 
+## 一键环境验证
+
+执行以下命令快速确认环境是否就绪：
+
+**macOS / Linux：**
+
+```bash
+echo "NVM: $(nvm --version 2>/dev/null || echo '未安装')"
+echo "Node: $(node -v 2>/dev/null || echo '未安装')"
+echo "npm: $(npm -v 2>/dev/null || echo '未安装')"
+echo "镜像源: $(npm config get registry 2>/dev/null || echo '未知')"
+```
+
+**Windows PowerShell：**
+
+```powershell
+Write-Host "NVM: $(nvm version 2>$null)"
+Write-Host "Node: $(node -v 2>$null)"
+Write-Host "npm: $(npm -v 2>$null)"
+Write-Host "镜像源: $(npm config get registry 2>$null)"
+```
+
 ## 常见问题
 
 ### 安装完 `nvm` 后提示 `command not found`
@@ -213,23 +283,58 @@ opencode --version
 - `zsh`：`source ~/.zshrc`
 - Windows：重开一个 PowerShell 窗口
 
-### 为什么不直接安装系统 Node？
+如果仍然找不到，检查配置文件末尾是否包含以下内容：
 
-可以，但后面切版本会很痛苦。你既然要同时跑多个 AI 编程工具，`NVM` 会更稳。
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
 
-### 为什么推荐 `Node 22`？
+### 切换 Node 版本后 `node -v` 还是旧版本
 
-因为它当前对这批 CLI 工具的兼容性最好，也比较适合做统一开发环境。
+- Windows：**必须以管理员身份运行** PowerShell，nvm-windows 需要管理员权限创建符号链接
+- macOS/Linux：检查 `which node` 是否指向 NVM 管理目录（`~/.nvm/versions/...`），如果指向 `/usr/local/bin/node`，说明有其他 Node 安装冲突，卸载即可
+- 检查 PATH 中是否有其他 Node.js 路径优先级更高
 
-### 安装 npm 工具时提示权限不足怎么办？
+### npm 提示权限不足（EACCES）
 
-1. 优先确认你是在 `nvm` 管理的 Node 环境里执行
-2. 重新打开终端后再执行一次
-3. 不要默认上来就加 `sudo npm install -g ...`
+优先确认你是在 `nvm` 管理的 Node 环境里执行：
 
-### Windows 用户需要装 Git 吗？
+```bash
+which node   # 应输出 ~/.nvm/versions/node/...
+```
 
-如果你后面要更顺畅地用 `Claude Code`、`Codex`、`OpenCode`，建议安装 Git。
+NVM 将 Node 安装在用户目录下，一般不需要 `sudo`。如果仍然提示权限问题：
+
+```bash
+npm config set prefix "$HOME/.npm-global"
+# 然后将 $HOME/.npm-global/bin 加入 PATH
+```
+
+不要默认上来就加 `sudo npm install -g ...`。
+
+### npm install 卡住或超时
+
+1. 切换到国内镜像源：`npm config set registry https://registry.npmmirror.com`
+2. 清除缓存重试：`npm cache clean --force && npm install`
+3. 增加超时时间：`npm config set fetch-timeout 120000`
+
+### Windows 下 nvm install 下载失败
+
+配置 nvm-windows 的下载镜像：
+
+```powershell
+nvm node_mirror https://npmmirror.com/mirrors/node/
+nvm npm_mirror https://npmmirror.com/mirrors/npm/
+```
+
+### Windows PowerShell 执行策略问题
+
+如果提示"禁止运行脚本"，以管理员身份执行：
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
 
 ## 下一步：进入具体接入
 
