@@ -225,6 +225,32 @@ claude "你好，请用一句话介绍你自己"
 -  `echo $ANTHROPIC_AUTH_TOKEN` 输出你的 API Key
 -  `claude` 可以正常启动并对话
 
+### 完整配置流程示例
+
+从零开始，以 macOS 为例：
+
+```bash
+# 1. 确认 Node.js 版本
+node --version          # 应 v22.x.x
+
+# 2. 安装 Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# 3. 验证安装
+claude --version        # 应 Claude Code v1.x.x
+
+# 4. 配置环境变量
+echo 'export ANTHROPIC_BASE_URL=https://xcompute.us' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN=sk-你的API密钥' >> ~/.zshrc
+source ~/.zshrc
+
+# 5. 验证配置
+echo $ANTHROPIC_BASE_URL   # 应 https://xcompute.us
+
+# 6. 启动 Claude Code
+claude
+```
+
 ## 高级配置
 
 ### 多模型切换
@@ -313,6 +339,53 @@ git diff HEAD~3 | claude -p "审查这些变更，指出潜在问题"
 
 # 日志分析
 cat error.log | claude -p "分析错误日志，找出根因"
+```
+
+### 权限管理最佳实践
+
+按项目设置权限：
+
+```bash
+cd my-project
+claude config set --project permissions.allow "Read,Write:src/**,Bash:npm *,Bash:git *"
+```
+
+安全建议：
+
+- 允许 Read 权限（只读是安全的）
+- 允许 `Bash:npm *` 和 `Bash:git *`（常用且安全）
+- 谨慎允许 `Bash:*`
+- 始终禁止 `Bash:rm -rf /` 和 `Bash:sudo *`
+
+### 实用工作流示例
+
+**新功能开发：**
+
+```text
+我需要为用户模块添加一个"忘记密码"功能。请先阅读现有的用户认证代码，
+然后设计实现方案，包括 API 接口、前端页面和邮件发送逻辑。
+```
+
+**Bug 修复：**
+
+```text
+用户反馈在提交表单时偶发 500 错误，错误日志如下：
+[粘贴日志]
+请帮我定位问题并修复。
+```
+
+**代码重构：**
+
+```text
+请将 src/services/ 下所有使用 callback 的代码重构为 async/await 风格，
+保持功能不变，添加适当的错误处理。
+```
+
+**编写测试：**
+
+```text
+为 src/components/UserProfile.tsx 编写完整的单元测试，
+覆盖正常流程和边界情况，使用 Jest + React Testing Library。
 ```
 
 ## 第一次正式使用：一步一步来
@@ -489,6 +562,29 @@ unset HTTPS_PROXY
 ### 为什么建议先从简单问题开始？
 
 因为非技术用户最容易在第一步就直接让 Agent 做复杂改动。先确认它能理解仓库、能正常响应，再开始真正修改更稳。
+
+### 其他常见问题
+
+**可以在公司内网使用吗？**
+
+取决于公司网络策略。如果外网访问受限，可以配置 HTTP 代理：
+
+```bash
+export HTTP_PROXY=http://your-company-proxy:port
+export HTTPS_PROXY=http://your-company-proxy:port
+```
+
+**API Key 被泄露了怎么办？**
+
+立即在 Xcompute 控制台重新生成 API Key，并更新本地配置。
+
+**费用如何计算？**
+
+Xcompute 按照中转站的渠道定价计费，具体费率请查看 Xcompute 控制台的费用页面。
+
+**支持并发请求吗？**
+
+取决于你的 Xcompute 账户等级和渠道限制，请咨询 Xcompute 客服了解详情。
 
 ## 配置速查
 
