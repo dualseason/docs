@@ -22,3 +22,336 @@ Base URL 选择与你使用的站点对应的地址：
 | 国际站 | [`https://api.xcompute.us/v1`](https://api.xcompute.us/v1) | 推荐 |
 | 加速入口 | [`https://intl.dualseason.com/v1`](https://intl.dualseason.com/v1) | 国内访问国际站时使用 |
 | 国内站 | [`https://xcompute.dualseason.com/v1`](https://xcompute.dualseason.com/v1) | 不推荐 |
+
+### 3. 快速测试
+
+```bash
+curl https://api.xcompute.us/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'
+```
+
+---
+
+## 站点说明
+
+| 站点 | 域名 | 适用场景 | 说明 |
+| --- | --- | --- | --- |
+| 国际站 | `xcompute.us` | 海外用户 | 香港服务器，需科学上网 |
+| 加速入口 | `intl.dualseason.com` | 国内用户 | 国内访问国际站的加速转发 |
+| 国内站 | `xcompute.dualseason.com` | 国内用户 | 独立站点，与国际站隔离（不推荐） |
+
+---
+
+## 为什么选择 Xcompute
+
+1. **一站式接入**：一个平台包含所有主流大模型，无需对接多个官网和充值
+2. **专业服务**：专业客服和售后技术团队，相比厂商官网有专人服务
+3. **价格优势**：国内模型集采优惠，国外模型技术降价
+4. **完整生态**：配套交付软件（Codex、Claude Code、OpenCode、龙虾、爱马仕）
+5. **智能体应用**：移动端 APP、无限画布工作流
+
+---
+
+## 模型定价
+
+### GPT 系列
+
+#### 渠道说明
+
+| 渠道 | 折扣 | 说明 |
+| --- | --- | --- |
+| GPT 渠道 | 1.5 折 | OpenAI 官网价格的 15% |
+| GPT 福利渠道 | 0.9 折 | 官方价格的 9%（推荐） |
+
+#### 文本模型
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 0.9 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| GPT 5.5 | `gpt-5.5` | $5 | $30 | 输入 $0.45 / 输出 $2.7 |
+| GPT 5.4 | `gpt-5.4` | $2.5 | $15 | 输入 $0.225 / 输出 $1.35 |
+
+#### 图像生成
+
+| 模型 | 模型 ID | 所属分组 | 单张价格 | 特性 |
+| --- | --- | --- | --- | --- |
+| GPT Image 2 | `gpt-image-2` | default | $0.03（约 ￥0.2） | 支持 16 张参考图，最高 4K 输出，`quality=high` |
+
+**注意事项：**
+
+- `gpt-image-2` 受 OpenAI 风控影响，可能因封号导致短期资源枯竭
+- 遇到问题可在群内反馈，管理员会查看号池资源
+
+---
+
+### Claude 系列
+
+#### 渠道说明
+
+| 渠道 | 折扣 | 特点 |
+| --- | --- | --- |
+| Kiro 渠道 | 1.8 折 | 价格更低，适合大部分场景 |
+| 官 Key 渠道 | 4.9 折 | 更聪明，适合需要蒸馏的大公司 |
+
+#### 模型列表
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | Kiro 实际价格<br />($/1M tokens) | 官 Key 实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- | --- |
+| Claude Fable 5 | `claude-fable-5` | $10 | $50 | 输入 $1.8 / 输出 $9 | 输入 $4.9 / 输出 $24.5 |
+| Claude Sonnet 5 | `claude-sonnet-5` | $3 | $15 | 输入 $0.54 / 输出 $2.7 | 输入 $1.47 / 输出 $7.35 |
+| Claude Opus 4.8 | `claude-opus-4-8` | $5 | $25 | 输入 $0.9 / 输出 $4.5 | 输入 $2.45 / 输出 $12.25 |
+
+---
+
+### Gemini 系列
+
+**特点：** 在界面优化、软件美化方面能力突出，情商高，适合塔罗牌算命等分析场景。
+
+| 模型 | 模型 ID | 输入价格<br />($/1M tokens) | 输出价格<br />($/1M tokens) |
+| --- | --- | --- | --- |
+| Gemini 3.1 Pro High | `gemini-3.1-pro-high` | $4 | $18 |
+| Gemini 3.1 Pro Preview | `gemini-3.1-pro-preview` | $2 | $12 |
+| Gemini 3.1 Pro Think | `gemini-3.1-pro-preview-think` | $4 | $24 |
+| Gemini 3.5 Flash | `gemini-3.5-flash` | $1.5 | $9 |
+
+---
+
+### Grok 系列
+
+| 模型 | 模型 ID | 输入价格<br />($/1M tokens) | 输出价格<br />($/1M tokens) |
+| --- | --- | --- | --- |
+| Grok 4.1 Fast | `grok-4.1-fast` | $0.20 | $0.50 |
+| Grok 4.3 Fast | `grok-4.3-fast` | $1.25 | $2.50 |
+| Grok 4.20 Fast | `grok-4.20-fast` | $1.25 | $2.50 |
+| Grok Build Console | `grok-build-console` | $1.00 | $2.00 |
+
+---
+
+### 国产模型系列
+
+**统一折扣：全系列 5 折**
+
+#### GLM 系列（智谱）
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| GLM 5 | `glm-5` | $1 | $3.2 | 输入 $0.5 / 输出 $1.6 |
+| GLM 5 Turbo | `glm-5-turbo` | $1.2 | $4 | 输入 $0.6 / 输出 $2 |
+| GLM 5.1 | `glm-5.1` | $6 | $24 | 输入 $3 / 输出 $12 |
+| GLM 5.2 | `glm-5.2` | $1.4 | $4.4 | 输入 $0.7 / 输出 $2.2 |
+| GLM 5V Turbo | `glm-5v-turbo` | $5 | $22 | 输入 $2.5 / 输出 $11 |
+
+#### Kimi 系列（月之暗面）
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| Kimi K2.5 | `kimi-k2.5` | $0.6 | $3 | 输入 $0.3 / 输出 $1.5 |
+| Kimi K2.6 | `kimi-k2.6` | $0.95 | $4 | 输入 $0.475 / 输出 $2 |
+| Kimi K2.7 Code | `kimi-k2.7-code` | $0.95 | $4 | 输入 $0.475 / 输出 $2 |
+
+#### DeepSeek 系列
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| DeepSeek V3.2 | `deepseek-v3.2` | $5 | $5 | 输入 $2.5 / 输出 $2.5 |
+| DeepSeek V4 Flash | `deepseek-v4-flash` | $0.14 | $0.28 | 输入 $0.07 / 输出 $0.14 |
+| DeepSeek V4 Pro | `deepseek-v4-pro` | $0.435 | $0.87 | 输入 $0.2175 / 输出 $0.435 |
+
+#### Qwen 系列（通义千问）
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| Qwen 3.5 Plus | `qwen3.5-plus` | $0.4 | $2.4 | 输入 $0.2 / 输出 $1.2 |
+| Qwen 3.6 Plus | `qwen3.6-plus` | $0.5 | $3 | 输入 $0.25 / 输出 $1.5 |
+| Qwen 3.7 Plus | `qwen3.7-plus` | $0.5 | $3 | 输入 $0.25 / 输出 $1.5 |
+| Qwen 3.7 Max | `qwen3.7-max` | $2.5 | $7.5 | 输入 $1.25 / 输出 $3.75 |
+
+#### MiniMax 系列
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| MiniMax M3 | `minimax-m3` | $0.3 | $1.2 | 输入 $0.15 / 输出 $0.6 |
+| MiniMax M2.5 | `minimax-m2.5` | $0.3 | $1.2 | 输入 $0.15 / 输出 $0.6 |
+| MiniMax M2.7 | `minimax-m2.7` | $0.3 | $1.2 | 输入 $0.15 / 输出 $0.6 |
+| MiniMax M2.5 | `MiniMax-M2.5` | $0.3 | $1.2 | 输入 $0.15 / 输出 $0.6 |
+| MiniMax M2.7 | `MiniMax-M2.7` | $0.3 | $1.2 | 输入 $0.15 / 输出 $0.6 |
+| MiniMax M2.7 HighSpeed | `MiniMax-M2.7-highspeed` | $0.6 | $2.4 | 输入 $0.3 / 输出 $1.2 |
+
+#### Mimo 系列
+
+| 模型 | 模型 ID | 官方输入价格<br />($/1M tokens) | 官方输出价格<br />($/1M tokens) | 5 折实际价格<br />($/1M tokens) |
+| --- | --- | --- | --- | --- |
+| Mimo V2.5 | `mimo-v2.5` | $0.14 | $0.28 | 输入 $0.07 / 输出 $0.14 |
+| Mimo V2.5 Pro | `mimo-v2.5-pro` | $0.435 | $0.87 | 输入 $0.2175 / 输出 $0.435 |
+| Mimo V2 Pro | `mimo-v2-pro` | $0.435 | $0.87 | 输入 $0.2175 / 输出 $0.435 |
+| Mimo V2 Omni | `mimo-v2-omni` | $0.14 | $0.28 | 输入 $0.07 / 输出 $0.14 |
+
+---
+
+## API 参考
+
+### 认证方式
+
+所有 API 请求都需要在 Header 中包含 API Key：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+### 基础端点
+
+| 功能 | 端点 | 方法 |
+| --- | --- | --- |
+| 聊天补全 | `/v1/chat/completions` | POST |
+| 图像生成 | `/v1/images/generations` | POST |
+| 文本嵌入 | `/v1/embeddings` | POST |
+
+### 聊天补全 API
+
+#### 请求示例
+
+```bash
+curl https://api.xcompute.us/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-5.5",
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "Hello!"}
+    ],
+    "temperature": 0.7,
+    "max_tokens": 1000
+  }'
+```
+
+#### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| model | string | 是 | 模型 ID，如 `gpt-5.5`、`claude-sonnet-5` |
+| messages | array | 是 | 消息列表，包含 role 和 content |
+| temperature | number | 否 | 采样温度，0-2，默认 1 |
+| max_tokens | number | 否 | 最大生成 token 数 |
+| stream | boolean | 否 | 是否流式输出，默认 false |
+
+#### 响应示例
+
+```json
+{
+  "id": "chatcmpl-123",
+  "object": "chat.completion",
+  "created": 1677652288,
+  "model": "gpt-5.5",
+  "choices": [{
+    "index": 0,
+    "message": {
+      "role": "assistant",
+      "content": "Hello! How can I help you today?"
+    },
+    "finish_reason": "stop"
+  }],
+  "usage": {
+    "prompt_tokens": 9,
+    "completion_tokens": 12,
+    "total_tokens": 21
+  }
+}
+```
+
+### 图像生成 API
+
+#### 请求示例
+
+```bash
+curl https://api.xcompute.us/v1/images/generations \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-image-2",
+    "prompt": "A cute cat playing piano",
+    "n": 1,
+    "size": "1024x1024",
+    "quality": "high"
+  }'
+```
+
+#### 请求参数
+
+| 参数 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| model | string | 是 | 模型 ID，如 `gpt-image-2` |
+| prompt | string | 是 | 图像描述 |
+| n | number | 否 | 生成数量，默认 1 |
+| size | string | 否 | 图像尺寸，如 `1024x1024`、`2048x2048` |
+| quality | string | 否 | 质量等级：`standard`、`high` |
+| reference_images | array | 否 | 参考图列表，最多 16 张 |
+
+---
+
+## 常见问题
+
+### 如何选择 Base URL？
+
+- **海外用户**：使用 `https://api.xcompute.us/v1`
+- **国内用户**：使用 `https://intl.dualseason.com/v1`（加速入口）
+- **国内站**：不推荐，与国际站完全隔离
+
+### 如何选择渠道？
+
+- **GPT 系列**：优先选择 `GPT 福利渠道 0.9 折`，价格更低
+- **Claude 系列普通使用**：选择 `Kiro 渠道`（1.8 折）
+- **Claude 系列蒸馏或更高智能需求**：选择 `官 Key 渠道`（4.9 折）
+
+### 图像生成失败怎么办？
+
+`gpt-image-2` 受 OpenAI 风控影响，可能因封号导致短期资源枯竭。解决方法：
+
+1. 在群内反馈问题
+2. 等待管理员补充号池资源
+3. 稍后重试
+
+### 如何计算费用？
+
+费用计算公式：
+
+```text
+总费用 = (输入价格 × 输入 Token 数 + 输出价格 × 输出 Token 数) × 渠道倍率
+```
+
+例如：使用 GPT 5.5，输入 1000 tokens，输出 500 tokens，选择 0.9 折渠道：
+
+```text
+总费用 = (5 × 1000/1000000 + 30 × 500/1000000) × 0.09
+       = (0.005 + 0.015) × 0.09
+       = 0.0018 美元
+```
+
+---
+
+## 更新日志
+
+### 2026-07-13
+
+- 文档重构，优化信息结构
+- 新增 API 参考文档
+- 新增常见问题解答
+- 统一模型定价表格格式
+
+---
+
+## 技术支持
+
+- **官方文档**：[https://api.xcompute.us](https://api.xcompute.us)
+- **客服支持**：在官方群内联系管理员
+- **问题反馈**：群内反馈或联系销售
+
+---
+
+*最后更新：2026-07-13*
+
+> 本内容由 Coze AI 生成，请遵循相关法律法规及《人工智能生成合成内容标识办法》使用与传播。
