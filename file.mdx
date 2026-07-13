@@ -123,12 +123,26 @@ curl https://xcompute.us/v1/chat/completions \
 
 ### Grok 系列
 
-| 模型 | 模型 ID | 输入价格<br />(\$/1M tokens) | 输出价格<br />(\$/1M tokens) |
+#### 文本模型
+
+| 模型 | 模型 ID | 输入价格<br />(\$/1M tokens) | 输出价格<br />(\$/1M tokens) | 缓存价格<br />(\$/1M tokens) | 上下文 |
+| --- | --- | --- | --- | --- | --- |
+| Grok 4.5 | `grok-4.5` | \$2 | \$6 | \$0.5 | 500K |
+| Grok 4.3 | `grok-4.3` | \$1.25 | \$2.5 | \$0.2 | 1M |
+
+#### 图像生成
+
+| 模型 | 模型 ID | 价格 | 说明 |
 | --- | --- | --- | --- |
-| Grok 4.1 Fast | `grok-4.1-fast` | \$0.20 | \$0.50 |
-| Grok 4.3 Fast | `grok-4.3-fast` | \$1.25 | \$2.50 |
-| Grok 4.20 Fast | `grok-4.20-fast` | \$1.25 | \$2.50 |
-| Grok Build Console | `grok-build-console` | \$1.00 | \$2.00 |
+| Grok Imagine | `grok-imagine` | \$0.02 / 次 | 图像生成 |
+| Grok Imagine Edit | `grok-imagine-edit` | \$0.02 / 次 | 图像编辑 |
+| Grok Imagine Quality | `grok-imagine-image-quality` | \$0.05 / 次 | 高品质图像 |
+
+#### 视频生成
+
+| 模型 | 模型 ID | 价格 | 说明 |
+| --- | --- | --- | --- |
+| Grok Video 1.5 | `grok-imagine-video-1.5` | \$0.08 / 秒 | 视频生成 |
 
 ---
 
