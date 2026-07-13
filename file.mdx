@@ -15,14 +15,14 @@ Base URL 选择与你使用的站点对应的地址：
 
 | 站点 | Base URL | 说明 |
 | --- | --- | --- |
-| 国际站 | [`https://api.xcompute.us/v1`](https://api.xcompute.us/v1) | 推荐 |
+| 国际站 | [`https://xcompute.us/v1`](https://xcompute.us/v1) | 推荐 |
 | 加速入口 | [`https://intl.dualseason.com/v1`](https://intl.dualseason.com/v1) | 国内访问国际站时使用 |
 | 国内站 | [`https://xcompute.dualseason.com/v1`](https://xcompute.dualseason.com/v1) | 不推荐 |
 
 ### 3. 快速测试
 
 ```bash
-curl https://api.xcompute.us/v1/chat/completions \
+curl https://xcompute.us/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -211,7 +211,7 @@ Authorization: Bearer YOUR_API_KEY
 #### 请求示例
 
 ```bash
-curl https://api.xcompute.us/v1/chat/completions \
+curl https://xcompute.us/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -264,7 +264,7 @@ curl https://api.xcompute.us/v1/chat/completions \
 #### 请求示例
 
 ```bash
-curl https://api.xcompute.us/v1/images/generations \
+curl https://xcompute.us/v1/images/generations \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -293,7 +293,7 @@ curl https://api.xcompute.us/v1/images/generations \
 
 ### 如何选择 Base URL？
 
-- **海外用户**：使用 `https://api.xcompute.us/v1`
+- **海外用户**：使用 `https://xcompute.us/v1`
 - **国内用户**：使用 `https://intl.dualseason.com/v1`（加速入口）
 - **国内站**：不推荐，与国际站完全隔离
 
@@ -342,7 +342,7 @@ curl https://api.xcompute.us/v1/images/generations \
 
 ## 技术支持
 
-- **官方文档**：[https://api.xcompute.us](https://api.xcompute.us)
+- **API 文档站**：[https://api.xcompute.us](https://api.xcompute.us)
 - **客服支持**：在官方群内联系管理员
 - **问题反馈**：群内反馈或联系销售
 
