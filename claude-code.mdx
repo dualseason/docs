@@ -15,10 +15,19 @@ description: "基于官方安装方式和第三方 provider 接入能力，把 C
 
 Claude Code 是 Anthropic 的编码 Agent。它能直接在终端里：
 
-1. 理解整个仓库结构
-2. 跨多个文件修改代码
-3. 运行命令、分析报错、给出修复方案
-4. 配合 `CLAUDE.md`、MCP、规则文件做持续化工作流
+### 核心功能
+
+| 功能 | 说明 |
+| --- | --- |
+| 代码生成 | 根据自然语言描述生成完整的代码实现 |
+| 文件编辑 | 直接读取、修改、创建项目中的文件 |
+| 终端操作 | 执行 shell 命令、运行测试、管理依赖 |
+| 项目理解 | 自动索引项目结构，理解代码关系和上下文 |
+| Git 操作 | 提交代码、创建分支、解决合并冲突 |
+| 调试排错 | 分析错误日志，定位并修复 bug |
+| 重构优化 | 大规模代码重构、性能优化建议 |
+
+与传统的代码补全工具不同，Claude Code 拥有对整个项目的全局理解能力，能够跨文件分析和修改代码，就像一位经验丰富的工程师坐在你旁边。
 
 ### 系统要求
 
@@ -78,6 +87,20 @@ claude --version
 ```
 
 如果能看到版本号，说明工具本身已经安装成功。
+
+如果安装遇到权限错误（EACCES）：
+
+```bash
+# 方法一：使用 sudo（macOS/Linux）
+sudo npm install -g @anthropic-ai/claude-code
+
+# 方法二：修改 npm 全局目录权限
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+npm install -g @anthropic-ai/claude-code
+```
 
 ### 各平台安装说明
 
@@ -169,6 +192,18 @@ claude config list   # 查看当前配置
 
 配置写入 `~/.claude/settings.json`，可手动编辑。
 
+**配置文件目录结构：**
+
+```
+~/.claude/
+├── settings.json          # 全局设置（API Key、Base URL 等）
+├── credentials.json       # 认证凭证
+├── statsig.json           # 功能标记
+└── projects/              # 项目级配置
+    └── <project-hash>/
+        └── settings.json  # 项目特定设置
+```
+
 **方式三：手动编辑 settings.json**
 
 ```json
@@ -212,18 +247,35 @@ export ANTHROPIC_BASE_URL=https://intl.dualseason.com
 
 ### 验证连接
 
+#### 启动 Claude Code
+
 ```bash
-claude "你好，请用一句话介绍你自己"
+claude
 ```
 
-如果能正常返回内容，说明已接通 Xcompute。如果跳到官方登录流程，检查配置路径或重开终端。
+首次启动会显示欢迎界面，在 `>` 提示符后输入：
 
-连接检查清单：
+```text
+你好，请告诉我你是什么模型，以及你的 API 地址是什么？
+```
+
+如果配置正确，Claude 会回复当前模型信息和 API Base URL。
+
+#### 检查模型
+
+```text
+/model
+```
+
+显示当前使用的模型信息。
+
+#### 连接检查清单
 
 -  `claude --version` 正常输出版本号
 -  `echo $ANTHROPIC_BASE_URL` 输出 `https://xcompute.us`
 -  `echo $ANTHROPIC_AUTH_TOKEN` 输出你的 API Key
 -  `claude` 可以正常启动并对话
+-  `/model` 显示的模型名称正确
 
 ### 完整配置流程示例
 
@@ -304,6 +356,21 @@ export CLAUDE_CODE_CONNECT_TIMEOUT=30  # 连接超时（秒）
 - 所有函数必须有 TypeScript 类型注解
 - 组件文件使用 PascalCase 命名
 - 工具函数使用 camelCase 命名
+
+## 测试要求
+- 修改代码后运行 npm test 验证
+- 新功能必须添加单元测试
+```
+
+你也可以在子目录中创建项目级 `CLAUDE.md`，Claude Code 在访问该目录时会自动加载：
+
+```
+my-project/
+├── CLAUDE.md              # 全局项目说明
+├── src/
+│   └── CLAUDE.md          # src 目录特定说明
+└── tests/
+    └── CLAUDE.md          # 测试目录特定说明
 ```
 
 ### 权限精细管理
@@ -445,10 +512,17 @@ claude
 
 ### 4. 常用命令
 
-1. `/help`：查看帮助
-2. `/model`：切换模型
-3. `/clear`：清空当前界面
-4. `/exit`：退出
+| 命令 | 说明 |
+| --- | --- |
+| `/help` | 显示帮助信息和所有可用命令 |
+| `/clear` | 清除当前对话上下文 |
+| `/model` | 查看或切换当前模型 |
+| `/config` | 查看或修改配置 |
+| `/cost` | 显示当前会话的 token 使用量和费用 |
+| `/compact` | 压缩对话上下文（长对话时有用） |
+| `/doctor` | 诊断连接和配置问题 |
+| `/status` | 显示当前状态信息 |
+| `/quit` 或 `/exit` | 退出 Claude Code |
 
 ## 常见问题
 
@@ -558,6 +632,8 @@ unset HTTPS_PROXY
 | 价格 | 官方定价 | 折扣价（最低 0.9 折） |
 | 计费方式 | 按 token 直接计费 | 通过 Xcompute 平台 |
 | 稳定性 | 最高 | 取决于中转站负载 |
+| 延迟 | 直连最低 | 可能略高（加速入口可缓解） |
+| 模型可用性 | 第一时间可用 | 可能有短暂延迟 |
 
 ### 为什么建议先从简单问题开始？
 
