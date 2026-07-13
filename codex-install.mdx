@@ -4,6 +4,17 @@ title: "Codex 的安装与配置"
 
 > Codex 是 OpenAI 推出的 AI 编程智能体（Coding Agent），能听懂人话，按指令行事，自动修改代码。本教程将指导你在不同平台上安装和配置 Codex。
 
+### 与 ChatGPT 的核心区别
+
+| 对比维度 | ChatGPT（网页版） | Codex CLI |
+| --- | --- | --- |
+| 运行环境 | 浏览器 | 本地终端 |
+| 文件系统 | 无法直接访问 | 可读写本地文件 |
+| 命令执行 | 不能执行 shell 命令 | 可在沙箱中执行命令 |
+| 代码上下文 | 手动粘贴 | 自动读取项目文件 |
+| 开源 | 否 | 完全开源 |
+| 模型灵活度 | 固定前端 | 可自定义 API 端点 |
+
 ## 工具简介
 
 Codex 的用处分为两大类：
@@ -313,6 +324,33 @@ args = ["-y", "@modelcontextprotocol/server-github"]
 env = { GITHUB_TOKEN = "ghp_xxx" }
 ```
 
+### 完整配置示例
+
+以下是一份生产级 `~/.codex/config.toml` 供参考：
+
+```toml
+# 默认模型
+model = "gpt-5.6-sol"
+
+# 默认沙箱模式
+approval_mode = "auto-edit"
+
+# Xcompute 主站
+[model_providers.xcompute]
+name = "Xcompute"
+base_url = "https://xcompute.us/v1"
+env_key = "OPENAI_API_KEY"
+
+# Xcompute 加速站
+[model_providers.xcompute-fast]
+name = "Xcompute Fast"
+base_url = "https://intl.dualseason.com/v1"
+env_key = "OPENAI_API_KEY"
+
+# 默认提供者
+provider = "xcompute"
+```
+
 ### 自定义指令
 
 ```bash
@@ -346,6 +384,18 @@ codex --model gpt-5.6-terra "为 src/utils/ 下的工具函数编写完整的单
 查看 Token 消耗：
 
 Codex 会在任务完成后显示 token 使用统计，帮助你优化指令措辞降低成本。
+
+### 切换模型对比效果
+
+```bash
+# 用 gpt-5.6-luna 完成简单任务
+time codex --model gpt-5.6-luna "写一个冒泡排序算法"
+# 响应快，成本低
+
+# 用 gpt-5.6-sol 完成同样任务
+time codex --model gpt-5.6-sol "写一个冒泡排序算法"
+# 可能更详细，但成本更高
+```
 
 ---
 
@@ -461,6 +511,29 @@ codex --sandbox none "你的任务"
 | 模型版本 | 最新 | 可能有数小时延迟 |
 | 速率限制 | 官方限制 | 取决于渠道配置 |
 | 价格 | 官方定价 | 折扣价（最低 0.9 折） |
+
+### 其他常见错误
+
+**ECONNREFUSED：**
+
+```bash
+# 检查网络设置和代理配置
+env | grep -i proxy
+```
+
+**rate limit exceeded：**
+
+```bash
+# 等待一段时间后重试，或降低请求频率
+# Xcompute 不同渠道有不同的速率限制
+```
+
+**insufficient balance：**
+
+```bash
+# 登录 Xcompute 平台查看余额并充值
+# 建议选择 GPT 福利渠道以降低成本
+```
 
 ## 配置速查
 
