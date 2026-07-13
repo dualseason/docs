@@ -150,8 +150,18 @@ codex --version
 如果弹出版本号（如 `0.xxx.0`）即安装成功。
 
 首次运行 `codex` 会有两个选项：
+
 1. **ChatGPT 账号** — 推荐新手，有免费额度
-2. **OpenAI API Key** — 适合开发者，可通过 CC Switch 中转
+2. **OpenAI API Key** — 适合开发者，接入 Xcompute API Key
+
+如果未配置 API Key 会提示认证错误，请先完成上方配置章节再测试。
+
+```bash
+# 一行命令快速验证配置
+OPENAI_BASE_URL="https://xcompute.us/v1" \
+  OPENAI_API_KEY="sk-xxx" \
+  codex "输出 hello world"
+```
 
 ### 桌面版（非程序员用）
 
@@ -177,6 +187,15 @@ codex --version
 ## 配置 Codex 对接 Xcompute
 
 Codex 默认连 OpenAI 官方 API。要接到 Xcompute，需要修改 API 地址和 Key。
+
+### Xcompute API 概览
+
+| 项目 | 信息 |
+| --- | --- |
+| Base URL（OpenAI 协议） | `https://xcompute.us/v1` |
+| 加速入口 | `https://intl.dualseason.com/v1` |
+| 渠道分组 | GPT 福利 0.9 折 / GPT 渠道 1.5 折 / Kiro 1.8 折 / 官 Key 4.9 折 |
+| 模型范围 | GPT 系列、Claude 系列、Gemini、国产模型 |
 
 ### 方法一：环境变量（推荐新手）
 
@@ -221,6 +240,18 @@ provider = "xcompute"
 <Tip>
   `env_key` 指向的是环境变量名称，你仍需设置 `OPENAI_API_KEY` 环境变量。
 </Tip>
+
+**配置字段详解：**
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 否 | 默认使用的模型名称 |
+| `provider` | string | 否 | 默认使用的模型提供者标识 |
+| `model_providers.<name>.name` | string | 是 | 提供者显示名称 |
+| `model_providers.<name>.base_url` | string | 是 | API 地址（必须含 `/v1`） |
+| `model_providers.<name>.env_key` | string | 是 | 存储 API Key 的环境变量名 |
+| `model_providers.<name>.wire_api` | string | 否 | 协议类型，`"chat"`（中转站用）或 `"responses"`（官方默认） |
+| `approval_mode` | string | 否 | 沙箱模式：`suggest` / `auto-edit` / `full-auto` |
 
 多提供者配置（方便切换）：
 
@@ -274,19 +305,42 @@ export OPENAI_API_KEY="sk-你的API密钥"
 
 ### 模型选择
 
-| 模型 | 渠道 | 特点 | 适用场景 |
+#### 可用模型一览
+
+| 模型 | 模型 ID | 渠道 | 上下文 | 特点 |
+| --- | --- | --- | --- | --- |
+| GPT 5.6 Sol | `gpt-5.6-sol` | GPT 福利 0.9 折 | 1M | 综合能力最强 |
+| GPT 5.6 Terra | `gpt-5.6-terra` | default | 1M | 性价比之选 |
+| GPT 5.6 Luna | `gpt-5.6-luna` | GPT 渠道 1.5 折 | 1M | 速度最快、最便宜 |
+| GPT 5.5 | `gpt-5.5` | GPT 福利 0.9 折 | 1M | 通用任务 |
+| GPT 5.4 | `gpt-5.4` | GPT 福利 0.9 折 | 1M | 极低成本 |
+
+#### 场景化推荐
+
+| 场景 | 推荐模型 | 理由 |
+| --- | --- | --- |
+| 日常编码、bug 修复 | `gpt-5.6-terra` | 性价比之王，编码能力接近顶尖 |
+| 复杂架构设计、多文件重构 | `gpt-5.6-sol` | 综合能力最强，上下文 1M |
+| 简单补全、格式化 | `gpt-5.6-luna` | 速度最快，成本极低 ($0.09/$0.54) |
+| 大段文档分析 | `gpt-5.6-sol` | 1M 超长上下文 |
+
+#### 成本对比估算
+
+以每天处理 10 个中等任务（每任务约 5K input + 2K output tokens）为例：
+
+| 模型 | 日消耗估算 | 月消耗估算 | 性价比 |
 | --- | --- | --- | --- |
-| `gpt-5.6-sol` | GPT 福利 0.9 折 | 高能力 | 复杂架构设计、代码生成 |
-| `gpt-5.6-terra` | default | 通用 | 日常对话、文本生成 |
-| `gpt-5.6-luna` | GPT 渠道 1.5 折 | 轻量快速 | 低成本对话、摘要 |
-| `gpt-5.5` | GPT 福利 0.9 折 | 通用 | 复杂任务 |
-| `gpt-5.4` | GPT 福利 0.9 折 | 性价比 | 日常编码 |
+| `gpt-5.6-luna` | ~$0.01 | ~$0.3 | 极低成本 |
+| `gpt-5.6-terra` | ~$0.02 | ~$0.6 | 经济实用 |
+| `gpt-5.6-sol` | ~$0.05 | ~$1.5 | 能力强劲 |
+
+使用 Xcompute 的 GPT 福利渠道（0.9 折），成本仅为官方价格的不到十分之一。
 
 ```bash
 # 通过 --model 指定模型
-codex --model gpt-5.6-sol "复杂任务"
-codex --model gpt-5.6-terra "日常任务"
-codex --model gpt-5.6-luna "简单任务"
+codex --model gpt-5.6-sol "复杂架构设计任务"
+codex --model gpt-5.6-terra "日常编码任务"
+codex --model gpt-5.6-luna "简单快速任务"
 ```
 
 ## 高级配置
@@ -383,16 +437,34 @@ codex --model gpt-5.6-terra "为 src/utils/ 下的工具函数编写完整的单
 
 查看 Token 消耗：
 
-Codex 会在任务完成后显示 token 使用统计，帮助你优化指令措辞降低成本。
+Codex 会在任务完成后显示 token 使用统计：
+
+```text
+✅ Task completed
+─────────────────────────────
+  Tokens used:
+    Prompt:     3,245 tokens
+    Completion: 1,892 tokens
+    Total:      5,137 tokens
+─────────────────────────────
+  Cost estimate: $0.0032 (gpt-5.6-terra)
+```
+
+通过观察 token 消耗，你可以优化指令措辞来减少不必要的开销。
 
 ### 切换模型对比效果
 
+不同模型对同一任务的输出质量和速度差异明显：
+
 ```bash
-# 用 gpt-5.6-luna 完成简单任务
+# 用 gpt-5.6-luna 完成简单任务（速度最快）
 time codex --model gpt-5.6-luna "写一个冒泡排序算法"
 # 响应快，成本低
 
-# 用 gpt-5.6-sol 完成同样任务
+# 用 gpt-5.6-terra 完成同样任务（日常推荐）
+time codex --model gpt-5.6-terra "写一个冒泡排序算法"
+
+# 用 gpt-5.6-sol 完成同样任务（最详细）
 time codex --model gpt-5.6-sol "写一个冒泡排序算法"
 # 可能更详细，但成本更高
 ```
@@ -482,10 +554,16 @@ Error: Sandbox initialization failed / Docker is not running
 ```
 
 ```bash
-# 确认 Docker 在运行
+# 1. 确认 Docker 在运行
 docker info
 
-# 临时跳过沙箱
+# 2. 确认当前用户在 docker 组中
+groups | grep docker
+
+# 3. WSL2 用户：确保 Docker Desktop 的 WSL2 集成已启用
+# Docker Desktop → Settings → Resources → WSL Integration
+
+# 4. 临时跳过沙箱测试
 codex --sandbox none "你的任务"
 ```
 
@@ -508,9 +586,11 @@ codex --sandbox none "你的任务"
 | 对比项 | 官方 OpenAI | Xcompute |
 | --- | --- | --- |
 | Base URL | `https://api.openai.com/v1` | `https://xcompute.us/v1` |
-| 模型版本 | 最新 | 可能有数小时延迟 |
+| 模型版本 | 最新 | 可能存在数小时延迟 |
+| 响应速度 | 取决于官方服务器 | 可选加速入口 |
 | 速率限制 | 官方限制 | 取决于渠道配置 |
 | 价格 | 官方定价 | 折扣价（最低 0.9 折） |
+| 计费 | 官方账单 | Xcompute 余额 |
 
 ### 其他常见错误
 
@@ -530,6 +610,10 @@ env | grep -i proxy
 
 **insufficient balance：**
 
+```
+Error: insufficient balance
+```
+
 ```bash
 # 登录 Xcompute 平台查看余额并充值
 # 建议选择 GPT 福利渠道以降低成本
@@ -542,22 +626,34 @@ env | grep -i proxy
 export OPENAI_BASE_URL="https://xcompute.us/v1"
 export OPENAI_API_KEY="sk-xxx"
 
-# 指定模型启动
-codex --model gpt-5.6-sol "复杂任务"
-codex --model gpt-5.6-terra "日常任务"
-codex --model gpt-5.6-luna "简单任务"
+# 基本使用
+codex "你的任务描述"
+codex --model gpt-5.6-sol "复杂架构设计"
+codex --model gpt-5.6-terra "日常编码任务"
+codex --model gpt-5.6-luna "简单快速任务"
 
 # 沙箱模式
-codex --sandbox suggest "任务"     # 最安全
-codex --sandbox auto-edit "任务"   # 平衡
-codex --sandbox full-auto "任务"   # 最高效
+codex --sandbox suggest "任务"     # 最安全 - AI 仅建议
+codex --sandbox auto-edit "任务"   # 平衡 - 文件自动编辑，命令需确认
+codex --sandbox full-auto "任务"   # 最高效 - 全部自动执行
 
 # 加速入口
 export OPENAI_BASE_URL="https://intl.dualseason.com/v1"
 
-# 验证
+# 验证 API 连通性
 curl -s $OPENAI_BASE_URL/models -H "Authorization: Bearer $OPENAI_API_KEY" | head -c 200
 ```
+
+**快速命令速查：**
+
+| 命令 | 说明 |
+| --- | --- |
+| `codex --version` | 验证安装 |
+| `codex "任务"` | 直接运行任务 |
+| `codex --model xxx "任务"` | 指定模型运行 |
+| `codex --sandbox xxx "任务"` | 指定沙箱模式 |
+| `codex --help` | 查看完整帮助 |
+| `npm update -g @openai/codex` | 升级 Codex |
 
 ### 配置路径
 
