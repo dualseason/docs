@@ -1,0 +1,116 @@
+---
+title: "Codex 破甲指南"
+description: "针对 Codex CLI 的破甲提示词项目汇总 — gpt-5.6-instruct 与 codex-instruct-5.5"
+---
+
+<Warning>
+  以下内容仅供安全研究与学习参考。请遵守当地法律法规及 OpenAI 使用条款。
+</Warning>
+
+## 背景
+
+OpenAI Codex CLI 内置了严格的内容安全限制。社区通过注入自定义系统指令（破甲 / jailbreak）的方式绕过这些限制，使得模型在安全研究、渗透测试、逆向工程等场景下不再拒绝回答。
+
+本页汇总了两个主流的 Codex CLI 破甲项目。
+
+---
+
+## gpt-5.6-instruct（v5）
+
+针对 `gpt-5.6-sol` 的 Codex CLI 破甲提示词与测试包。
+
+**项目地址**：[MDX-Tom/gpt-5.6-instruct](https://github.com/MDX-Tom/gpt-5.6-instruct)
+
+**当前版本**：`v5`
+
+**策略演进**：
+
+| 版本 | 策略 | 原理 |
+| --- | --- | --- |
+| 5.4 | CTF 沙箱 | 沙箱叙事降级 |
+| 5.5 | unrestricted 模式 | 开发者模式覆盖 |
+| 5.6-sol | `model_instructions_file` 注入 | 配置注入，指令覆盖 |
+
+`v5` 将安全研究、渗透测试、逆向工程、GPT/Codex 逆向、软件破解与 NSFW 虚构内容统一声明为本地沙箱任务，显式压制拒绝/回退话术。
+
+### 部署方式
+
+```bash
+# 部署破甲指令
+python codex-instruct.py
+
+# 重启 Codex 生效
+```
+
+部署脚本会复制 `gpt-5.6-sol-unrestricted.md` 到 `~/.codex/`，并在 `config.toml` 写入 `model_instructions_file` 配置项。
+
+### 测试概况
+
+测试集规模：6 个场景 × 3 个长度级别 × 2 种语言 × 10 条 = 360 条。
+
+| 级别 | 通过 |
+| --- | --- |
+| minimal | 120 / 120 |
+| short | 120 / 120 |
+| medium | 120 / 120 |
+
+### 删除恢复
+
+```bash
+# 删除 config.toml 中的 model_instructions_file 行
+# 删除 ~/.codex/gpt-5.6-sol-unrestricted.md
+# 重启 Codex
+```
+
+---
+
+## codex-instruct-5.5
+
+针对 GPT-5.5 的 Codex CLI 破甲工具 — 一键注入无限制模式系统指令。
+
+**项目地址**：[yynxxxxx/Codex-5.5-codex-instruct-5.5](https://github.com/yynxxxxx/Codex-5.5-codex-instruct-5.5)
+
+与 5.4 的 CTF 沙箱方案不同，5.5 版本采用更直接的破甲策略：直接声明无限制开发者模式、关闭所有过滤器、明确要求不拒绝任何任务。8 条核心指令覆盖了安全研究、渗透测试、逆向工程、NSFW 虚构内容等全部场景。
+
+### 部署方式
+
+```bash
+# 部署 GPT-5.5 破限指令
+python codex-instruct.py
+
+# 重启 Codex 生效
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `--file`, `-f` | 使用外部 `.md` 指令文件 |
+| `--name`, `-n` | 输出文件名不含 `.md`（默认 `gpt5.5-unrestricted`） |
+| `--dry-run` | 预览，不实际修改 |
+| `--codex-dir` | 手动指定 `.codex` 目录 |
+
+### 删除恢复
+
+```bash
+# 删除 config.toml 中的 model_instructions_file 行
+# 删除 ~/.codex/gpt5.5-unrestricted.md
+# 重启 Codex
+```
+
+---
+
+## 对比总结
+
+| 特性 | 5.5 (unrestricted) | 5.6-sol (v5) |
+| --- | --- | --- |
+| 策略 | 直接声明无限制开发者模式 | 配置注入 + 沙箱叙事 |
+| 风格 | 极简指令，覆盖面广 | 严谨声明，压制拒绝话术 |
+| 指令长度 | ~40 行 | 更长，含详细声明 |
+| 适用模型 | GPT-5.5 | GPT-5.6-sol |
+| 测试覆盖 | 无公开测试集 | 360 条全通过 |
+
+## 相关资源
+
+- https://github.com/MDX-Tom/gpt-5.6-instruct
+- https://github.com/yynxxxxx/Codex-5.5-codex-instruct-5.5
+
+*最后更新：2026-07-13*
