@@ -1,0 +1,317 @@
+---
+AIGC:
+  Label: "1"
+  ContentProducer: "001191110102MACQD9K64018705"
+  ProduceID: "1168115141182544_0/project_7661880082130157843-files/codex-plus-plus-xcompute-guide.md"
+  ReservedCode1: ""
+  ContentPropagator: "001191110102MACQD9K64028705"
+  PropagateID: "1168115141182544#1783923780201"
+  ReservedCode2: ""
+title: "Codex++ 对接 Xcompute API 教程"
+---
+
+> Codex++ 是面向 OpenAI Codex / ChatGPT 桌面应用的外部启动器与管理工具。本教程将指导你通过 Codex++ 接入 Xcompute API 中转站。
+
+<Frame>
+  ![Codex++ 图标](/images/codex-plus-plus.png)
+</Frame>
+
+## 目录
+
+1. [工具简介](#工具简介)
+2. [前置准备](#前置准备)
+3. [安装 Codex++](#安装-codex)
+4. [获取 Xcompute API Key](#获取-xcompute-api-key)
+5. [配置 Xcompute 供应商](#配置-xcompute-供应商)
+6. [测试连接](#测试连接)
+7. [开始使用](#开始使用)
+8. [常见问题](#常见问题)
+
+---
+
+## 工具简介
+
+Codex++ 通过 Chromium DevTools Protocol 和本地辅助服务增强 Codex 桌面应用，不修改官方应用的 `app.asar`，也不向安装目录写入补丁文件。
+
+主要功能包括：
+
+- **供应商切换**：支持官方登录、纯 API、混合模式和聚合供应商
+- **协议转换**：将 Chat Completions 转换为 Codex 使用的 Responses 协议
+- **会话管理**：支持批量删除、Markdown 导出和 Token 用量历史
+- **界面增强**：提供中文界面、插件管理、会话宽度和滚动恢复
+- **聚合供应商**：支持多个 API 供应商之间的故障转移和轮转
+
+**项目地址**：[https://github.com/BigPizzaV3/CodexPlusPlus](https://github.com/BigPizzaV3/CodexPlusPlus)
+
+### 供应商模式说明
+
+| 模式 | 用途 | 说明 |
+| --- | --- | --- |
+| **官方登录** | 只使用 ChatGPT 官方账号 | 清理自定义供应商和 API Key，保留官方登录状态 |
+| **官方登录 + API** | 保留官方账号，模型请求走 API | API Key 写入供应商 Bearer Token |
+| **纯 API** | 完全使用自定义 API | 独立保存配置，不依赖官方账号 |
+| **聚合供应商** | 多个 API 供应商路由 | 支持故障转移、按会话轮转、按请求轮转和权重轮转 |
+
+<Tip>
+  对接 Xcompute 时推荐使用 **纯 API** 模式，认证边界更清晰。
+</Tip>
+
+---
+
+## 前置准备
+
+开始之前，请确保：
+
+- 已安装 OpenAI Codex 桌面应用
+- 已注册 [Xcompute 账号](https://xcompute.us)
+- 操作系统为 Windows 10+ 或受 Codex 桌面应用支持的 macOS
+
+<Info>
+  Codex++ 是外部启动器和管理工具。部分增强功能依赖 Codex 桌面应用的页面结构，官方应用更新后可能需要等待 Codex++ 适配。
+</Info>
+
+---
+
+## 安装 Codex++
+
+访问 [Codex++ Releases](https://github.com/BigPizzaV3/CodexPlusPlus/releases/latest) 下载最新安装包：
+
+| 系统 | 安装包 |
+| --- | --- |
+| Windows | `CodexPlusPlus-*-windows-x64-setup.exe` |
+| macOS Intel | `CodexPlusPlus-*-macos-x64.dmg` |
+| macOS Apple Silicon | `CodexPlusPlus-*-macos-arm64.dmg` |
+
+### Windows 安装
+
+1. 双击运行 Windows 安装程序
+2. 按照安装向导完成安装
+3. 安装后确认桌面或开始菜单中存在两个入口
+
+| 入口 | 用途 |
+| --- | --- |
+| **Codex++** | 静默启动官方 Codex，并加载供应商配置和增强功能 |
+| **Codex++ 管理工具** | 管理供应商、模型、会话、脚本、更新和诊断 |
+
+### macOS 安装
+
+1. 根据处理器类型下载对应的 DMG
+2. 打开 DMG 文件
+3. 将 **Codex++.app** 和 **Codex++ 管理工具.app** 安装到应用程序目录
+4. 从启动台打开 **Codex++ 管理工具**
+
+如果 macOS 提示应用“已损坏”或无法打开，可以执行：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/Codex++\ 管理工具.app
+sudo xattr -rd com.apple.quarantine /Applications/Codex++.app
+```
+
+<Frame>
+  ![macOS 拦截 Codex++ 的提示](/images/codex-plus-macos-warning.png)
+</Frame>
+
+---
+
+## 获取 Xcompute API Key
+
+1. 登录 [Xcompute 控制台](https://xcompute.us)
+2. 进入 [API 密钥页面](https://xcompute.us/keys)
+3. 点击 **创建新密钥**
+4. 根据要使用的模型选择渠道分组
+5. 复制生成的 API Key（以 `sk-` 开头）
+
+| 使用场景 | 建议渠道 |
+| --- | --- |
+| GPT 模型 | GPT 福利渠道 0.9 折 |
+| Claude 日常使用 | Kiro 渠道 1.8 折 |
+| Claude 高质量或蒸馏需求 | 官 Key 渠道 4.9 折 |
+
+<Warning>
+  API Key 相当于账号密码。请勿公开、分享或提交到代码仓库。
+</Warning>
+
+---
+
+## 配置 Xcompute 供应商
+
+### 第一步：打开管理工具
+
+首次使用时先打开 **Codex++ 管理工具**，确认 Codex 应用路径和运行状态正确。
+
+### 第二步：创建纯 API 供应商
+
+1. 打开 **供应商配置**
+2. 点击 **添加供应商**
+3. 选择 **纯 API** 模式
+4. 将供应商名称填写为 `Xcompute`
+
+### 第三步：填写连接信息
+
+| 字段 | 推荐值 |
+| --- | --- |
+| **供应商名称** | `Xcompute` |
+| **供应商类型** | `纯 API` |
+| **Base URL** | `https://api.xcompute.us/v1` |
+| **API Key** | 从 Xcompute 获取的 `sk-` 密钥 |
+
+国内访问国际站时，可以将 Base URL 改为：
+
+```text
+https://intl.dualseason.com/v1
+```
+
+<Warning>
+  Codex++ 的 Base URL 需要包含正确的 `/v1` 前缀。不要只填写站点域名。
+</Warning>
+
+### 第四步：选择上游协议
+
+| 协议 | 使用条件 | 说明 |
+| --- | --- | --- |
+| **Responses** | 上游支持 `/v1/responses` | Codex 原生协议，优先选择 |
+| **Chat Completions** | 上游支持 `/v1/chat/completions` | Codex++ 通过本地代理转换为 Responses |
+
+<Info>
+  使用 Chat Completions 协议时，必须从 **Codex++** 入口启动 Codex，本地协议转换服务才会生效。
+</Info>
+
+### 第五步：添加模型
+
+| 模型名称 | 模型 ID | 适用场景 |
+| --- | --- | --- |
+| GPT 5.5 | `gpt-5.5` | 复杂编码和 Agent 任务 |
+| GPT 5.4 | `gpt-5.4` | 日常编码和成本控制 |
+| Claude Fable 5 | `claude-fable-5` | 高强度推理和编码 |
+| Claude Sonnet 5 | `claude-sonnet-5` | 质量与成本平衡 |
+| Claude Opus 4.8 | `claude-opus-4-8` | Claude Opus 工作流 |
+
+为每个模型选择合适的上下文窗口。Codex++ 支持 `1M`、`200K` 或纯数字，并会生成对应的模型目录配置。
+
+### 第六步：保存配置
+
+选择一个可用模型作为测试模型，然后点击 **保存**。
+
+---
+
+## 测试连接
+
+### 模型测试
+
+1. 打开 Xcompute 供应商详情
+2. 确认 Base URL、API Key、协议和测试模型均已填写
+3. 运行 **模型测试**
+4. 检查响应状态和错误信息
+
+### Provider Doctor
+
+如果模型测试失败，运行 **Provider Doctor**。它会检查：
+
+- Base URL 和 API Key 是否完整
+- 当前协议和测试模型是否匹配
+- 纯 API 配置是否正确写入
+- 本地代理和环境变量是否存在冲突
+
+也可以使用 Xcompute 的模型接口排查网络和密钥：
+
+```bash
+curl https://api.xcompute.us/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+---
+
+## 开始使用
+
+### 激活 Xcompute 供应商
+
+1. 在供应商列表中选择 Xcompute
+2. 点击 **启用**
+3. 确认当前供应商已切换为 Xcompute
+
+### 从 Codex++ 启动
+
+从 **Codex++** 入口启动 Codex，或在管理工具中点击启动按钮。不要直接打开官方 Codex 应用，否则本地协议转换和部分增强功能可能不会加载。
+
+在 Codex 中发送一条测试消息。能够正常收到回复即表示配置成功。
+
+---
+
+## 界面增强功能
+
+Codex++ 的增强功能可以单独开启或关闭：
+
+- **会话管理**：批量删除、Markdown 导出、项目移动和 Token 用量历史
+- **插件增强**：插件市场、模型白名单和插件自动展开
+- **界面优化**：中文界面、会话宽度、滚动恢复和服务层级控制
+- **开发工作流**：Upstream worktree、线程 ID、Goals 和 Stepwise
+- **用户脚本**：安装、启用和管理自定义脚本
+
+<Frame>
+  ![Codex++ 增强设置](/images/codex-plus-settings-panel.png)
+</Frame>
+
+<Frame>
+  ![Codex++ 插件和会话增强](/images/codex-plus-enhancements.png)
+</Frame>
+
+---
+
+## 常见问题
+
+### Codex++ 菜单没有出现？
+
+1. 确认从 **Codex++** 入口启动，而不是直接打开官方应用
+2. 在管理工具的 **安装维护** 页面检查 Codex 应用路径
+3. 在 **关于** 页面查看启动状态和诊断日志
+
+### 切换供应商后请求失败？
+
+1. 运行模型测试和 Provider Doctor
+2. 确认 Base URL 包含 `/v1`
+3. 确认协议、API Key 和测试模型匹配
+4. 确认 Xcompute 账户有余额且密钥未过期
+5. Chat Completions 模式下确认从 Codex++ 启动器进入
+
+### 如何切换回官方 API？
+
+在供应商列表中选择 **官方登录** 配置并启用，然后重新启动 Codex++。也可以在管理工具中恢复 Codex 原有配置。
+
+### 如何配置聚合供应商？
+
+1. 先添加至少一个已填写 Base URL 和 API Key 的普通 API 供应商
+2. 创建 **聚合供应商**
+3. 勾选要加入路由的供应商
+4. 选择故障转移、按会话轮转、按请求轮转或权重轮转
+
+### macOS 提示“已损坏”？
+
+执行安装章节中的 `xattr` 命令解除隔离，然后重新打开应用。
+
+---
+
+## 数据位置
+
+| 数据类型 | 位置 |
+| --- | --- |
+| Codex 配置 | `~/.codex/config.toml` |
+| Codex 登录状态 | `~/.codex/auth.json` |
+| Codex 本地数据库 | `~/.codex/sqlite/*.db` |
+| Codex++ 状态与日志 | `~/.codex-session-delete/` |
+| Provider 同步备份 | `~/.codex/backups_state/provider-sync` |
+
+---
+
+## 相关资源
+
+- **Codex++ GitHub**：[https://github.com/BigPizzaV3/CodexPlusPlus](https://github.com/BigPizzaV3/CodexPlusPlus)
+- **Codex++ Releases**：[https://github.com/BigPizzaV3/CodexPlusPlus/releases](https://github.com/BigPizzaV3/CodexPlusPlus/releases)
+- **Xcompute API 文档**：[https://api.xcompute.us](https://api.xcompute.us)
+- **问题反馈**：[GitHub Issues](https://github.com/BigPizzaV3/CodexPlusPlus/issues)
+- **交流群**：QQ群 830629290
+
+---
+
+*最后更新：2026-07-13*
+
+> 本内容由 Coze AI 生成，请遵循相关法律法规及《人工智能生成合成内容标识办法》使用与传播。
