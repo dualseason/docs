@@ -1,164 +1,372 @@
 ---
 title: "ComfyUI 接入"
-description: "基于 ComfyUI 官方安装方式，讲清楚如何把 ComfyUI 工作流和 Xcompute API 结合起来。"
+description: "将 ComfyUI 与 Xcompute API 对接，实现 AI 提示词生成、多模态分析、自动化图像工作流。"
 ---
 
-ComfyUI 是图像与视频工作流工具，强项是节点编排、本地模型和图像后处理。它和 Xcompute 的关系，不是“替代”，而是“组合”：
+ComfyUI 是目前最强大的节点式 AI 图像/视频生成工作流引擎。与传统的 Web UI 不同，ComfyUI 采用可视化的节点图编排工作流，让你像搭积木一样组合各种 AI 模型和处理步骤。
 
-1. `Xcompute` 负责调用远程模型
-2. `ComfyUI` 负责节点编排、批量工作流、后处理和本地增强
+**一个重要理解：** ComfyUI 不像 Claude Code、Codex 那样天然就是文本模型客户端。Xcompute 负责远程模型调用，ComfyUI 负责节点编排、批量工作流、后处理和本地增强。两者是"组合"关系，而非"替代"。
 
 <Frame>
-  <img src="https://mintcdn.com/dripart/NmGUk_QSXQXRVtZP/images/interface/setting/user.jpg?fit=max&auto=format&n=NmGUk_QSXQXRVtZP&q=85&s=066170b38e0b9ead026029685e00fa65" alt="ComfyUI 官方设置界面" />
+  <img src="https://mintcdn.com/dripart/NmGUk_QSXQXRVtZP/images/interface/setting/user.jpg?fit=max&auto=format&n=NmGUk_QSXQXRVtZP&q=85&s=066170b38e0b9ead026029685e00fa65" alt="ComfyUI 设置界面" />
 </Frame>
 
-<caption>*ComfyUI 官方文档中的设置界面截图*</caption>
+## 核心特性
 
-## 先理解 ComfyUI 适合做什么
+| 特性 | 说明 |
+| --- | --- |
+| 节点式架构 | 通过连接节点构建工作流，灵活度极高 |
+| 可复现 | 工作流可导出为 JSON，方便分享和复现 |
+| 自定义节点 | 社区提供数千个自定义节点 |
+| 多模态 | 支持图像、视频、音频生成 |
+| API 驱动 | 内置 REST API + WebSocket，易于集成 |
+| 资源高效 | 相比 WebUI 内存占用更低 |
 
-ComfyUI 官方重点强调的是：
+## ComfyUI 能做什么
 
-1. 节点式图像和视频工作流
-2. 本地模型与外部模型混合编排
-3. 通过 API 和外部服务接入复杂内容生产链路
+- **图像生成**：Stable Diffusion、FLUX、SDXL
+- **视频生成**：AnimateDiff、SVD、Wan
+- **图像编辑**：Inpainting、ControlNet、IPAdapter
+- **风格迁移**：LoRA 和风格模型
+- **图像分析**：多模态模型识别图像内容
+- **提示词优化**：LLM 自动优化和扩展提示词
 
-## 这篇文章适合谁
+## 为什么接入 Xcompute
 
-如果你是下面这些场景，这篇很适合你：
+将 ComfyUI 与 Xcompute API 结合可以实现：
 
-1. 想做批量出图或图像工作流
-2. 想把远程大模型和本地图像处理串起来
-3. 想把 Xcompute 作为生图入口，再在 ComfyUI 里继续做后处理
+- **AI 智能提示词生成**：用 LLM 自动生成高质量提示词
+- **图像内容分析**：用多模态模型分析图像，反向生成提示词
+- **自动化 Pipeline**：LLM 生成提示词 → ComfyUI 生成图像 → LLM 评估质量
+- **批量处理**：结合 Xcompute 的低价 API，实现大规模内容创作
 
-## 官方安装方式
+## 安装与部署
 
-### 方案一：桌面版或便携版
+### Windows
 
-如果你只是想快速开始，优先用官方桌面版或 Windows 便携版。
+<Tabs>
+  <Tab title="便携包（推荐新手）">
+    前往 [ComfyUI GitHub Releases](https://github.com/comfyanonymous/ComfyUI/releases) 下载最新便携包，解压后双击 `run_nvidia_gpu.bat` 启动。访问 `http://127.0.0.1:8188`。
+  </Tab>
+  <Tab title="手动安装">
+    ```powershell
+    git clone https://github.com/comfyanonymous/ComfyUI.git
+    cd ComfyUI
+    python -m venv venv
+    venv\Scripts\activate
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+    pip install -r requirements.txt
+    python main.py
+    ```
+  </Tab>
+</Tabs>
 
-- 官方项目页：[https://github.com/Comfy-Org/ComfyUI](https://github.com/Comfy-Org/ComfyUI)
-- 官方下载页：[https://www.comfy.org/download](https://www.comfy.org/download)
-
-### 方案二：手动安装
-
-适合 Linux / macOS / 有 Python 环境的用户。
+### macOS
 
 ```bash
-git clone https://github.com/Comfy-Org/ComfyUI.git
+brew install python@3.12
+git clone https://github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
+python3 -m venv venv
+source venv/bin/activate
+pip install torch torchvision torchaudio
+pip install -r requirements.txt
+python main.py --force-fp16
+```
+
+M1/M2/M3 Mac 自动使用 Metal Performance Shaders (MPS)。
+
+### Linux
+
+```bash
+sudo apt install -y python3.12 python3.12-venv python3-pip git
+git clone https://github.com/comfyanonymous/ComfyUI.git
+cd ComfyUI
+python3 -m venv venv
+source venv/bin/activate
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 python main.py
 ```
 
-## 先理解一个关键点
+### Docker
 
-<Warning>
-  ComfyUI 并不像 Claude Code、Codex、OpenCode 那样，天然就是一个“文本模型客户端”。它更像一个图像工作流引擎。
-</Warning>
-
-所以你不要把它理解成“把 Base URL 填进去就完事”的工具。
-
-更准确的理解是：
-
-1. Xcompute 负责远程生成
-2. ComfyUI 负责工作流编排、后处理、节点连接
-
-## Xcompute 怎么和 ComfyUI 配合
-
-这里要讲清楚一点：
-
-<Warning>
-  ComfyUI 官方的 Partner Nodes 更偏向接它自己的合作模型与账户体系，不适合直接当成 Xcompute 的通用接入口。
-</Warning>
-
-所以更推荐这两种方式：
-
-### 方式一：把 Xcompute 当外部生成服务
-
-你在 ComfyUI 外部先调用 Xcompute 的图像或视频接口，再把返回结果喂回 ComfyUI 继续做：
-
-1. 文生图
-2. 图生图
-3. 放大
-4. 风格化
-5. 拼接到更复杂的本地工作流里
-
-### 方式二：用 HTTP/API 节点接远程接口
-
-如果你的 ComfyUI 工作流里已经有 API 调用能力，可以直接请求：
-
-```bash
-POST https://xcompute.us/v1/images/generations
+```yaml
+version: '3.8'
+services:
+  comfyui:
+    image: ghcr.io/ai-dock/comfyui:latest
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./models:/opt/ComfyUI/models
+      - ./output:/opt/ComfyUI/output
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 ```
 
-请求示例：
+## 安装 ComfyUI Manager
 
+ComfyUI Manager 是必装插件管理器，可一键安装数千个自定义节点：
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/ltdrdata/ComfyUI-Manager.git
+# 重启 ComfyUI
+```
+
+重启后界面会出现 **Manager** 按钮，用于搜索安装节点、下载模型、一键更新插件。
+
+## Xcompute API 对接方案
+
+### 方案一：自定义节点接入（推荐）
+
+在 ComfyUI Manager 中搜索安装以下节点之一：
+
+- `ComfyUI-Custom-Scripts` — 包含 HTTP Request 节点
+- `ComfyUI_HTTP_Request` — 专门的 HTTP 请求节点
+- `ComfyUI-LLM-Party` — LLM 集成节点集合
+
+在节点中配置：
+
+| 配置项 | 值 |
+| --- | --- |
+| API Provider | OpenAI Compatible |
+| Base URL | `https://xcompute.us/v1` |
+| API Key | `sk-xxx` |
+| Model | `gpt-5.6-sol` |
+
+加速入口：`https://intl.dualseason.com/v1`
+
+### 方案二：Python 脚本桥接
+
+适合需要复杂逻辑处理的场景。安装 `openai` 包：
+
+```bash
+pip install openai
+```
+
+**AI 图像生成 Pipeline：**
+
+```python
+import json, time, urllib.request
+from openai import OpenAI
+
+XCOMPUTE_BASE_URL = "https://xcompute.us/v1"
+XCOMPUTE_API_KEY = "sk-xxx"
+COMFYUI_URL = "http://127.0.0.1:8188"
+
+def generate_prompt(topic, style="photorealistic"):
+    """用 Xcompute LLM 生成图像提示词"""
+    client = OpenAI(base_url=XCOMPUTE_BASE_URL, api_key=XCOMPUTE_API_KEY)
+    response = client.chat.completions.create(
+        model="gpt-5.6-sol",
+        messages=[
+            {"role": "system", "content": "Create detailed, vivid prompts for image generation. Output ONLY the prompt."},
+            {"role": "user", "content": f"Create a {style} image prompt about: {topic}"}
+        ],
+        temperature=0.8,
+        max_tokens=300
+    )
+    return response.choices[0].message.content.strip()
+
+def submit_workflow(prompt):
+    """提交工作流到 ComfyUI"""
+    workflow = {
+        "prompt": {
+            "3": {"class_type": "KSampler", "inputs": {"seed": int(time.time()) % 1000000, "steps": 20, "cfg": 7, "model": ["4", 0], "positive": ["6", 0], "negative": ["7", 0], "latent_image": ["5", 0]}},
+            "4": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "sd_xl_base_1.0.safetensors"}},
+            "5": {"class_type": "EmptyLatentImage", "inputs": {"width": 1024, "height": 1024, "batch_size": 1}},
+            "6": {"class_type": "CLIPTextEncode", "inputs": {"text": prompt, "clip": ["4", 1]}},
+            "7": {"class_type": "CLIPTextEncode", "inputs": {"text": "ugly, blurry, low quality", "clip": ["4", 1]}},
+            "8": {"class_type": "VAEDecode", "inputs": {"samples": ["3", 0], "vae": ["4", 2]}},
+            "9": {"class_type": "SaveImage", "inputs": {"filename_prefix": "Xcompute_", "images": ["8", 0]}}
+        }
+    }
+    data = json.dumps(workflow).encode('utf-8')
+    req = urllib.request.Request(f"{COMFYUI_URL}/prompt", data=data, headers={'Content-Type': 'application/json'})
+    result = json.loads(urllib.request.urlopen(req).read())
+    return result['prompt_id']
+
+def wait_result(prompt_id, timeout=300):
+    """等待 ComfyUI 生成完成"""
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            resp = json.loads(urllib.request.urlopen(f"{COMFYUI_URL}/history/{prompt_id}").read())
+            if prompt_id in resp:
+                for node_id, output in resp[prompt_id]['outputs'].items():
+                    if 'images' in output and output['images']:
+                        img = output['images'][0]
+                        return f"{COMFYUI_URL}/view?filename={img['filename']}&type={img['type']}"
+        except: pass
+        time.sleep(2)
+    raise TimeoutError(f"生成超时 ({timeout}s)")
+
+# 一键运行
+prompt = generate_prompt("a futuristic city with flying cars", "cinematic")
+pid = submit_workflow(prompt)
+url = wait_result(pid)
+print(f"图像地址: {url}")
+```
+
+### 方案三：HTTP Request 节点直接调用
+
+在工作流中添加 HTTP Request 节点，配置：
+
+- **Method:** POST
+- **URL:** `https://xcompute.us/v1/chat/completions`
+- **Headers:** `Content-Type: application/json` + `Authorization: Bearer sk-xxx`
+- **Body:**
 ```json
 {
-  "model": "gemini-3.1-flash-image-preview",
-  "prompt": "赛博朋克风格的城市夜景，霓虹灯闪烁",
-  "size": "16:9",
-  "resolution": "2K",
-  "n": 1
+  "model": "gpt-5.6-sol",
+  "messages": [{"role": "user", "content": "为以下主题生成图像提示词：{输入文本}"}],
+  "temperature": 0.8
 }
 ```
 
-## 非技术用户推荐做法
+**工作流连接：**
+```
+[输入文本] → [HTTP Request 节点] → [解析响应] → [CLIP Text Encode] → [KSampler] → [保存图像]
+```
 
-如果你不是开发者，最推荐的做法不是自己拼 API 节点，而是这样：
+## 导出自定义工作流 API 格式
 
-1. 先在 Xcompute 文生图
-2. 把图拿回来
-3. 导入 ComfyUI
-4. 再做高清放大、风格延展、修复、视频转换
+在 ComfyUI 界面中构建好工作流后，点击菜单 → **Save (API Format)**，下载的 JSON 即可直接通过 `/prompt` API 提交。
 
-这会比你一开始就折腾复杂 API 工作流更容易成功。
+## 实战案例
 
-## 推荐工作流
+### 案例：图像分析 + 二次创作
 
-1. 在 Xcompute 生成初稿图
-2. 通过任务状态接口拿到输出图 URL
-3. 将图片导入 ComfyUI
-4. 在 ComfyUI 里做局部修复、风格延展、放大或视频转换
+上传图片 → 多模态模型分析 → 提取描述 → 创意改编 → ComfyUI 生成
 
-## 第一次使用建议
+```python
+import base64
+from openai import OpenAI
 
-### 路线 A：最省事
+client = OpenAI(base_url="https://xcompute.us/v1", api_key="sk-xxx")
 
-1. 安装 ComfyUI
-2. 打开界面
-3. 用 Xcompute 先生成一张图片
-4. 拖进 ComfyUI
-5. 做一次最简单的放大或修图
+with open("input.png", "rb") as f:
+    img_b64 = base64.b64encode(f.read()).decode()
 
-### 路线 B：进阶一点
+# 多模态分析
+analysis = client.chat.completions.create(
+    model="gpt-5.6-sol",
+    messages=[{"role": "user", "content": [
+        {"type": "text", "text": "详细描述这张图片的内容、风格、色彩和构图"},
+        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_b64}"}}
+    ]}]
+).choices[0].message.content
 
-1. 在 ComfyUI 中搭一个图片处理工作流
-2. 用外部脚本或 API 节点请求 Xcompute
-3. 自动把结果喂给下一步节点
+# 创意改编
+new_prompt = client.chat.completions.create(
+    model="gpt-5.6-sol",
+    messages=[
+        {"role": "system", "content": "Based on the description, create a creative variation as an image prompt."},
+        {"role": "user", "content": f"Original: {analysis}\n\nCreate a creative variation."}
+    ]
+).choices[0].message.content
+
+# 提交 ComfyUI 生成
+pid = submit_workflow(new_prompt)
+print(f"新图像: {wait_result(pid)}")
+```
+
+### 批量生成
+
+```python
+topics = ["underwater city", "steampunk airship", "cyberpunk market"]
+for topic in topics:
+    prompt = generate_prompt(topic, "cinematic, 8k")
+    pid = submit_workflow(prompt)
+    print(f"{topic}: {wait_result(pid)}")
+```
+
+## 自定义 Python 节点
+
+在 `ComfyUI/custom_nodes/` 下创建 `xcompute_nodes.py`：
+
+```python
+from openai import OpenAI
+
+class XcomputeLLM:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {"required": {
+            "prompt": ("STRING", {"multiline": True}),
+            "model": (["gpt-5.6-sol", "gpt-5.5"],),
+            "api_key": ("STRING", {"default": "sk-xxx"}),
+        }}
+
+    RETURN_TYPES = ("STRING",)
+    FUNCTION = "generate"
+    CATEGORY = "Xcompute"
+
+    def generate(self, prompt, model, api_key):
+        client = OpenAI(base_url="https://xcompute.us/v1", api_key=api_key)
+        result = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}]
+        ).choices[0].message.content
+        return (result,)
+
+NODE_CLASS_MAPPINGS = {"XcomputeLLM": XcomputeLLM}
+```
 
 ## 常见问题
 
-### 为什么我不建议一开始就硬接 Partner Nodes
+### ComfyUI 启动报错 "CUDA out of memory"
 
-因为 ComfyUI 官方 Partner Nodes 更偏它自己的账户体系和合作模型，对 Xcompute 这种外部服务并不是最直接的路径。
+```bash
+# 使用 fp16 模式
+python main.py --force-fp16
 
-### 非技术用户最容易卡在哪里
+# 降低模型精度
+python main.py --fp16-vae
 
-1. Python 环境
-2. 模型文件路径
-3. 节点太复杂
+# CPU 模式（无需显存）
+python main.py --cpu
+```
 
-所以第一阶段建议先把它当“后处理台”来用，而不是一上来就当全自动 API 编排器。
+### API 调用返回 401
 
-## 什么时候适合用 ComfyUI + Xcompute
+- API Key 是否正确（`sk-` 开头）
+- Base URL 是否包含 `/v1`（正确：`https://xcompute.us/v1`）
+- Key 是否过期或余额不足
 
-1. 你要做复杂图像工作流
-2. 你既想用远程大模型，也想保留本地后处理能力
-3. 你要做批量图像生产或图像到视频链路
+### 自定义节点安装失败
 
-## 官方参考
+```bash
+source venv/bin/activate  # 确保在正确的虚拟环境中
+pip install -r custom_nodes/节点名称/requirements.txt
+```
 
-1. ComfyUI README
-2. ComfyUI install guide
-3. ComfyUI Partner Nodes / API Nodes docs
+### ComfyUI API 格式工作流如何导出
+
+在界面中点击菜单 → **Save (API Format)**，或在浏览器开发者工具 Network 标签观察提交时的请求体。
+
+## 渠道与定价
+
+| 渠道 | 折扣 | 推荐场景 |
+| --- | --- | --- |
+| GPT 福利渠道 | 0.9 折 | 大批量提示词生成 |
+| Kiro 渠道 | 1.8 折 | 日常使用 |
+| 官 Key 渠道 | 4.9 折 | 高质量需求 |
+| 国产模型 | 5 折 | 中文提示词优化 |
+
+批量生成提示词时选择 GPT 福利渠道（0.9 折），成本极低。
+
+## 参考资源
+
+1. [Xcompute 文档站](https://api.xcompute.us)
+2. [ComfyUI GitHub](https://github.com/comfyanonymous/ComfyUI)
+3. [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
+4. [ComfyUI 官方文档](https://comfyanonymous.github.io/ComfyUI_Docs/)
