@@ -20,6 +20,20 @@ Claude Code 是 Anthropic 的编码 Agent。它能直接在终端里：
 3. 运行命令、分析报错、给出修复方案
 4. 配合 `CLAUDE.md`、MCP、规则文件做持续化工作流
 
+### 系统要求
+
+| 项目 | 最低版本 | 推荐版本 |
+| --- | --- | --- |
+| Node.js | v22.0.0 | v22.x LTS |
+| npm | v10+ | 最新稳定版 |
+| 操作系统 | macOS 12+ / Ubuntu 20.04+ / WSL2 | 最新稳定版 |
+| 内存 | 4 GB | 8 GB+ |
+| 磁盘空间 | 500 MB | 1 GB+ |
+
+<Tip>
+  Claude Code 不支持原生 Windows（cmd / PowerShell），必须通过 WSL2 使用。
+</Tip>
+
 ## 这篇文章会带你完成什么
 
 你做完这篇后，应该能完成这几件事：
@@ -65,85 +79,241 @@ claude --version
 
 如果能看到版本号，说明工具本身已经安装成功。
 
-## 接入 Xcompute
+### 各平台安装说明
 
-Claude Code 官方支持第三方 provider，这也是我们接 Xcompute 的关键。
-
-推荐使用 `settings.json`，这样最稳定。
-
-## 第一步：先准备 Xcompute API Key
-
-1. 打开 [Xcompute API 密钥页面](https://xcompute.us/keys)
-2. 创建一把新的密钥
-3. 复制下来，先不要关页面
-
-<Tip>
-  建议专门给 Claude Code 单独创建一把密钥，后面查额度和日志最方便。
-</Tip>
-
-<Steps>
-  <Step title="创建独立 API Key">
-    前往 [Xcompute API 密钥页面](https://xcompute.us/keys) 创建一个专门给 Claude Code 使用的密钥。
-  </Step>
-
-  <Step title="创建或编辑配置文件">
-    在 `~/.claude/settings.json` 中加入下面这段配置：
-
-    ```json
-    {
-      "env": {
-        "ANTHROPIC_BASE_URL": "https://xcompute.us",
-        "ANTHROPIC_AUTH_TOKEN": "YOUR_XCOMPUTE_API_KEY",
-        "ANTHROPIC_MODEL": "claude-sonnet-4-5-20250929"
-      }
-    }
-    ```
-  </Step>
-
-  <Step title="确认文件位置是否正确">
-    常见路径如下：
-
-    - macOS / Linux：`~/.claude/settings.json`
-    - Windows：`C:\Users\你的用户名\.claude\settings.json`
-  </Step>
-
-  <Step title="重新打开终端并启动 Claude Code">
-    保存配置后，重新打开终端，再运行：
-
-    ```bash
-    claude
-    ```
-  </Step>
-</Steps>
-
-## 可选：环境变量方式
-
-如果你不想写 `settings.json`，也可以在当前终端中临时设置：
+**macOS**
 
 ```bash
-export ANTHROPIC_BASE_URL="https://xcompute.us"
-export ANTHROPIC_AUTH_TOKEN="YOUR_XCOMPUTE_API_KEY"
-export ANTHROPIC_MODEL="claude-sonnet-4-5-20250929"
+# 如果使用 Homebrew 管理的 Node.js
+brew install node@22
+npm install -g @anthropic-ai/claude-code
+```
+
+**Ubuntu / Debian**
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install -g @anthropic-ai/claude-code
+```
+
+**Windows (WSL2)**
+
+```powershell
+# 1. 先在 PowerShell 中安装 WSL2
+wsl --install
+
+# 2. 重启电脑后进入 WSL Ubuntu
+wsl
+
+# 3. 在 WSL 中安装 Node.js 和 Claude Code
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+npm install -g @anthropic-ai/claude-code
+```
+
+## 接入 Xcompute
+
+Claude Code 支持第三方 provider，这是接入 Xcompute 的关键。Xcompute 的 API 客户端会与 Anthropic Messages 协议进行转换，所以你只需要配置 Base URL 和 Key 即可。
+
+### 了解渠道信息
+
+| 配置项 | 值 |
+| --- | --- |
+| Base URL | `https://xcompute.us` |
+| 加速入口 | `https://intl.dualseason.com` |
+| API Key 格式 | `sk-xxxxxxxxxxxxxxxx` |
+| 协议 | Anthropic Messages |
+
+渠道分组与折扣：
+
+| 渠道名称 | 折扣 | 说明 |
+| --- | --- | --- |
+| GPT 福利渠道 | 0.9 折 | 超低价格，适合日常开发 |
+| Kiro 渠道 | 1.8 折 | 平衡价格与性能 |
+| 官 Key 渠道 | 4.9 折 | 接近官方价格，稳定性最佳 |
+
+### 三种配置方式
+
+Mintlify 不支持嵌套 Tabs，这里列出三种方式，选择一种即可。
+
+**方式一：环境变量（推荐）** — 优先级最高，最简单直接
+
+```bash
+# 永久写入配置（bash）
+echo 'export ANTHROPIC_BASE_URL=https://xcompute.us' >> ~/.bashrc
+echo 'export ANTHROPIC_AUTH_TOKEN=sk-你的API密钥' >> ~/.bashrc
+source ~/.bashrc
+
+# 或如果你用 zsh（macOS 默认）
+echo 'export ANTHROPIC_BASE_URL=https://xcompute.us' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN=sk-你的API密钥' >> ~/.zshrc
+source ~/.zshrc
+```
+
+临时测试（当前终端有效）：
+
+```bash
+export ANTHROPIC_BASE_URL=https://xcompute.us
+export ANTHROPIC_AUTH_TOKEN=sk-你的API密钥
 claude
 ```
 
-这种方式适合临时测试，不适合长期使用。
+**方式二：claude config 命令**
 
-## 验证是否接通
+```bash
+claude config set anthropicBaseUrl https://xcompute.us
+claude config set apiKey sk-你的API密钥
+claude config list   # 查看当前配置
+```
+
+配置写入 `~/.claude/settings.json`，可手动编辑。
+
+**方式三：手动编辑 settings.json**
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://xcompute.us",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_XCOMPUTE_API_KEY",
+    "ANTHROPIC_MODEL": "claude-sonnet-4-5-20250929"
+  }
+}
+```
+
+文件位置：
+- macOS / Linux：`~/.claude/settings.json`
+- Windows：`C:\Users\你的用户名\.claude\settings.json`
+
+### 加速入口
+
+如果 `https://xcompute.us` 延迟较高，可切换加速入口：
+
+```bash
+export ANTHROPIC_BASE_URL=https://intl.dualseason.com
+```
+
+两个入口使用相同 API Key，协议完全一致，均可正常使用。
+
+| 对比项 | 标准入口 | 加速入口 |
+| --- | --- | --- |
+| URL | `https://xcompute.us` | `https://intl.dualseason.com` |
+| 协议 | Anthropic Messages | Anthropic Messages |
+| 适用场景 | 默认使用 | 网络较慢时切换 |
+| API Key | 通用 | 通用 |
+
+### 模型选择
+
+| 模型 | 特点 | 适用场景 |
+| --- | --- | --- |
+| `claude-sonnet-4-5-20250929` | 速度与质量平衡 | 日常开发推荐 |
+| `claude-opus-4-1-20250805` | 最强推理能力 | 复杂架构、疑难 bug |
+| `claude-haiku-4-5-20251001` | 轻量快速 | 快速问答
+
+### 验证连接
 
 ```bash
 claude "你好，请用一句话介绍你自己"
 ```
 
-如果能正常返回内容，说明 Claude Code 已经接到 Xcompute。
+如果能正常返回内容，说明已接通 Xcompute。如果跳到官方登录流程，检查配置路径或重开终端。
 
-如果启动后还是跳到官方登录流程，一般说明你的配置文件路径不对，或者没有重新打开终端。
+连接检查清单：
 
-## 建议模型
+-  `claude --version` 正常输出版本号
+-  `echo $ANTHROPIC_BASE_URL` 输出 `https://xcompute.us`
+-  `echo $ANTHROPIC_AUTH_TOKEN` 输出你的 API Key
+-  `claude` 可以正常启动并对话
 
-1. 日常编码：`claude-sonnet-4-5-20250929`
-2. 复杂规划：`claude-opus-4-1-20250805`
-3. 快速问答：`claude-haiku-4-5-20251001`
+## 高级配置
+
+### 多模型切换
+
+```bash
+# 启动时指定模型
+claude --model claude-opus-4-1-20250805
+
+# 运行时切换（在 Claude Code 界面中）
+/model claude-sonnet-4-5-20250929
+```
+
+推荐创建别名（写入 `~/.zshrc` 或 `~/.bashrc`）：
+
+```bash
+alias cc-sonnet='claude --model claude-sonnet-4-5-20250929'
+alias cc-opus='claude --model claude-opus-4-1-20250805'
+alias cc-quick='claude --model claude-haiku-4-5-20251001'
+```
+
+### 代理设置
+
+```bash
+export HTTP_PROXY=http://127.0.0.1:7890
+export HTTPS_PROXY=http://127.0.0.1:7890
+export NO_PROXY=localhost,127.0.0.1
+```
+
+<Tip>
+  Xcompute 中转站通常不需要代理。代理主要在使用官方 API 时使用。
+</Tip>
+
+### 超时配置
+
+```bash
+export CLAUDE_CODE_TIMEOUT=180000   # 请求超时（毫秒）
+export CLAUDE_CODE_CONNECT_TIMEOUT=30  # 连接超时（秒）
+```
+
+### 自定义 System Prompt
+
+在项目根目录创建 `CLAUDE.md`，Claude Code 会自动读取作为上下文参考：
+
+```md
+# 项目说明
+
+这是一个 React + TypeScript 项目。
+
+## 编码规范
+- 使用函数式组件和 React Hooks
+- 所有函数必须有 TypeScript 类型注解
+- 组件文件使用 PascalCase 命名
+- 工具函数使用 camelCase 命名
+```
+
+### 权限精细管理
+
+```bash
+claude config set permissions.allow "Read"
+claude config set permissions.allow "Write:src/**"
+claude config set permissions.deny "Bash:rm -rf *"
+claude config set permissions.deny "Bash:sudo *"
+```
+
+对应 `settings.json` 配置：
+
+```json
+{
+  "permissions": {
+    "allow": ["Read", "Write:src/**", "Bash:npm *", "Bash:git *"],
+    "deny": ["Bash:rm -rf *", "Bash:sudo *"]
+  }
+}
+```
+
+### 管道输入用法
+
+`claude -p` 支持非交互模式，适合脚本集成：
+
+```bash
+# 分析代码
+cat src/app.ts | claude -p "分析这段代码的潜在问题"
+
+# 审查 Git diff
+git diff HEAD~3 | claude -p "审查这些变更，指出潜在问题"
+
+# 日志分析
+cat error.log | claude -p "分析错误日志，找出根因"
+```
 
 ## 第一次正式使用：一步一步来
 
@@ -209,17 +379,127 @@ claude
 
 ## 常见问题
 
-### 启动后看起来没走 Xcompute，怎么办？
+### API 连接失败
 
-先检查三件事：
+```
+Error: Failed to connect to API endpoint / ECONNREFUSED / ETIMEDOUT
+```
 
-1. `settings.json` 是否放对位置
-2. `ANTHROPIC_BASE_URL` 是否写成 `https://xcompute.us`
-3. 终端是否已经完全重开
+排查步骤：
+
+```bash
+# 1. 检查环境变量
+echo $ANTHROPIC_BASE_URL   # 应输出 https://xcompute.us
+
+# 2. 测试网络连通性
+curl -v https://xcompute.us
+# 返回 401 说明连接正常，问题在 API Key
+
+# 3. 检查 DNS 解析
+nslookup xcompute.us
+
+# 4. 尝试切换加速入口
+export ANTHROPIC_BASE_URL=https://intl.dualseason.com
+```
+
+### 认证错误
+
+```
+Error: Authentication failed (401) / Invalid API key
+```
+
+排查步骤：
+
+```bash
+# 1. 确认 API Key 格式
+echo $ANTHROPIC_AUTH_TOKEN   # 应以 sk- 开头
+
+# 2. 检查是否有多余空格
+echo -n "$ANTHROPIC_AUTH_TOKEN" | wc -c
+
+# 3. 用 curl 直接测试
+curl https://xcompute.us/v1/messages \
+  -H "x-api-key: $ANTHROPIC_AUTH_TOKEN" \
+  -H "content-type: application/json" \
+  -H "anthropic-version: 2023-06-01" \
+  -d '{"model": "claude-sonnet-4-5-20250929", "max_tokens": 10, "messages": [{"role": "user", "content": "Hi"}]}'
+```
+
+<Warning>
+  API Key 是从 Xcompute 平台获取的，不是 Anthropic 官方 Key，两者不通用。
+</Warning>
+
+### 模型不可用
+
+```
+Error: Model not found / Model not available
+```
+
+```bash
+# 1. 确认模型名称完整
+echo $ANTHROPIC_MODEL   # 应包含完整日期，如 claude-sonnet-4-5-20250929
+
+# 2. 清除模型配置，使用默认
+unset ANTHROPIC_MODEL
+claude config remove model
+
+# 3. 访问 Xcompute 控制台查看可用模型
+```
+
+常见错误：
+
+| 错误写法 | 正确写法 |
+| --- | --- |
+| `claude-sonnet-4` | `claude-sonnet-4-5-20250929` |
+| `claude-4-opus` | `claude-opus-4-1-20250805` |
+| `claude-4` | `claude-sonnet-4-5-20250929` |
+
+### 网络超时
+
+```
+Error: Request timed out / ETIMEDOUT after 30000ms
+```
+
+```bash
+# 1. 切换到加速入口
+export ANTHROPIC_BASE_URL=https://intl.dualseason.com
+
+# 2. 增加超时
+export CLAUDE_CODE_TIMEOUT=180000
+
+# 3. 检查代理设置
+echo $HTTP_PROXY
+echo $HTTPS_PROXY
+
+# 4. 清除代理（如果导致问题）
+unset HTTP_PROXY
+unset HTTPS_PROXY
+```
+
+### 与官方 API 的区别
+
+| 对比项 | 官方 API | Xcompute |
+| --- | --- | --- |
+| Base URL | `https://api.anthropic.com` | `https://xcompute.us` |
+| 认证方式 | `x-api-key` header | `ANTHROPIC_AUTH_TOKEN` |
+| 价格 | 官方定价 | 折扣价（最低 0.9 折） |
+| 计费方式 | 按 token 直接计费 | 通过 Xcompute 平台 |
+| 稳定性 | 最高 | 取决于中转站负载 |
 
 ### 为什么建议先从简单问题开始？
 
 因为非技术用户最容易在第一步就直接让 Agent 做复杂改动。先确认它能理解仓库、能正常响应，再开始真正修改更稳。
+
+## 配置速查
+
+| 配置项 | 环境变量 | 命令 | 示例值 |
+| --- | --- | --- | --- |
+| API 地址 | `ANTHROPIC_BASE_URL` | `claude config set anthropicBaseUrl` | `https://xcompute.us` |
+| API 密钥 | `ANTHROPIC_AUTH_TOKEN` | `claude config set apiKey` | `sk-xxx` |
+| 模型 | `ANTHROPIC_MODEL` | `claude config set model` | `claude-sonnet-4-5-20250929` |
+| HTTP 代理 | `HTTP_PROXY` | — | `http://127.0.0.1:7890` |
+| HTTPS 代理 | `HTTPS_PROXY` | — | `http://127.0.0.1:7890` |
+| 超时 | `CLAUDE_CODE_TIMEOUT` | — | `180000`（毫秒） |
 
 ## 配图示例
 
@@ -237,6 +517,54 @@ claude
 
 ## 官方参考
 
-1. Claude Code overview
-2. Claude Code setup
-3. Claude Code best practices
+1. [Claude Code overview](https://docs.anthropic.com/en/docs/claude-code)
+2. [Claude Code setup](https://docs.anthropic.com/en/docs/claude-code/setup)
+3. [Claude Code best practices](https://docs.anthropic.com/en/docs/claude-code/best-practices)
+4. [Xcompute API 文档站](https://api.xcompute.us)
+
+## 一键配置脚本
+
+保存为 `setup-claude-code.sh`，在 macOS / Linux 上运行：
+
+```bash
+#!/bin/bash
+set -e
+
+echo "配置 Claude Code + Xcompute..."
+
+if ! command -v node &> /dev/null; then
+    echo "Node.js 未安装，请先安装 Node.js 22+"
+    exit 1
+fi
+
+NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+if [ "$NODE_VERSION" -lt 22 ]; then
+    echo "Node.js 版本过低 ($(node --version))，需要 v22+"
+    exit 1
+fi
+
+npm install -g @anthropic-ai/claude-code
+
+read -p "请输入你的 Xcompute API Key: " API_KEY
+echo "请选择 API 入口："
+echo "  1) 标准入口 (https://xcompute.us)"
+echo "  2) 加速入口 (https://intl.dualseason.com)"
+read -p "请输入选项 (1/2): " ENTRY
+
+if [ "$ENTRY" = "2" ]; then
+    BASE_URL="https://intl.dualseason.com"
+else
+    BASE_URL="https://xcompute.us"
+fi
+
+SHELL_RC="$HOME/.zshrc"
+[ -n "$BASH_VERSION" ] && SHELL_RC="$HOME/.bashrc"
+
+echo "" >> "$SHELL_RC"
+echo "# Xcompute Claude Code" >> "$SHELL_RC"
+echo "export ANTHROPIC_BASE_URL=$BASE_URL" >> "$SHELL_RC"
+echo "export ANTHROPIC_AUTH_TOKEN=$API_KEY" >> "$SHELL_RC"
+
+echo "配置已写入 $SHELL_RC"
+echo "运行 source $SHELL_RC 生效，然后执行 claude 开始使用"
+```
