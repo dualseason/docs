@@ -1,27 +1,323 @@
 ---
-title: "快速配置 CC Switch"
+title: "CC Switch 对接 Xcompute API 教程"
+description: "通过 CC Switch 为 Claude Code、Codex 等 AI 编程工具配置 Xcompute API。"
+AIGC:
+  Label: "1"
+  ContentProducer: "001191110102MACQD9K64018705"
+  ProduceID: "1168115141182544_0/project_7661880082130157843-files/cc-switch-xcompute-guide.md"
+  ReservedCode1: ""
+  ContentPropagator: "001191110102MACQD9K64028705"
+  PropagateID: "1168115141182544#1783923170974"
+  ReservedCode2: ""
 ---
 
-CC Switch是一款开源的快速配置Claude cli、Claude code、Codex、gemini、Opnecode、龙虾和爱马仕的工具，由站长以及其他程序员一起维护。
+# CC Switch 对接 Xcompute API 教程
+
+> CC Switch 是一款跨平台桌面应用程序，可以统一管理 Claude Code、Claude Desktop、Codex、Gemini CLI、OpenCode、OpenClaw 和 Hermes Agent。本教程将指导你通过 CC Switch 接入 Xcompute API 中转站。
+
+## 目录
+
+1. [工具简介](#工具简介)
+2. [前置准备](#前置准备)
+3. [安装 CC Switch](#安装-cc-switch)
+4. [获取 Xcompute API Key](#获取-xcompute-api-key)
+5. [配置 Xcompute 供应商](#配置-xcompute-供应商)
+6. [测试连接](#测试连接)
+7. [开始使用](#开始使用)
+8. [常见问题](#常见问题)
+
+---
+
+## 工具简介
+
+CC Switch 是一个图形化的 AI 工具配置管理器，主要功能包括：
+
+- **一键切换**：快速切换不同 AI 工具的供应商配置
+- **多工具管理**：统一管理 Claude Code、Claude Desktop、Codex、Gemini CLI、OpenCode、OpenClaw 和 Hermes Agent
+- **速度测试**：测试不同 API 端点的响应速度
+- **配置备份**：自动备份配置并支持恢复
+- **MCP 管理**：统一配置和同步 MCP 服务器
+
+**项目地址**：[https://github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)
 
 <Frame>
-  ![Image](/images/image-9.png)
+  ![CC Switch 支持的 AI 工具](/images/image-9.png)
 </Frame>
 
-CC Switch界面如下所示，我这里是接入了国际站和国内站两个站点示例（目前展示的是Claude的接入方法）
+---
+
+## 前置准备
+
+开始之前，请确保：
+
+- 已安装 Claude Code、Codex 或其他受支持的 AI 工具
+- 已注册 [Xcompute 账号](https://xcompute.us)
+- 操作系统为 Windows 10+、macOS 12+ 或主流 Linux 发行版
+
+---
+
+## 安装 CC Switch
+
+### Windows 安装
+
+**方法一：MSI 安装器（推荐）**
+
+1. 访问 [CC Switch Releases](https://github.com/farion1231/cc-switch/releases/latest)
+2. 下载最新版本的 `CC-Switch-v{版本号}-Windows.msi`
+3. 双击运行安装程序
+4. 按照安装向导完成安装
+5. 从开始菜单启动 CC Switch
+
+**方法二：便携版**
+
+1. 下载 `CC-Switch-v{版本号}-Windows-Portable.zip`
+2. 解压到任意目录
+3. 运行目录中的 CC Switch 程序
+
+### macOS 安装
+
+**方法一：Homebrew 安装（推荐）**
+
+```bash
+brew install --cask cc-switch
+```
+
+更新 CC Switch：
+
+```bash
+brew upgrade --cask cc-switch
+```
+
+**方法二：手动安装**
+
+1. 访问 [Releases 页面](https://github.com/farion1231/cc-switch/releases/latest)
+2. 下载 `CC-Switch-v{版本号}-macOS.dmg`
+3. 打开 DMG 文件，将 CC Switch 拖入应用程序文件夹
+4. 从启动台启动 CC Switch
+
+### Linux 安装
+
+**Debian/Ubuntu：**
+
+```bash
+sudo dpkg -i CC-Switch-*-Linux.deb
+sudo apt-get install -f
+```
+
+**AppImage 通用版本：**
+
+```bash
+chmod +x CC-Switch-*-Linux.AppImage
+./CC-Switch-*-Linux.AppImage
+```
+
+**Arch Linux：**
+
+```bash
+paru -S cc-switch-bin
+```
+
+---
+
+## 获取 Xcompute API Key
+
+1. 登录 [Xcompute 控制台](https://xcompute.us)
+2. 进入 [API 密钥页面](https://xcompute.us/keys)
+3. 点击 **创建新密钥**
+4. 根据要使用的模型选择对应渠道分组
+5. 复制生成的 API Key（以 `sk-` 开头）
+
+| 使用场景 | 建议渠道 |
+| --- | --- |
+| GPT 模型 | GPT 福利渠道 0.9 折 |
+| Claude 日常使用 | Kiro 渠道 1.8 折 |
+| Claude 高质量或蒸馏需求 | 官 Key 渠道 4.9 折 |
+
+<Warning>
+  API Key 相当于账号密码。请勿公开、分享或提交到代码仓库。
+</Warning>
+
+---
+
+## 配置 Xcompute 供应商
+
+### 第一步：选择 AI 工具
+
+启动 CC Switch，在顶部工具栏选择要配置的工具。本教程以 Claude Code 为例。
 
 <Frame>
-  ![Image](/images/image-8.png)
+  ![在 CC Switch 中选择 AI 工具](/images/image-9.png)
 </Frame>
 
-配置界面如下配置方法\\
+### 第二步：添加供应商
+
+点击右上角的 **添加** 按钮，创建自定义供应商。已经添加的国际站和国内站会显示在供应商列表中。
 
 <Frame>
-  ![Image](/images/image-10.png)
+  ![CC Switch 供应商列表](/images/image-8.png)
 </Frame>
+
+### 第三步：填写基础配置
+
+供应商名称可以自定义。API Key 填写从 Xcompute 获取的 `sk-` 密钥，请求地址需要根据工具选择。
+
+| 工具 | 请求地址 | API 格式 |
+| --- | --- | --- |
+| Claude Code | `https://api.xcompute.us` | Anthropic Messages（原生） |
+| Codex | `https://api.xcompute.us/v1` | OpenAI |
+
+如果你在国内访问国际站，可以将域名替换为 `intl.dualseason.com`：
+
+| 工具 | 加速入口请求地址 |
+| --- | --- |
+| Claude Code | `https://intl.dualseason.com` |
+| Codex | `https://intl.dualseason.com/v1` |
+
+<Warning>
+  Claude Code 的请求地址不要添加 `/v1`。Codex 使用兼容 OpenAI 的接口，需要保留 `/v1`。
+</Warning>
 
 <Frame>
-  ![Image](/images/image-11.png)
+  ![填写 Xcompute 供应商配置](/images/image-10.png)
 </Frame>
 
-其中供应商名称可随意填写，但API key和请求地址需要在API创建令牌以后可以获取到。然后最重要的是API key是填入以sk-形式的密钥，API请求地址是那个中转站的网址以https://xxx.com的形式填入请求地址的（因为Claude 的Base会显示为多加一个/model，如果加v1会导致无法使用），然后模型选择按上图选择正确即可。
+### 第四步：配置 Claude 模型映射
+
+使用 Claude Code 时，按下表填写模型映射：
+
+| 模型角色 | 显示名称 | 实际请求模型 |
+| --- | --- | --- |
+| Sonnet | `claude-sonnet-5` | `claude-sonnet-5` |
+| Opus | `claude-opus-4-8` | `claude-opus-4-8` |
+| Fable | `claude-fable-5` | `claude-fable-5` |
+
+默认兜底模型可以根据你的渠道和使用习惯选择。确认认证字段为 `ANTHROPIC_AUTH_TOKEN`，然后点击 **保存**。
+
+<Frame>
+  ![配置 Claude 模型映射](/images/image-11.png)
+</Frame>
+
+### 第五步：配置 Codex 模型
+
+切换到顶部的 Codex 标签，添加 Xcompute 供应商，并使用带 `/v1` 的请求地址。
+
+| 模型名称 | 模型 ID |
+| --- | --- |
+| GPT 5.5 | `gpt-5.5` |
+| GPT 5.4 | `gpt-5.4` |
+
+---
+
+## 测试连接
+
+### 使用 CC Switch 测试
+
+1. 打开刚创建的 Xcompute 供应商
+2. 点击请求地址右侧的 **管理与测速**
+3. 确认端点可以连接并查看响应延迟
+4. 保存测试通过的请求地址
+
+### 使用 curl 排查
+
+如果连接失败，可以在终端直接检查 Xcompute 接口。将 `YOUR_API_KEY` 替换为你的真实密钥：
+
+```bash
+curl https://api.xcompute.us/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+---
+
+## 开始使用
+
+### 激活配置
+
+在供应商列表中选择 Xcompute，然后点击 **启用**。也可以通过系统托盘菜单直接切换供应商。
+
+<Info>
+  切换供应商后，通常需要重新启动终端或对应的 CLI 工具才能使配置生效。Claude Code 支持供应商数据热切换时可以直接生效。
+</Info>
+
+### 启动 AI 工具
+
+**启动 Claude Code：**
+
+```bash
+claude
+```
+
+**启动 Codex CLI：**
+
+```bash
+codex
+```
+
+在 Claude Code 或 Codex 中发送一条测试消息。能够正常收到回复即表示配置成功。
+
+---
+
+## 常见问题
+
+### 如何切换回官方 API？
+
+在 CC Switch 的预设供应商中添加官方供应商，切换过去后重新启动对应的 CLI 工具，并按官方登录或 OAuth 流程操作。
+
+### 连接失败怎么办？
+
+按以下顺序排查：
+
+1. 确认 API Key 正确、未过期且账户有余额
+2. 确认请求地址与工具匹配：Claude Code 不加 `/v1`，Codex 需要 `/v1`
+3. 使用上面的 curl 命令测试网络和密钥
+4. 在 CC Switch 中查看错误日志和测速结果
+5. 国内网络可以切换到 `https://intl.dualseason.com`
+
+### 如何同时管理多个工具？
+
+CC Switch 支持 Claude Code、Claude Desktop、Codex、Gemini CLI、OpenCode、OpenClaw 和 Hermes Agent。在顶部工具栏分别选择工具并配置供应商即可。
+
+### 响应很慢怎么办？
+
+1. 切换到加速入口 `https://intl.dualseason.com`
+2. 使用 **管理与测速** 选择延迟较低的端点
+3. 检查本地网络和代理设置
+
+### 配置备份在哪里？
+
+- **数据库**：`~/.cc-switch/cc-switch.db`
+- **本地设置**：`~/.cc-switch/settings.json`
+- **备份位置**：`~/.cc-switch/backups/`
+- **备份数量**：自动轮换并保留最近 10 个版本
+
+可以在 CC Switch 设置中恢复备份。
+
+---
+
+## 进阶技巧
+
+### 系统托盘快速切换
+
+CC Switch 会在系统托盘显示图标。右键点击图标并选择供应商，配置即可切换。
+
+### 开机自动启动
+
+打开 CC Switch 设置并启用 **开机自动启动**，应用会在系统启动时自动运行。
+
+### 多语言支持
+
+CC Switch 支持简体中文、繁体中文、English 和日本語，可以在设置中切换界面语言。
+
+---
+
+## 相关资源
+
+- **CC Switch 官网**：[https://ccswitch.io](https://ccswitch.io)
+- **CC Switch GitHub**：[https://github.com/farion1231/cc-switch](https://github.com/farion1231/cc-switch)
+- **Xcompute API 文档**：[https://api.xcompute.us](https://api.xcompute.us)
+- **问题反馈**：[GitHub Issues](https://github.com/farion1231/cc-switch/issues)
+
+---
+
+*最后更新：2026-07-13*
+
+> 本内容由 Coze AI 生成，请遵循相关法律法规及《人工智能生成合成内容标识办法》使用与传播。
