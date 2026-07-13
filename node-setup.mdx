@@ -78,21 +78,42 @@ nvm version
 choco install nvm
 ```
 
+**Windows 环境变量确认：**
+
+安装后检查以下环境变量是否正确：
+
+```
+NVM_HOME = C:\Users\<用户名>\AppData\Roaming\nvm
+NVM_SYMLINK = C:\Program Files\nodejs
+```
+
+PATH 中应包含 `%NVM_HOME%`、`%NVM_SYMLINK%` 和 `%APPDATA%\npm`。如果 PATH 中同时存在旧版 Node.js 路径，会导致版本切换不生效。
+
 ### macOS 平台
 
 **方法一：使用 curl 安装脚本（官方推荐）**
 
-先安装 Xcode Command Line Tools：
+先检查 Xcode Command Line Tools：
+
+```bash
+xcode-select -p
+```
+
+如果输出类似 `/Library/Developer/CommandLineTools`，说明已安装。如果没有，先安装：
 
 ```bash
 xcode-select --install
 ```
+
+系统会弹出安装对话框，点击「安装」并等待完成。
 
 安装 NVM：
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 ```
+
+💡 如果 `curl` 下载失败，可以用浏览器打开 https://github.com/nvm-sh/nvm/releases 下载 `install.sh`，然后执行 `bash ~/Downloads/install.sh`。
 
 安装脚本会自动配置 `.zshrc`。如果没有自动配置，手动添加：
 
@@ -105,6 +126,12 @@ export NVM_DIR="$HOME/.nvm"
 
 ```bash
 source ~/.zshrc
+```
+
+验证安装：
+
+```bash
+nvm --version
 ```
 
 **方法二：使用 Homebrew 安装**
@@ -123,6 +150,12 @@ mkdir ~/.nvm
 ```bash
 # Debian/Ubuntu
 sudo apt update && sudo apt install -y curl
+
+# CentOS/RHEL/Fedora
+sudo dnf install -y curl
+
+# Arch Linux
+sudo pacman -S curl
 ```
 
 安装 NVM：
@@ -211,6 +244,7 @@ npm install <package> --save           # 安装并保存依赖
 npm install <package> --save-dev       # 安装并保存开发依赖
 npm uninstall -g <package>             # 卸载全局包
 npm list -g --depth=0                  # 查看全局已安装包
+npm view <package-name> versions       # 查看某个包的所有版本
 npm cache clean --force                # 清除缓存
 ```
 
@@ -301,11 +335,26 @@ Write-Host "镜像源: $(npm config get registry 2>$null)"
 ### 预期输出
 
 ```
-NVM: 0.40.3
-Node: v22.14.0
-npm: 10.9.2
-镜像源: https://registry.npmmirror.com
-node路径: /home/user/.nvm/versions/node/v22.14.0/bin/node
+🔍 ===== Node.js 环境验证 =====
+
+📦 NVM 版本:
+0.40.3
+
+🟢 Node.js 版本:
+v22.14.0
+✅ Node.js 版本满足要求 (>= 22)
+
+📦 npm 版本:
+10.9.2
+
+📂 路径信息:
+  node: /home/user/.nvm/versions/node/v22.14.0/bin/node
+  npm:  /home/user/.nvm/versions/node/v22.14.0/bin/npm
+  npm 全局: /home/user/.nvm/versions/node/v22.14.0
+
+🌐 npm 镜像源: https://registry.npmmirror.com
+
+🔍 ===== 验证完成 =====
 ```
 
 ## 常见问题
@@ -334,7 +383,14 @@ export NVM_DIR="$HOME/.nvm"
 
 - **Windows**：必须以管理员身份运行终端
 - **macOS/Linux**：检查 `which node` 是否指向 `~/.nvm/versions/...`，如果指向 `/usr/local/bin/node`，说明有其他 Node 安装冲突
+- 检查是否有 Homebrew 安装的 Node.js：`brew list node 2>/dev/null && echo "有冲突"`，如有则卸载：`brew uninstall node`
 - 检查 PATH 中是否有其他 Node.js 路径优先级更高
+
+Windows 下检查所有 Node.js 路径：
+
+```powershell
+echo $env:PATH -split ';' | Select-String -Pattern "node"
+```
 
 ### npm 权限不足（EACCES）
 
@@ -367,6 +423,20 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
+### Node 版本找不到
+
+```
+nvm: No available version of node found for xxx
+```
+
+```bash
+# 更新 NVM 远程版本列表
+nvm ls-remote | tail -20
+
+# 重新安装
+nvm install 22 --latest-npm
+```
+
 ### 代理设置
 
 ```bash
@@ -374,8 +444,19 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 npm config set proxy http://127.0.0.1:7890
 npm config set https-proxy http://127.0.0.1:7890
 
-# NVM 下载镜像
+# 取消代理
+npm config delete proxy
+npm config delete https-proxy
+
+# NVM 下载镜像（Node.js 二进制文件）
 export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node
+```
+
+Windows PowerShell 设置代理：
+
+```powershell
+$env:HTTP_PROXY = "http://127.0.0.1:7890"
+$env:HTTPS_PROXY = "http://127.0.0.1:7890"
 ```
 
 ## 下一步：进入具体接入
