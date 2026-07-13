@@ -31,7 +31,17 @@ title: "Codex++ 对接 Xcompute API 教程"
 
 ## 工具简介
 
-Codex++ 通过 Chromium DevTools Protocol 和本地辅助服务增强 Codex 桌面应用，不修改官方应用的 `app.asar`，也不向安装目录写入补丁文件。
+Codex++ 通过 Chromium DevTools Protocol（CDP）和本地辅助服务增强 Codex 桌面应用，不修改官方应用的 `app.asar`，也不向安装目录写入补丁文件。
+
+### CDP 原理简述
+
+CDP 是 Chrome/Chromium 的底层调试协议。Codex 桌面端基于 Electron（Chromium 内核），其界面本质是一个"网页"。Codex++ 通过 CDP 连接 Codex 的渲染进程，在运行时注入增强脚本，实现供应商切换、协议转换等功能，而无需修改任何原始文件。
+
+```
+Codex++ 启动 → 启动原版 Codex → CDP 连接渲染进程 → 注入增强脚本 → 增强功能生效
+```
+
+卸载只需删除 Codex++，Codex 完全不受影响。
 
 主要功能包括：
 
@@ -254,6 +264,35 @@ Codex++ 的增强功能可以单独开启或关闭：
 <Frame>
   ![Codex++ 插件和会话增强](/images/codex-plus-enhancements.png)
 </Frame>
+
+---
+
+## 附录：一键连通性测试
+
+保存为 `test_xcompute.py`，快速验证 API 连通性：
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-你的Xcompute密钥",
+    base_url="https://xcompute.us/v1",
+)
+
+try:
+    response = client.chat.completions.create(
+        model="gpt-5.5",
+        messages=[{"role": "user", "content": "你好，请回复'连接成功'"}],
+        max_tokens=50,
+    )
+    print(f"✅ 连接成功！回复：{response.choices[0].message.content}")
+except Exception as e:
+    print(f"❌ 连接失败：{e}")
+```
+
+```bash
+pip install openai && python test_xcompute.py
+```
 
 ---
 

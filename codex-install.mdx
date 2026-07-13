@@ -186,6 +186,66 @@ curl https://xcompute.us/v1/models \
 
 ---
 
+## 进阶：wire_api 详解
+
+对接第三方 API 时，`config.toml` 中的 `wire_api` 是最容易配错的字段：
+
+| 值 | 对应接口 | 说明 |
+| --- | --- | --- |
+| `"chat"` | `POST {base_url}/chat/completions` | 标准 OpenAI Chat 协议，大多数中转站使用 |
+| `"responses"` | `POST {base_url}/responses` | OpenAI 新版 Responses API，官方默认 |
+
+对接 Xcompute 等中转站时，通常使用 `wire_api = "chat"`。
+
+## 进阶：多 Profile 配置
+
+在 `config.toml` 中配置多个 Profile，修改 `profile` 字段即可快速切换模型：
+
+```toml
+profile = "gpt5-xcompute"
+
+[profiles.gpt5-xcompute]
+model = "gpt-5.5"
+model_provider = "xcompute"
+model_reasoning_effort = "high"
+
+[profiles.deepseek]
+model = "deepseek-v3.2"
+model_provider = "xcompute-cn"
+model_reasoning_effort = "medium"
+
+[model_providers.xcompute]
+name = "Xcompute API"
+base_url = "https://xcompute.us/v1"
+env_key = "OPENAI_API_KEY"
+wire_api = "chat"
+```
+
+## 进阶：AGENTS.md 项目记忆
+
+在项目根目录创建 `AGENTS.md`，为 Codex 提供持久化上下文：
+
+```markdown
+# 项目规范
+- 使用 TypeScript + React 开发
+- 所有输出使用中文
+- 测试框架使用 Jest
+```
+
+在 Codex 对话中使用 `/init` 可自动生成此文件。
+
+## 成本控制建议
+
+| 策略 | 说明 |
+| --- | --- |
+| 日常编码用 GPT 福利渠道 | 0.9 折，性价比最高 |
+| 复杂架构用官 Key 渠道 | 4.9 折，品质更有保障 |
+| 简单任务用国产模型 | 5 折，成本低速度快 |
+| 调低 reasoning effort | `medium` 或 `low` 减少 Token |
+| 及时退出会话 | 避免空闲隐性消耗 |
+
+---
+
 ## 相关资源
 
 - **Codex 官方文档**：[https://platform.openai.com/codex](https://platform.openai.com/codex)

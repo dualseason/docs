@@ -50,6 +50,23 @@ CodexHub 通过本地 backend 连接 Codex App、Codex VS Code 插件和 Codex C
 | IM 会话管理 | 在 IM 中创建、恢复会话并处理审批 |
 | AI Gateway | 将 Codex 请求转发到 Xcompute 等模型渠道 |
 
+### 架构全景
+
+```
+Codex App / VS Code / CLI
+        │
+        ▼
+ CodexHub Backend (127.0.0.1:3847)
+        │
+   ┌────┴────┐
+   │         │
+AI Gateway  IM Bridge
+   │         │
+   ▼         ▼
+Xcompute   飞书/微信/Telegram
+(模型服务)   (远程控制)
+```
+
 ---
 
 ## 前置准备
@@ -342,6 +359,51 @@ GET http://127.0.0.1:3847/api/events
 - **架构说明**：[CodexHub Architecture](https://github.com/happy-loki/codexhub/blob/main/docs/architecture.md)
 - **排障文档**：[Troubleshooting](https://github.com/happy-loki/codexhub/blob/main/docs/troubleshooting.md)
 - **认证说明**：[Auth Notes](https://github.com/happy-loki/codexhub/blob/main/docs/auth-notes.zh-CN.md)
+
+---
+
+## 附录：Xcompute 渠道 TOML 配置参考
+
+以下是一份完整的 AI Gateway TOML 配置，可直接参考使用：
+
+```toml
+[aiGateway]
+enabled = true
+routePrefix = "/ai-gateway/v1"
+
+# Xcompute GPT 渠道（OpenAI 协议）
+[[aiGateway.providers]]
+name = "xcompute-gpt"
+enabled = true
+kind = "openai_responses"
+baseUrl = "https://xcompute.us/v1"
+apiKey = "sk-xc-your-api-key"
+models = ["gpt-5.5", "gpt-5.4"]
+
+# Xcompute Claude 渠道（Anthropic 协议）
+[[aiGateway.providers]]
+name = "xcompute-claude"
+enabled = true
+kind = "anthropic_messages"
+baseUrl = "https://xcompute.us"
+apiKey = "sk-xc-your-api-key"
+models = ["claude-fable-5", "claude-sonnet-5"]
+
+# Xcompute 加速渠道（可选）
+[[aiGateway.providers]]
+name = "xcompute-accelerated"
+enabled = true
+kind = "openai_responses"
+baseUrl = "https://intl.dualseason.com/v1"
+apiKey = "sk-xc-your-api-key"
+models = ["gpt-5.5"]
+
+# 模型映射示例
+[aiGateway.modelMapping]
+"claude-sonnet-5" = ["claude-sonnet-5"]
+```
+
+⚠️ 请将 `apiKey` 替换为你的真实密钥，不要提交到 Git。
 
 ---
 
