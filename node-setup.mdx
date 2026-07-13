@@ -3,225 +3,249 @@ title: "环境准备：NVM、Node.js 22 和 npm"
 description: "先完成 Windows、macOS、Linux 的 NVM 和 Node.js 22 安装，再统一用 npm 安装 Claude Code、Codex 和 OpenCode。"
 ---
 
-这一页是整个集成教程的基础篇。你只要先把 `NVM`、`Node.js 22` 和 `npm` 安装好，后面接入 `Claude Code`、`Codex`、`OpenCode` 就会简单很多。
+适用对象：Xcompute API 中转站用户，需要配置 Node.js 开发环境以运行 Claude Code、Codex、OpenCode 等 AI 编程工具。
 
-<Frame>
-  <img src="https://raw.githubusercontent.com/nvm-sh/logos/HEAD/nvm-logo-color.svg" alt="NVM 官方 Logo" />
-</Frame>
+最后更新：2026-07-13
 
-<caption>*NVM 是最常见的 Node 版本管理工具之一*</caption>
+难度：入门级
 
-<Info>
-  `Node.js` 自带 `npm`。装好 `Node.js 22` 后，不需要再单独安装 npm。
-</Info>
+## 概述
 
-## 这篇教程适合谁
+### 为什么需要配置 Node.js 环境？
 
-如果你属于下面任意一种情况，就建议先看这篇：
+在 AI 编程时代，越来越多的开发工具依赖 Node.js 运行时环境：
 
-1. 你还没装过 `Node.js`
-2. 你分不清 `Node.js`、`npm`、`nvm` 是什么
-3. 你需要在一台电脑上安装多个 AI 编程工具
-4. 你希望后面教程里的命令可以直接复制执行
+| 工具 | 最低 Node.js 版本要求 | 说明 |
+| --- | --- | --- |
+| Claude Code | Node.js 22+ | Anthropic 官方 CLI 编程工具 |
+| OpenAI Codex CLI | Node.js 22+ | OpenAI 命令行编程助手 |
+| OpenCode | Node.js 22+ | 开源 AI 编程工具 |
+| Cursor | 内置 | 自带运行时，无需额外配置 |
 
-## 你最终会得到什么
+如果你使用 Xcompute API 中转站来加速这些工具的 API 访问，第一步就是要确保本地 Node.js 环境已正确配置。
 
-做完这篇以后，你会拥有：
+### 为什么选择 NVM？
 
-1. 一个可以切换 Node 版本的环境
-2. 一个稳定的 `Node.js 22` 运行时
-3. 一个可用的 `npm`
-4. 三个可直接运行的工具：`Claude Code`、`Codex`、`OpenCode`
+NVM（Node Version Manager）是 Node.js 的版本管理工具：
 
-## 为什么先装 NVM
+- **版本隔离**：不同项目可以使用不同的 Node.js 版本，互不干扰
+- **一键切换**：`nvm use 22` 即可切换到 Node.js 22
+- **安全卸载**：不需要时可以完全移除，不留残余
+- **多版本共存**：同时安装 Node.js 18、20、22 等多个版本
 
-推荐先装 `NVM`，原因很简单：
+  如果你之前通过官网安装包直接安装过 Node.js，建议先卸载后再使用 NVM 管理，以避免版本冲突。
 
-1. 你后面可能会同时碰到 `Node 20`、`Node 22`、`Node 24` 的项目。
-2. `Claude Code`、`Codex`、`OpenCode` 这些 CLI 更新很快，切 Node 版本会比重装省事很多。
-3. Windows 和 macOS / Linux 的安装方式不同，提前统一思路会少踩坑。
+### 整体路线图
 
-## 操作总览
+```
+┌──────────┐   ┌──────────┐   ┌────────┐   ┌──────────┐
+│ 安装 NVM │ → │ 安装 Node│ → │ 配置npm│ → │ 安装工具 │
+│          │   │ 22       │   │        │   │ CLI      │
+└──────────┘   └──────────┘   └────────┘   └──────────┘
+```
 
-整个过程就四步：
+预计总耗时：15-30 分钟（取决于网络速度）。
 
-<Steps>
-  <Step title="安装 NVM">
-    先安装 Node 版本管理工具。
-  </Step>
-  <Step title="安装 Node.js 22">
-    让机器拥有统一的运行环境。
-  </Step>
-  <Step title="验证 Node 和 npm">
-    确认命令已经生效。
-  </Step>
-  <Step title="安装 AI 编程工具">
-    统一安装 `Claude Code`、`Codex`、`OpenCode`。
-  </Step>
-</Steps>
+## NVM 安装与配置
 
-## 第一步：安装 NVM
+### Windows 平台
 
-<Tabs>
-  <Tab title="macOS / Linux">
-    如果你是 `Mac` 或 `Linux` 用户，推荐直接使用官方安装脚本。
+Windows 下的 Node.js 版本管理工具是 **nvm-windows**，与 macOS/Linux 的 nvm 是不同的项目。
 
-    ```bash
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
-    ```
+**方法一：使用 winget 安装（推荐）**
 
-    安装完成后，重新打开终端。也可以手动加载：
+以管理员身份打开 PowerShell，执行：
 
-    ```bash
-    source ~/.bashrc
-    ```
+```powershell
+winget install CoreyButler.NVMforWindows
+```
 
-    如果你使用的是 `zsh`，改成：
+安装完成后，必须关闭并重新打开 PowerShell 窗口，使环境变量生效。
 
-    ```bash
-    source ~/.zshrc
-    ```
+```powershell
+nvm version
+```
 
-    然后验证：
+  如果不重启终端，可能会报 `nvm : 无法将"nvm"项识别为 cmdlet` 错误。
 
-    ```bash
-    command -v nvm
-    ```
+**方法二：手动下载安装包**
 
-    如果终端输出 `nvm`，说明安装成功。
-  </Tab>
+前往 [nvm-windows Releases](https://github.com/coreybutler/nvm-windows/releases) 下载最新版本的 `nvm-setup.exe`，双击安装即可。
 
-  <Tab title="Windows">
-    Windows 不用官方 POSIX 版 `nvm`，而是使用 `nvm-windows`。
+**方法三：使用 Chocolatey 安装**
 
-    下载地址：
+```powershell
+choco install nvm
+```
 
-    - [https://github.com/coreybutler/nvm-windows/releases](https://github.com/coreybutler/nvm-windows/releases)
+### macOS 平台
 
-    你只需要：
+**方法一：使用 curl 安装脚本（官方推荐）**
 
-    1. 打开下载页
-    2. 下载最新的安装包
-    3. 双击安装
-    4. 安装完成后重开 PowerShell
+先安装 Xcode Command Line Tools：
 
-    安装完成后，打开 PowerShell，先验证：
+```bash
+xcode-select --install
+```
 
-    ```powershell
-    nvm version
-    ```
+安装 NVM：
 
-    如果能看到版本号，再继续下一步。
-  </Tab>
-</Tabs>
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+```
 
-## 第二步：安装 Node.js 22
+安装脚本会自动配置 `.zshrc`。如果没有自动配置，手动添加：
 
-<Info>
-  这里统一推荐 `Node.js 22`。原因是它足够新、兼容性也好，适合作为这批 CLI 工具的统一基础环境。
-</Info>
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
 
-<Warning>
-  如果你的机器里之前已经装过系统级 Node.js，理论上也能继续用，但更容易出现版本冲突。非技术用户优先走 `NVM + Node 22` 最省事。
-</Warning>
+使配置生效：
 
-<Tabs>
-  <Tab title="macOS / Linux">
-    执行下面三条命令：
+```bash
+source ~/.zshrc
+```
 
-    ```bash
-    nvm install 22
-    nvm use 22
-    nvm alias default 22
-    ```
+**方法二：使用 Homebrew 安装**
 
-    然后验证：
+```bash
+brew install nvm
+mkdir ~/.nvm
+```
 
-    ```bash
-    node -v
-    npm -v
-    ```
+安装后同样需要手动配置 shell（参考上面的配置步骤）。
 
-    正常情况下你会看到：
+### Linux 平台
 
-    1. `node -v` 返回 `v22.x.x`
-    2. `npm -v` 返回一个 npm 版本号
-  </Tab>
+确保已安装 curl：
 
-  <Tab title="Windows">
-    执行下面命令：
+```bash
+# Debian/Ubuntu
+sudo apt update && sudo apt install -y curl
+```
 
-    ```powershell
-    nvm install 22.22.2
-    nvm use 22.22.2
-    ```
+安装 NVM：
 
-    然后验证：
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm --version
+```
 
-    ```powershell
-    node -v
-    npm -v
-    ```
+### Windows Subsystem for Linux (WSL)
 
-    如果命令找不到，请先完全关闭 PowerShell 再重新打开一次。
-  </Tab>
-</Tabs>
+在 WSL 中安装方式与 Linux 完全一致。打开 WSL 终端后，按照 Linux 步骤操作即可。
 
-### NVM 常用命令速查
+  WSL 中的 NVM 和 Node.js 与 Windows 系统是完全独立的。不要混用 Windows 的 nvm-windows 和 WSL 中的 nvm。
 
-安装好 NVM 后，以下命令会经常用到：
+## NVM 常用命令
 
 | 命令 | 说明 | 示例 |
 | --- | --- | --- |
 | `nvm install <version>` | 安装指定版本 | `nvm install 22` |
 | `nvm use <version>` | 切换到指定版本 | `nvm use 22` |
 | `nvm ls` / `nvm list` | 列出已安装版本 | `nvm ls` |
-| `nvm ls-remote` | 列出可安装版本 | `nvm ls-remote` |
+| `nvm ls-remote` | 列出远程可安装版本 | `nvm ls-remote` |
 | `nvm alias default <version>` | 设置默认版本 | `nvm alias default 22` |
-| `nvm uninstall <version>` | 卸载版本 | `nvm uninstall 20` |
+| `nvm uninstall <version>` | 卸载指定版本 | `nvm uninstall 20` |
 | `nvm current` | 查看当前版本 | `nvm current` |
+| `nvm which <version>` | 查看版本安装路径 | `nvm which 22` |
 
-### 配置 npm 镜像源（国内用户推荐）
+## 安装 Node.js 22
 
-如果你在国内访问 npm 官方源较慢，可以切换到淘宝镜像：
+Node.js 22 是目前最新的 LTS 版本，将支持到 2027 年 4 月。
 
 ```bash
-npm config set registry https://registry.npmmirror.com
-npm config get registry   # 验证
+nvm install 22
 ```
 
-如需切换回官方源：
+安装完成后会自动切换到该版本。然后设置默认版本：
 
 ```bash
+nvm alias default 22
+```
+
+验证版本：
+
+```bash
+node -v   # 应输出 v22.x.x
+npm -v    # 应输出 10.x.x
+```
+
+### Windows 特别注意
+
+在 Windows 上需要确认环境变量配置正确。检查 `NVM_HOME` 和 `NVM_SYMLINK` 是否存在于系统环境变量中。如果 PATH 中同时存在旧版 Node.js 路径，会导致版本切换不生效。
+
+  Windows 上 `nvm use` 需要在管理员权限的终端中运行，因为它需要创建符号链接。
+
+## npm 配置
+
+### 配置 npm 镜像源
+
+由于 npm 官方仓库在国内访问较慢，建议配置国内镜像源。
+
+```bash
+# 查看当前镜像源
+npm config get registry
+
+# 切换到淘宝镜像（推荐国内用户）
+npm config set registry https://registry.npmmirror.com
+
+# 切换回官方源
 npm config set registry https://registry.npmjs.org
 ```
 
-### 配置代理（如需）
+| 镜像源 | 地址 | 说明 |
+| --- | --- | --- |
+| 官方源 | https://registry.npmjs.org | 最权威 |
+| 淘宝镜像 | https://registry.npmmirror.com | 国内最快 |
+| 华为镜像 | https://mirrors.huaweicloud.com/repository/npm | 备选 |
 
-如果你需要通过 HTTP 代理访问网络：
-
-```bash
-npm config set proxy http://127.0.0.1:7890
-npm config set https-proxy http://127.0.0.1:7890
-```
-
-NVM 安装 Node.js 时也支持镜像下载：
+### npm 常用命令
 
 ```bash
-# macOS / Linux
-export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node
-
-# Windows (nvm-windows)
-nvm node_mirror https://npmmirror.com/mirrors/node/
+npm install -g <package-name>          # 全局安装
+npm install                            # 安装项目依赖
+npm install <package> --save           # 安装并保存依赖
+npm install <package> --save-dev       # 安装并保存开发依赖
+npm uninstall -g <package>             # 卸载全局包
+npm list -g --depth=0                  # 查看全局已安装包
+npm cache clean --force                # 清除缓存
 ```
 
-## 第三步：统一安装常用 CLI
+### 配置全局安装路径
 
-下面这三个是本次集成教程会重点讲到的工具：
+如果你使用 NVM，全局包默认安装在 NVM 的版本目录下，一般不需要额外配置。
 
-1. `Claude Code`：Anthropic 官方编码 Agent
-2. `Codex`：OpenAI 官方编码 Agent
-3. `OpenCode`：开源编码 Agent
+如果需要自定义：
+
+```bash
+npm config set prefix "$HOME/.npm-global"
+export PATH="$HOME/.npm-global/bin:$PATH"
+```
+
+### npm 配置文件（.npmrc）
+
+```bash
+# 查看用户级配置
+npm config list
+
+# 查看配置文件位置
+npm config get userconfig
+```
+
+常见的 `.npmrc` 配置示例：
+
+```ini
+registry=https://registry.npmmirror.com
+engine-strict=true
+save-exact=true
+```
+
+## 安装 AI 编程工具
+
+Node.js 环境就绪后，统一安装常用 AI 编程 CLI：
 
 ```bash
 npm install -g @anthropic-ai/claude-code
@@ -229,31 +253,31 @@ npm install -g @openai/codex
 npm install -g opencode-ai
 ```
 
-## 第四步：验证 CLI 是否可用
-
-依次执行：
+验证安装：
 
 ```bash
 claude --version
-codex --help
+codex --version
 opencode --version
 ```
 
-<Tip>
-  如果某个命令报错，优先检查当前终端是否已经切到 `Node 22`，再检查全局 npm 安装路径是否生效。
-</Tip>
+### 推荐模型
 
-## 看到什么算成功
+安装完成后，接入 Xcompute 时推荐使用以下模型：
 
-1. `claude --version` 能返回版本号
-2. `codex --help` 能显示帮助信息
-3. `opencode --version` 能返回版本号
+**Claude Code：**
+- 日常编码：`claude-sonnet-5`
+- 复杂任务：`claude-opus-4-8`
+- 推理增强：`claude-fable-5`
 
-只要这三项都正常，后面的接入教程基本就可以继续了。
+**Codex：**
+- 复杂任务：`gpt-5.6-sol`（GPT 福利 0.9 折）
+- 日常任务：`gpt-5.6-terra`（default）
+- 轻量任务：`gpt-5.6-luna`（GPT 渠道 1.5 折）
 
-## 一键环境验证
+## 环境验证
 
-执行以下命令快速确认环境是否就绪：
+### 一键验证脚本
 
 **macOS / Linux：**
 
@@ -262,6 +286,7 @@ echo "NVM: $(nvm --version 2>/dev/null || echo '未安装')"
 echo "Node: $(node -v 2>/dev/null || echo '未安装')"
 echo "npm: $(npm -v 2>/dev/null || echo '未安装')"
 echo "镜像源: $(npm config get registry 2>/dev/null || echo '未知')"
+echo "node路径: $(which node 2>/dev/null || echo '未找到')"
 ```
 
 **Windows PowerShell：**
@@ -273,55 +298,61 @@ Write-Host "npm: $(npm -v 2>$null)"
 Write-Host "镜像源: $(npm config get registry 2>$null)"
 ```
 
+### 预期输出
+
+```
+NVM: 0.40.3
+Node: v22.14.0
+npm: 10.9.2
+镜像源: https://registry.npmmirror.com
+node路径: /home/user/.nvm/versions/node/v22.14.0/bin/node
+```
+
 ## 常见问题
 
-### 安装完 `nvm` 后提示 `command not found`
+### nvm 命令找不到
 
-通常是 shell 配置还没重新加载。
+```bash
+# macOS/Linux：检查配置文件
+cat ~/.zshrc | grep NVM
+cat ~/.bashrc | grep NVM
 
-- `bash`：`source ~/.bashrc`
-- `zsh`：`source ~/.zshrc`
-- Windows：重开一个 PowerShell 窗口
+# 重新加载
+source ~/.zshrc   # 或 source ~/.bashrc
 
-如果仍然找不到，检查配置文件末尾是否包含以下内容：
+# Windows：重启 PowerShell
+```
+
+如果仍然找不到，检查配置文件末尾是否包含：
 
 ```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
-### 切换 Node 版本后 `node -v` 还是旧版本
+### Node 版本切换不生效
 
-- Windows：**必须以管理员身份运行** PowerShell，nvm-windows 需要管理员权限创建符号链接
-- macOS/Linux：检查 `which node` 是否指向 NVM 管理目录（`~/.nvm/versions/...`），如果指向 `/usr/local/bin/node`，说明有其他 Node 安装冲突，卸载即可
+- **Windows**：必须以管理员身份运行终端
+- **macOS/Linux**：检查 `which node` 是否指向 `~/.nvm/versions/...`，如果指向 `/usr/local/bin/node`，说明有其他 Node 安装冲突
 - 检查 PATH 中是否有其他 Node.js 路径优先级更高
 
-### npm 提示权限不足（EACCES）
+### npm 权限不足（EACCES）
 
-优先确认你是在 `nvm` 管理的 Node 环境里执行：
+优先确认你是在 NVM 管理的 Node 环境里执行：
 
 ```bash
 which node   # 应输出 ~/.nvm/versions/node/...
 ```
 
-NVM 将 Node 安装在用户目录下，一般不需要 `sudo`。如果仍然提示权限问题：
-
-```bash
-npm config set prefix "$HOME/.npm-global"
-# 然后将 $HOME/.npm-global/bin 加入 PATH
-```
-
-不要默认上来就加 `sudo npm install -g ...`。
+NVM 将 Node 安装在用户目录下，一般不需要 `sudo`。
 
 ### npm install 卡住或超时
 
 1. 切换到国内镜像源：`npm config set registry https://registry.npmmirror.com`
 2. 清除缓存重试：`npm cache clean --force && npm install`
-3. 增加超时时间：`npm config set fetch-timeout 120000`
+3. 增加超时：`npm config set fetch-timeout 120000`
 
 ### Windows 下 nvm install 下载失败
-
-配置 nvm-windows 的下载镜像：
 
 ```powershell
 nvm node_mirror https://npmmirror.com/mirrors/node/
@@ -330,10 +361,21 @@ nvm npm_mirror https://npmmirror.com/mirrors/npm/
 
 ### Windows PowerShell 执行策略问题
 
-如果提示"禁止运行脚本"，以管理员身份执行：
+以管理员身份执行：
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### 代理设置
+
+```bash
+# npm 代理
+npm config set proxy http://127.0.0.1:7890
+npm config set https-proxy http://127.0.0.1:7890
+
+# NVM 下载镜像
+export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node
 ```
 
 ## 下一步：进入具体接入
@@ -342,10 +384,46 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
   <Card title="Claude Code 接入" icon="terminal" href="/claude-code">
     用 Anthropic 官方 CLI 接入 Xcompute。
   </Card>
-  <Card title="Codex 接入" icon="code" href="/codex">
+  <Card title="Codex 接入" icon="code" href="/codex-install">
     用 OpenAI 官方 Codex CLI 接入 Xcompute。
   </Card>
   <Card title="OpenCode 接入" icon="code" href="/opencode">
     用 OpenAI 兼容 provider 配置接入 Xcompute。
   </Card>
 </Columns>
+
+## 附录：完整安装命令速查
+
+```bash
+# macOS / Linux - 一键安装
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+source ~/.bashrc
+nvm install 22
+nvm alias default 22
+node -v && npm -v
+
+# Windows PowerShell（管理员）
+winget install CoreyButler.NVMforWindows
+# 重启 PowerShell
+nvm install 22.22.2
+nvm use 22.22.2
+node -v && npm -v
+```
+
+## 附录：版本对应关系
+
+| Node.js 版本 | 代号 | npm 版本 | LTS 支持截止 |
+| --- | --- | --- | --- |
+| v22.x | Jod | v10.x | 2027-04 |
+| v20.x | Iron | v10.x | 2026-04 |
+| v18.x | Hydrogen | v9.x | 2025-04（已停止） |
+
+## 附录：相关资源
+
+| 资源 | 链接 |
+| --- | --- |
+| NVM 官方仓库 | https://github.com/nvm-sh/nvm |
+| nvm-windows 仓库 | https://github.com/coreybutler/nvm-windows |
+| Node.js 官网 | https://nodejs.org |
+| npm 淘宝镜像 | https://npmmirror.com |
+| Xcompute API 文档站 | https://api.xcompute.us |
