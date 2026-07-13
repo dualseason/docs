@@ -1,20 +1,23 @@
 ---
 title: "概览"
-description: "Xcompute"
+description: "岭梦科技是一家专注于技术服务的公司，包含AI大模型、AI Agent、ERP企业软件开发、APP应用开发、硬件嵌入式开发、移动支付收付款、技术课程培训。Xcompute是岭梦科技合作的中转站项目制公司，技术服务合伙形式。"
 ---
 
-Xcompute的 AI API 平台概览，包含国际站、加速入口和国内站说明。 平台提供文本、图像、音频和视频能力。你可以用一套兼容 OpenAI 的接口，把模型能力快速集成到你的产品中。
+# Xcompute API 文档
 
-| 站点 | 域名 | 说明 |
-| --- | --- | --- |
-| 国际站 | `xcompute.us` | 香港服务器，面向国际网络环境。（需要科学上网） |
-| 加速入口 | `intl.dualseason.com` | 国内访问国际站的加速转发入口。（国内环境访问） |
-| 国内站 | `xcompute.dualseason.com` | 国内独立站点，与国际站完全隔离。（不推荐访问） |
+> 一站式 AI API 中转平台，兼容 OpenAI 接口规范
 
-## 为什么选择 Xcompute中转站
+## 快速开始
 
-1. 一个网站包含所有主流大模型的接入，不需要对接繁琐的各大官网和充值。
-2. 有专业客服和售后技术团队，相比大模型厂商官网他们没有专人服务。
-3. 价格比官网价格更低，国内模型有集采优惠，国外模型有技术手段降价。
-4. 有一整套交付软件配套：Codex、Claude code、Opencode、龙虾、爱马仕。
-5. 有自己的软件智能体：移动端APP、无限画布工作流。
+### 1. 获取 API Key
+
+登录 [Xcompute 控制台](https://xcompute.us) → 个人中心 → API Keys → 创建新密钥
+
+### 2. 基础配置
+
+```bash
+# Base URL（三选一）
+国际站：[https://api.xcompute.us/v1](https://api.xcompute.us/v1)
+加速入口：[https://intl.dualseason.com/v1](https://intl.dualseason.com/v1)
+国内站：[https://xcompute.dualseason.com/v1](https://xcompute.dualseason.com/v1)（不推荐）
+```
