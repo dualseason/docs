@@ -197,7 +197,7 @@ OPENAI_BASE_URL="https://xcompute.us/v1" OPENAI_API_KEY="sk-xxx" codex "输出 h
 创建 `~/.codex/config.toml`：
 
 ```toml
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 
 [model_providers.xcompute]
 name = "Xcompute"
@@ -214,7 +214,7 @@ provider = "xcompute"
 多提供者配置（方便切换）：
 
 ```toml
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 
 [model_providers.xcompute]
 name = "Xcompute 主站"
@@ -263,15 +263,19 @@ export OPENAI_API_KEY="sk-你的API密钥"
 
 ### 模型选择
 
-| 模型 | 渠道 | 上下文 | 特点 | 适用场景 |
-| --- | --- | --- | --- | --- |
-| `gpt-5.5` | GPT 福利 0.9 折 | 1M tokens | 通用能力最强 | 复杂架构设计、多文件重构 |
-| `gpt-5.4` | GPT 福利 0.9 折 | 1M tokens | 性价比之选 | 日常编码、bug 修复 |
+| 模型 | 渠道 | 特点 | 适用场景 |
+| --- | --- | --- | --- |
+| `gpt-5.6-sol` | GPT 福利 0.9 折 | 高能力 | 复杂架构设计、代码生成 |
+| `gpt-5.6-terra` | default | 通用 | 日常对话、文本生成 |
+| `gpt-5.6-luna` | GPT 渠道 1.5 折 | 轻量快速 | 低成本对话、摘要 |
+| `gpt-5.5` | GPT 福利 0.9 折 | 通用 | 复杂任务 |
+| `gpt-5.4` | GPT 福利 0.9 折 | 性价比 | 日常编码 |
 
 ```bash
 # 通过 --model 指定模型
-codex --model gpt-5.5 "复杂任务"
-codex --model gpt-5.4 "日常任务"
+codex --model gpt-5.6-sol "复杂任务"
+codex --model gpt-5.6-terra "日常任务"
+codex --model gpt-5.6-luna "简单任务"
 ```
 
 ## 高级配置
@@ -324,19 +328,19 @@ echo "本项目使用 Python 3.12 + FastAPI。" > .codex/instructions.md
 创建 Express.js 项目：
 
 ```bash
-codex --model gpt-5.4 "在当前目录创建一个 Express.js REST API 项目，包含用户 CRUD，使用 SQLite，包含错误处理和输入验证"
+codex --model gpt-5.6-sol "在当前目录创建一个 Express.js REST API 项目，包含用户 CRUD，使用 SQLite，包含错误处理和输入验证"
 ```
 
 代码审查：
 
 ```bash
-codex --model gpt-5.5 "审查 src/ 目录下的所有代码，找出潜在的性能问题和安全漏洞"
+codex --model gpt-5.6-sol "审查 src/ 目录下的所有代码，找出潜在的性能问题和安全漏洞"
 ```
 
 编写测试：
 
 ```bash
-codex --model gpt-5.4 "为 src/utils/ 下的工具函数编写完整的单元测试，使用 Jest 框架"
+codex --model gpt-5.6-terra "为 src/utils/ 下的工具函数编写完整的单元测试，使用 Jest 框架"
 ```
 
 查看 Token 消耗：
@@ -401,7 +405,7 @@ Error: 404 The model 'xxx' does not exist
 curl -s https://xcompute.us/v1/models \
   -H "Authorization: Bearer $OPENAI_API_KEY" | python3 -m json.tool
 
-# 确认拼写：gpt-5.5（正确）、GPT-5.5（大小写错误）、gpt55（缺少短横线）
+# 确认拼写：gpt-5.6-sol（正确）、GPT-5.6-Sol（大小写错误）、gpt5.6sol（缺少短横线）
 ```
 
 ### 连接超时
@@ -466,8 +470,9 @@ export OPENAI_BASE_URL="https://xcompute.us/v1"
 export OPENAI_API_KEY="sk-xxx"
 
 # 指定模型启动
-codex --model gpt-5.5 "复杂任务"
-codex --model gpt-5.4 "日常任务"
+codex --model gpt-5.6-sol "复杂任务"
+codex --model gpt-5.6-terra "日常任务"
+codex --model gpt-5.6-luna "简单任务"
 
 # 沙箱模式
 codex --sandbox suggest "任务"     # 最安全
@@ -510,7 +515,7 @@ curl -s $OPENAI_BASE_URL/models -H "Authorization: Bearer $OPENAI_API_KEY" | hea
 profile = "gpt5-xcompute"
 
 [profiles.gpt5-xcompute]
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 model_provider = "xcompute"
 model_reasoning_effort = "high"
 
@@ -543,8 +548,9 @@ wire_api = "chat"
 
 | 策略 | 说明 |
 | --- | --- |
-| 日常编码用 GPT 福利渠道 | 0.9 折，性价比最高 |
-| 复杂架构用官 Key 渠道 | 4.9 折，品质更有保障 |
+| 轻量任务用 gpt-5.6-luna | GPT 渠道 1.5 折，\$0.09/\$0.54 极低成本 |
+| 日常编码用 gpt-5.6-terra | default，\$0.225/\$1.35 性价比之选 |
+| 复杂任务用 gpt-5.6-sol | GPT 福利 0.9 折，\$0.45/\$2.70 高能力 |
 | 简单任务用国产模型 | 5 折，成本低速度快 |
 | 调低 reasoning effort | `medium` 或 `low` 减少 Token |
 | 及时退出会话 | 避免空闲隐性消耗 |
