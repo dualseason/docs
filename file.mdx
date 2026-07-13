@@ -49,6 +49,8 @@ curl https://xcompute.us/v1/chat/completions \
 2. **专业服务**：专业客服和售后技术团队，相比厂商官网有专人服务
 3. **价格优势**：国内模型集采优惠，国外模型技术降价
 4. **完整生态**：配套交付软件（Codex、Claude Code、OpenCode、龙虾、爱马仕）
+   - 龙虾（Longxia）：专为 Cursor/VS Code 设计的 AI 编程助手，支持代码补全、对话与多模型切换
+   - 爱马仕（Hermes）：轻量级 Agent 框架，支持 CLI 与 MCP 协议，可配合多种 AI 工具使用
 5. **智能体应用**：移动端 APP、无限画布工作流
 
 ---
@@ -68,8 +70,8 @@ curl https://xcompute.us/v1/chat/completions \
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 0.9 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| GPT 5.5 | `gpt-5.5` | \$5 | \$30 |  |
-|  | GPT 5.4 | `gpt-5.4` | \$2.5 | \$15 |
+| GPT 5.5 | `gpt-5.5` | \$5 | \$30 | \$0.45 / \$2.70 |
+| GPT 5.4 | `gpt-5.4` | \$2.5 | \$15 | \$0.23 / \$1.35 |
 
 #### 图像生成
 
@@ -97,9 +99,9 @@ curl https://xcompute.us/v1/chat/completions \
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | Kiro 实际价格<br />(\$/1M tokens) | 官 Key 实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- | --- |
-| Claude Fable 5 | `claude-fable-5` | \$10 | \$50 |  |  |
-| Claude Sonnet 5 | `claude-sonnet-5` | \$3 | \$15 |  |  |
-| Claude Opus 4.8 | `claude-opus-4-8` | \$5 | \$25 |  |  |
+| Claude Fable 5 | `claude-fable-5` | \$10 | \$50 | \$1.80 / \$9.00 | \$4.90 / \$24.50 |
+| Claude Sonnet 5 | `claude-sonnet-5` | \$3 | \$15 | \$0.54 / \$2.70 | \$1.47 / \$7.35 |
+| Claude Opus 4.8 | `claude-opus-4-8` | \$5 | \$25 | \$0.90 / \$4.50 | \$2.45 / \$12.25 |
 
 ---
 
@@ -135,56 +137,56 @@ curl https://xcompute.us/v1/chat/completions \
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| GLM 5 | `glm-5` | \$1 | \$3.2 |  |
-| GLM 5 Turbo | `glm-5-turbo` | \$1.2 | \$4 |  |
-| GLM 5.1 | `glm-5.1` | \$6 | \$24 |  |
-| GLM 5.2 | `glm-5.2` | \$1.4 | \$4.4 |  |
-| GLM 5V Turbo | `glm-5v-turbo` | \$5 | \$22 |  |
+| GLM 5 | `glm-5` | \$1 | \$3.2 | \$0.50 / \$1.60 |
+| GLM 5 Turbo | `glm-5-turbo` | \$1.2 | \$4 | \$0.60 / \$2.00 |
+| GLM 5.1 | `glm-5.1` | \$6 | \$24 | \$3.00 / \$12.00 |
+| GLM 5.2 | `glm-5.2` | \$1.4 | \$4.4 | \$0.70 / \$2.20 |
+| GLM 5V Turbo | `glm-5v-turbo` | \$5 | \$22 | \$2.50 / \$11.00 |
 
 #### Kimi 系列（月之暗面）
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| Kimi K2.5 | `kimi-k2.5` | \$0.6 | \$3 |  |
-| Kimi K2.6 | `kimi-k2.6` | \$0.95 | \$4 |  |
-| Kimi K2.7 Code | `kimi-k2.7-code` | \$0.95 | \$4 |  |
+| Kimi K2.5 | `kimi-k2.5` | \$0.6 | \$3 | \$0.30 / \$1.50 |
+| Kimi K2.6 | `kimi-k2.6` | \$0.95 | \$4 | \$0.48 / \$2.00 |
+| Kimi K2.7 Code | `kimi-k2.7-code` | \$0.95 | \$4 | \$0.48 / \$2.00 |
 
 #### DeepSeek 系列
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| DeepSeek V3.2 | `deepseek-v3.2` | \$5 | \$5 |  |
-| DeepSeek V4 Flash | `deepseek-v4-flash` | \$0.14 | \$0.28 |  |
-| DeepSeek V4 Pro | `deepseek-v4-pro` | \$0.435 | \$0.87 |  |
+| DeepSeek V3.2 | `deepseek-v3.2` | \$5 | \$5 | \$2.50 / \$2.50 |
+| DeepSeek V4 Flash | `deepseek-v4-flash` | \$0.14 | \$0.28 | \$0.07 / \$0.14 |
+| DeepSeek V4 Pro | `deepseek-v4-pro` | \$0.435 | \$0.87 | \$0.22 / \$0.44 |
 
 #### Qwen 系列（通义千问）
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| Qwen 3.5 Plus | `qwen3.5-plus` | \$0.4 | \$2.4 |  |
-| Qwen 3.6 Plus | `qwen3.6-plus` | \$0.5 | \$3 |  |
-| Qwen 3.7 Plus | `qwen3.7-plus` | \$0.5 | \$3 |  |
-| Qwen 3.7 Max | `qwen3.7-max` | \$2.5 | \$7.5 |  |
+| Qwen 3.5 Plus | `qwen3.5-plus` | \$0.4 | \$2.4 | \$0.20 / \$1.20 |
+| Qwen 3.6 Plus | `qwen3.6-plus` | \$0.5 | \$3 | \$0.25 / \$1.50 |
+| Qwen 3.7 Plus | `qwen3.7-plus` | \$0.5 | \$3 | \$0.25 / \$1.50 |
+| Qwen 3.7 Max | `qwen3.7-max` | \$2.5 | \$7.5 | \$1.25 / \$3.75 |
 
 #### MiniMax 系列
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| MiniMax M3 | `minimax-m3` | \$0.3 | \$1.2 |  |
-| MiniMax M2.5 | `minimax-m2.5` | \$0.3 | \$1.2 |  |
-| MiniMax M2.7 | `minimax-m2.7` | \$0.3 | \$1.2 |  |
-| MiniMax M2.5 | `MiniMax-M2.5` | \$0.3 | \$1.2 |  |
-| MiniMax M2.7 | `MiniMax-M2.7` | \$0.3 | \$1.2 |  |
-| MiniMax M2.7 HighSpeed | `MiniMax-M2.7-highspeed` | \$0.6 | \$2.4 |  |
+| MiniMax M3 | `minimax-m3` | \$0.3 | \$1.2 | \$0.15 / \$0.60 |
+| MiniMax M2.5 | `minimax-m2.5` | \$0.3 | \$1.2 | \$0.15 / \$0.60 |
+| MiniMax M2.7 | `minimax-m2.7` | \$0.3 | \$1.2 | \$0.15 / \$0.60 |
+| MiniMax M2.5 | `MiniMax-M2.5` | \$0.3 | \$1.2 | \$0.15 / \$0.60 |
+| MiniMax M2.7 | `MiniMax-M2.7` | \$0.3 | \$1.2 | \$0.15 / \$0.60 |
+| MiniMax M2.7 HighSpeed | `MiniMax-M2.7-highspeed` | \$0.6 | \$2.4 | \$0.30 / \$1.20 |
 
 #### Mimo 系列
 
 | 模型 | 模型 ID | 官方输入价格<br />(\$/1M tokens) | 官方输出价格<br />(\$/1M tokens) | 5 折实际价格<br />(\$/1M tokens) |
 | --- | --- | --- | --- | --- |
-| Mimo V2.5 | `mimo-v2.5` | \$0.14 | \$0.28 |  |
-| Mimo V2.5 Pro | `mimo-v2.5-pro` | \$0.435 | \$0.87 |  |
-| Mimo V2 Pro | `mimo-v2-pro` | \$0.435 | \$0.87 |  |
-| Mimo V2 Omni | `mimo-v2-omni` | \$0.14 | \$0.28 |  |
+| Mimo V2.5 | `mimo-v2.5` | \$0.14 | \$0.28 | \$0.07 / \$0.14 |
+| Mimo V2.5 Pro | `mimo-v2.5-pro` | \$0.435 | \$0.87 | \$0.22 / \$0.44 |
+| Mimo V2 Pro | `mimo-v2-pro` | \$0.435 | \$0.87 | \$0.22 / \$0.44 |
+| Mimo V2 Omni | `mimo-v2-omni` | \$0.14 | \$0.28 | \$0.07 / \$0.14 |
 
 ---
 

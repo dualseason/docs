@@ -1,0 +1,208 @@
+---
+title: "Codex 的安装与配置"
+---
+
+> Codex 是 OpenAI 推出的 AI 编程智能体（Coding Agent），能听懂人话，按指令行事，自动修改代码。本教程将指导你在不同平台上安装和配置 Codex。
+
+## 工具简介
+
+Codex 的用处分为两大类：
+
+**程序员用：**
+- 用看得懂的中文回答他做了什么
+- 按你的需求操控电脑进行数据修改与代码编写
+- 支持多任务操作，可开多个窗口一起工作
+
+**非程序员用：**
+- 整理桌面文件排列整齐
+- 辅助完成每日工作，减轻工作压力
+- 需要成品时，叫 Codex 帮你生成一个，简单快捷
+
+---
+
+## 前置准备
+
+- 已注册 [Xcompute 账号](https://xcompute.us) 并获取 API Key
+- Mac / Windows / Linux 系统均可
+- 桌面版需科学上网（VPN）
+
+---
+
+## 获取 Xcompute API Key
+
+<Info>
+  如果你已经拥有 API Key，可以直接跳到安装步骤。如尚未获取，可参考 [Xcompute API 文档](/file#快速开始) 创建密钥。
+</Info>
+
+| 使用场景 | 建议渠道 |
+| --- | --- |
+| GPT 模型 | GPT 福利渠道 0.9 折 |
+| Claude 日常使用 | Kiro 渠道 1.8 折 |
+| Claude 高质量或蒸馏需求 | 官 Key 渠道 4.9 折 |
+
+---
+
+## 安装 Codex
+
+### CLI 版（程序员用）
+
+#### Mac 系统
+
+**方式一：npm 安装**（如果没有 npm，先安装 Node.js）
+
+Node.js 下载地址（需 VPN）：[https://nodejs.org/en](https://nodejs.org/en)
+
+```bash
+npm install -g @openai/codex
+```
+
+**方式二：Homebrew 安装**
+
+```bash
+brew -v
+brew install --cask codex
+```
+
+#### Windows 系统
+
+以管理员身份运行 PowerShell，安装 WSL：
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+重启进入 WSL 后，安装 Node.js 和 Codex：
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install 22
+npm install -g @openai/codex
+```
+
+#### Linux 系统
+
+**方式一：npm 安装**
+
+```bash
+npm install -g @openai/codex
+```
+
+**方式二：二进制离线安装**
+
+```bash
+# x86_64
+curl -L https://github.com/openai/codex/releases/download/rust-v0.131.0/codex-x86_64-unknown-linux-musl.tar.gz | tar -xz
+sudo mv codex /usr/local/bin/
+
+# ARM64（将文件名中的 x86_64 替换为 aarch64 即可）
+```
+
+#### 验证安装
+
+```bash
+codex --version
+```
+
+如果弹出版本号（如 `0.xxx.0`）即安装成功。
+
+首次运行 `codex` 会有两个选项：
+1. **ChatGPT 账号** — 推荐新手，有免费额度
+2. **OpenAI API Key** — 适合开发者，可通过 CC Switch 中转
+
+### 桌面版（非程序员用）
+
+打开即用，无需命令行操作。
+
+| 系统 | 下载方式 |
+| --- | --- |
+| Mac / Windows | 官网下载（需 VPN，Windows 推荐 Win10+） |
+| Linux | 暂不支持桌面端 |
+
+下载地址：[https://chatgpt.com/zh-Hans-CN/download/](https://chatgpt.com/zh-Hans-CN/download/)
+
+打开桌面版后，会看到登录界面：
+
+<Frame>
+  <img src="/images/image-20.png" alt="Codex 登录界面" />
+</Frame>
+
+按界面提示输入 API Key 即可登录使用。
+
+---
+
+## 配置 Codex
+
+通过 **CC Switch** 可以快速配置 Codex 的供应商信息。CC Switch 是一款跨平台桌面配置管理工具，统一管理 Claude Code、Codex、OpenCode 等 AI 工具。
+
+<Frame>
+  <img src="/images/image-21.png" alt="CC Switch 界面" />
+</Frame>
+
+详细的 CC Switch 配置步骤请参考 [CC Switch 对接 Xcompute API 教程](/cc-switch)。核心配置项如下：
+
+| 字段 | 说明 |
+| --- | --- |
+| **供应商名称** | 可随意填写 |
+| **API Key** | 以 `sk-` 开头的密钥 |
+| **请求地址** | `https://xcompute.us/v1`（国内用 `intl.dualseason.com/v1`） |
+
+---
+
+## 测试连接
+
+配置完成后，启动 Codex 并发送一条测试消息：
+
+```text
+你好，请用一句话介绍你自己
+```
+
+能够正常收到回复即表示配置成功。
+
+如果连接失败，可以用 curl 排查：
+
+```bash
+curl https://xcompute.us/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+---
+
+## 常见问题
+
+### 找不到 `.codex/config.toml`？
+
+先执行一次 `codex`，退出后再去用户目录找。
+- Linux / macOS：`~/.codex`
+- Windows：`C:\Users\你的用户名\.codex`
+
+### 桌面版无法登录？
+
+确保已开启科学上网（VPN），并确认账号或 API Key 有效。
+
+### 配置后 Codex 仍走官方？
+
+检查 `config.toml` 中的 `base_url` 是否正确指向 Xcompute 地址。
+
+---
+
+## 相关资源
+
+- **Codex 官方文档**：[https://platform.openai.com/codex](https://platform.openai.com/codex)
+- **CC Switch 配置教程**：[https://api.xcompute.us/cc-switch](/cc-switch)
+- **Xcompute API 文档**：[https://api.xcompute.us](/file)
+- **Node.js 下载**：[https://nodejs.org/en](https://nodejs.org/en)
+
+## 更多教程
+
+- [CC Switch 对接 Xcompute API 教程](/cc-switch)
+- [Codex++ 对接 Xcompute API 教程](/codex-plus-plus)
+- [CodexHub 对接 Xcompute API 教程](/codexhub)
+- [Codex 破甲指南](/codex-jailbreak)
+- [移动端使用 Claude、Codex — Kelivo](/kelivo)
+
+---
+
+_最后更新：2026-07-13_
+
+> 本内容由 Coze AI 生成，请遵循相关法律法规及《人工智能生成合成内容标识办法》使用与传播。
