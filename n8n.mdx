@@ -1,171 +1,310 @@
 ---
 title: "n8n 接入"
-description: "基于 n8n 官方安装与 OpenAI 节点文档，把 n8n 工作流接到 Xcompute。"
+description: "将 Xcompute API 接入 n8n 工作流平台，构建 AI 自动化应用。"
 ---
 
-n8n 是一个工作流自动化平台。它很适合把 Xcompute 接进：
-
-1. 自动化流程
-2. Agent 编排
-3. 表单、Webhook、数据库、消息通知联动
-4. AI 内容处理流水线
-
-## 这篇文章适合谁
-
-如果你想做下面这些事情，这篇很适合你：
-
-1. 让 AI 自动处理表单、Webhook、消息通知
-2. 把 Xcompute 串进 CRM、数据库、IM、邮件系统
-3. 搭建非技术人员也能看懂的自动化流程图
+n8n 是一个基于节点的开源工作流自动化平台。通过可视化拖拽的方式，将各种应用、API、数据库和服务连接起来。它很适合把 Xcompute 接进自动化流程、Agent 编排、AI 内容处理流水线。
 
 <Frame>
-  <img src="https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png" alt="n8n 官方界面截图" />
+  <img src="https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-screenshot-readme.png" alt="n8n 界面截图" />
 </Frame>
 
-<caption>*n8n 官方 README 截图*</caption>
+## 核心功能
 
-## 你最终会得到什么
+| 功能模块 | 说明 | 典型场景 |
+| --- | --- | --- |
+| 工作流自动化 | 可视化编排节点与连线 | 定时任务、数据同步 |
+| AI Agent | 内置 LangChain 集成 | 智能客服、自动决策 |
+| Webhook | 接收外部 HTTP 请求 | API 网关、实时处理 |
+| 400+ 集成 | 覆盖主流 SaaS | 邮件→Slack→数据库全链路 |
+| 代码节点 | JavaScript / Python | 自定义逻辑、数据转换 |
 
-做完这篇以后，你会拥有：
+## 部署 n8n
 
-1. 一个可访问的 n8n 实例
-2. 一个能请求 Xcompute 的工作流
-3. 一条能跑通的 AI 自动化链路
-
-## 官方安装方式
-
-如果你想快速体验，官方推荐可以先用：
+### Docker 部署（推荐）
 
 ```bash
-npx n8n
+docker run -d \
+  --name n8n \
+  --restart always \
+  -p 5678:5678 \
+  -v n8n_data:/home/node/.n8n \
+  -e GENERIC_TIMEZONE="Asia/Shanghai" \
+  docker.n8n.io/n8nio/n8n
 ```
 
-如果你想长期跑本地实例，也可以全局安装：
+访问 `http://localhost:5678` 完成管理员账号注册。
+
+**生产环境 Docker Compose：**
+
+```yaml
+version: "3.8"
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=Asia/Shanghai
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=your-password
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PASSWORD=n8n_secure_password
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=n8n_secure_password
+      - POSTGRES_DB=n8n
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  n8n_data:
+  postgres_data:
+```
+
+### npm 安装
 
 ```bash
 npm install -g n8n
-n8n
+n8n start
 ```
 
-## 对非技术用户更推荐哪种安装方式
+### n8n Cloud
 
-如果你只是测试：
+也可直接使用 [n8n Cloud](https://app.n8n.cloud) 注册使用。
 
-1. 优先 `npx n8n`
+## 接入 Xcompute API
 
-如果你想长期运行：
+### 方式一：OpenAI 节点（推荐）
 
-1. 再考虑全局安装或 Docker
+适用于 GPT、Gemini 等兼容 OpenAI 协议的模型。
 
-默认访问地址：
+1. 添加 **OpenAI** 节点
+2. 创建新 Credential：
+   - **API Key**: 你的 Xcompute API Key
+   - **Base URL**: `https://xcompute.us/v1`
+3. 选择或手动填写模型名（见下方列表）
 
-```text
-http://localhost:5678
+### 方式二：Anthropic 节点
+
+适用于 Claude 系列模型。
+
+1. 添加 **Anthropic Chat Model** 节点（LangChain 分类下）
+2. 创建新 Credential：
+   - **API Key**: 你的 Xcompute API Key
+   - **Base URL**: `https://xcompute.us`（**不加 /v1**）
+3. 选择或手动填写模型名
+
+### 方式三：HTTP Request 节点（最通用）
+
+当内置节点无法满足需求时，直接发送 API 请求：
+
+**OpenAI 协议：**
+
 ```
-
-## 第一步：先确认平台能打开
-
-你成功的标志是：
-
-1. 浏览器里能打开 `http://localhost:5678`
-2. 能进入编辑器界面
-3. 能新建工作流
-
-## 接入 Xcompute 的两种方式
-
-### 方式一：用 OpenAI 节点
-
-n8n 自带 OpenAI 节点。对于支持自定义 `Base URL` 的版本，你可以直接把它接到 Xcompute：
-
-- `Base URL`: `https://xcompute.us/v1`
-- `API Key`: 你的 Xcompute API Key
-
-这种方式适合：
-
-1. 你已经在用 OpenAI 节点
-2. 你的节点版本支持自定义基础地址
-
-### 方式二：用 HTTP Request 节点
-
-如果你当前版本的 OpenAI 节点不方便填自定义地址，最稳的方案就是直接用 `HTTP Request` 节点调用 Xcompute。
-
-例如：
-
-```bash
 POST https://xcompute.us/v1/chat/completions
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer sk-xxx
+Body:
+  {
+    "model": "gpt-5.6-sol",
+    "messages": [{"role": "user", "content": "你好"}],
+    "temperature": 0.7,
+    "max_tokens": 2048
+  }
 ```
 
-请求体：
+通过表达式提取结果：`{{ $json.choices[0].message.content }}`
 
-```json
+**Anthropic 协议：**
+
+```
+POST https://xcompute.us/v1/messages
+Headers:
+  Content-Type: application/json
+  x-api-key: sk-xxx
+  anthropic-version: "2023-06-01"
+Body:
+  {
+    "model": "claude-sonnet-5",
+    "max_tokens": 1024,
+    "messages": [{"role": "user", "content": "你好"}]
+  }
+```
+
+### 加速入口
+
+| 协议 | 标准入口 | 加速入口 |
+| --- | --- | --- |
+| OpenAI | `https://xcompute.us/v1` | `https://intl.dualseason.com/v1` |
+| Anthropic | `https://xcompute.us` | `https://intl.dualseason.com` |
+
+## 推荐模型
+
+| 场景 | 推荐模型 | 成本 |
+| --- | --- | --- |
+| 简单分类/提取 | `gpt-5.6-terra` | 低 |
+| 通用对话 | `gpt-5.6-sol` / `claude-sonnet-5` | 中 |
+| 复杂推理 | `gpt-5.6-sol` | 中 |
+| 长文档处理 | `claude-sonnet-5` (200K) | 中 |
+| 代码生成 | `gpt-5.6-sol` | 中 |
+| 批量处理 | `gpt-5.6-terra` | 低 |
+
+## AI Agent 工作流
+
+### 基础架构
+
+```
+Chat Trigger → AI Agent → LLM（Xcompute）
+                  ↓
+            ┌─────┴─────┐
+          Tools       Memory
+```
+
+### 创建步骤
+
+1. 新建工作流，添加 **Chat Trigger** 节点
+2. 添加 **AI Agent** 节点（Agent Type: Tools Agent）
+3. 在 "AI Language Model" 端口连接 **OpenAI Chat Model**（选择 Xcompute Credential）
+4. 在 "Memory" 端口连接 **Window Buffer Memory**（Context Window Length: 10）
+5. 可选：添加 Tools（Calculator、HTTP Request、Wikipedia 等）
+
+## 实战案例
+
+### 案例：智能邮件自动回复
+
+```
+Email Trigger (IMAP) → AI 分类 → IF
+                                    ↓
+                    ┌───────────────┼───────────────┐
+                 重要邮件        一般邮件         垃圾邮件
+                    ↓               ↓               ↓
+              AI 生成回复      模板回复        标记归档
+                    ↓
+              发送邮件回复
+```
+
+**AI 分类节点 Prompt：**
+
+```
+对以下邮件进行分类和重要性评估。返回 JSON 格式：
 {
-  "model": "gpt-5",
-  "messages": [
-    {
-      "role": "user",
-      "content": "请总结今天新增的工单内容"
-    }
-  ]
+  "category": "urgent/important/normal/spam",
+  "summary": "一句话概括",
+  "suggested_reply": "建议回复"
 }
+
+邮件主题：{{ $json.subject }}
+邮件正文：{{ $json.text }}
 ```
 
-这种方式最通用，也最容易排错。
+**AI 生成回复节点（重要邮件）：**
 
-## 非技术用户推荐顺序
+```
+生成专业、友好的邮件回复。原始主题：{{ $json.subject }}
+建议方向：{{ $json.suggested_reply }}
+```
 
-最建议按下面顺序来：
+### 案例：AI 内容创作 Pipeline
 
-1. 打开 n8n
-2. 新建一个最简单工作流
-3. 先用 `HTTP Request` 节点请求 Xcompute
-4. 先让它返回一句文本
-5. 跑通后，再接 Webhook、表单、数据库、消息通知
+```
+Webhook → [LLM-1: gpt-5.6-terra] 生成大纲
+         → [LLM-2: gpt-5.6-sol] 撰写正文
+         → [LLM-3: claude-sonnet-5] 校对优化
+         → 格式化输出
+```
 
-## 推荐工作流
+不同模型各司其职：轻量模型做大纲、强模型做正文、Claude 做润色。
 
-1. `Webhook` 或业务触发器进入
-2. `Set` / `Code` 节点整理上下文
-3. `HTTP Request` 或 `OpenAI` 节点请求 Xcompute
-4. 解析返回结果
-5. 发回飞书、Telegram、邮件、数据库或下一条业务链路
+## 高级功能
 
-## 第一次上手建议
+### 自定义 API 调用（Code 节点）
 
-### 最简单测试流
+```javascript
+const response = await fetch('https://xcompute.us/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${$credentials.xcomputeApiKey}`
+  },
+  body: JSON.stringify({
+    model: 'gpt-5.6-sol',
+    messages: [{ role: 'user', content: $json.user_input }],
+    temperature: 0.7
+  })
+});
+const data = await response.json();
+return [{ json: { response: data.choices[0].message.content } }];
+```
 
-1. 新建工作流
-2. 放一个手动触发器
-3. 放一个 `HTTP Request` 节点
-4. 请求 `https://xcompute.us/v1/chat/completions`
-5. 返回一条简单回复
-6. 点运行
+### 错误处理
 
-如果能看到模型返回内容，说明你已经接通成功。
+每个 AI 节点的 Settings 中配置重试：Retry On Fail: true, Max Tries: 3
+
+使用 **Error Trigger** 工作流捕获全局错误，发送告警通知。
+
+### 子工作流
+
+创建 "Xcompute LLM 调用" 子工作流（Execute Workflow Trigger → LLM → Respond），在主工作流中通过 **Execute Workflow** 节点调用，统一管理模型配置。
+
+### 动态选择模型
+
+在 Model 字段中使用表达式：
+
+```
+{{ $json.task_type === "complex" ? "gpt-5.6-sol" : "gpt-5.6-terra" }}
+```
 
 ## 常见问题
 
-### 为什么推荐先用 HTTP Request 节点？
+### Credential 连接失败
 
-因为它最直接、最透明。非技术用户一旦遇到问题，也更容易把请求体和报错发给别人排查。
+排查：
 
-### 什么时候再用 OpenAI 节点？
+```bash
+# 验证 API Key
+curl -X GET https://xcompute.us/v1/models \
+  -H "Authorization: Bearer sk-your-key"
 
-当你已经确认：
+# 检查网络
+curl -I https://xcompute.us/v1
+```
 
-1. Xcompute 可用
-2. 请求格式没问题
-3. 只是想把节点体验做得更方便
+常见原因：API Key 错误、Base URL 格式不对（OpenAI 协议要加 `/v1`）、网络不通。
 
-这时候再切到 OpenAI 节点更合适。
+### AI 节点超时
 
-## 什么时候适合用 n8n
+- 增加超时：`N8N_DEFAULT_BINARY_TIMEOUT: 300`
+- 切换到加速入口
+- 降低 `max_tokens`
 
-1. 你要做 AI 自动化流程
-2. 你需要把 AI 输出接到很多第三方系统
-3. 你希望非纯工程团队也能看懂流程图
+### 模型选择建议
 
-## 官方参考
+- 简单任务用 `gpt-5.6-terra`，复杂任务用 `gpt-5.6-sol`
+- 设置 `max_tokens` 限制输出长度
+- 使用 GPT 福利渠道（0.9 折）处理批量任务
 
-1. n8n npm install docs
-2. n8n OpenAI node docs
-3. n8n AI / workflow docs
+### URL 配置速查
+
+| 协议 | 标准入口 | 加速入口 |
+| --- | --- | --- |
+| OpenAI | `https://xcompute.us/v1` | `https://intl.dualseason.com/v1` |
+| Anthropic | `https://xcompute.us` | `https://intl.dualseason.com` |
+
+**注意：** OpenAI 协议带 `/v1`，Anthropic 协议不带 `/v1`，API Key 通用。
+
+## 参考资源
+
+1. [n8n 官方文档](https://docs.n8n.io)
+2. [n8n AI 节点文档](https://docs.n8n.io/advanced-ai/)
+3. [n8n GitHub](https://github.com/n8n-io/n8n)
+4. [Xcompute 文档站](https://api.xcompute.us)
