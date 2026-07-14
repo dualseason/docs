@@ -70,6 +70,7 @@
         "pages": [
           "file",
           "agent",
+          "opencode-install",
           "cc-switch",
           "codex-plus-plus",
           "codex-jailbreak",

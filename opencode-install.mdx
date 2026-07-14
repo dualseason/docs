@@ -1,0 +1,194 @@
+---
+title: "OpenCode 安装教程"
+description: "在 macOS、Windows 和 Linux 上安装 OpenCode CLI 与桌面端。"
+---
+
+OpenCode 提供 CLI 和桌面端两种使用方式。CLI 适合在终端中直接操作项目，桌面端则提供图形界面。两者可以同时安装。
+
+<Tip>
+  推荐先安装桌面端快速体验，再根据需要安装 CLI。需要接入 Xcompute 和切换模型时，请继续阅读 [OpenCode 接入教程](/opencode)。
+</Tip>
+
+## 安装 OpenCode CLI
+
+### macOS / Linux
+
+<Tabs>
+  <Tab title="一键安装（推荐）">
+    在终端中执行：
+
+    ```bash
+    curl -fsSL https://opencode.ai/install | bash
+    ```
+  </Tab>
+  <Tab title="Homebrew">
+    ```bash
+    brew install anomalyco/tap/opencode
+    ```
+
+    OpenCode 官方 Tap 通常能更快获得新版本。
+  </Tab>
+  <Tab title="npm">
+    需要提前安装 Node.js：
+
+    ```bash
+    npm install -g opencode-ai
+    ```
+  </Tab>
+  <Tab title="Bun">
+    ```bash
+    bun install -g opencode-ai
+    ```
+  </Tab>
+</Tabs>
+
+### Windows
+
+<Note>
+  官方推荐在 WSL 中使用 CLI，可获得更好的兼容性和性能。桌面端可以直接安装在 Windows 中。
+</Note>
+
+<Tabs>
+  <Tab title="WSL（推荐）">
+    以管理员身份打开 PowerShell，安装 WSL：
+
+    ```powershell
+    wsl --install
+    ```
+
+    重启电脑并进入 WSL 后执行：
+
+    ```bash
+    curl -fsSL https://opencode.ai/install | bash
+    ```
+  </Tab>
+  <Tab title="Chocolatey">
+    ```powershell
+    choco install opencode
+    ```
+  </Tab>
+  <Tab title="Scoop">
+    ```powershell
+    scoop install opencode
+    ```
+  </Tab>
+  <Tab title="npm">
+    ```powershell
+    npm install -g opencode-ai
+    ```
+  </Tab>
+</Tabs>
+
+### 验证 CLI 安装
+
+安装完成后重新打开终端，并执行：
+
+```bash
+opencode --version
+```
+
+如果终端显示版本号，说明安装成功。进入任意项目目录即可启动：
+
+```bash
+cd /path/to/your-project
+opencode
+```
+
+首次进入项目后，可以执行 `/init`。OpenCode 会分析项目并生成 `AGENTS.md`，用于记录项目结构和开发规范。
+
+## 安装 OpenCode 桌面端
+
+OpenCode Desktop 目前处于 Beta 阶段，支持 macOS、Windows 和 Linux。建议通过 [官方下载页面](https://opencode.ai/download) 获取最新版本。
+
+| 系统 | 安装包 |
+| --- | --- |
+| macOS（Apple Silicon） | [下载 DMG](https://opencode.ai/download/stable/darwin-aarch64-dmg) |
+| macOS（Intel） | [下载 DMG](https://opencode.ai/download/stable/darwin-x64-dmg) |
+| Windows（x64） | [下载安装程序](https://opencode.ai/download/stable/windows-x64-nsis) |
+| Debian / Ubuntu（x64） | [下载 DEB](https://opencode.ai/download/stable/linux-x64-deb) |
+| Fedora / RHEL（x64） | [下载 RPM](https://opencode.ai/download/stable/linux-x64-rpm) |
+
+### macOS
+
+下载与你的芯片对应的 DMG 文件，打开后将 OpenCode 拖入 **Applications** 文件夹。
+
+也可以使用 Homebrew 安装：
+
+```bash
+brew install --cask opencode-desktop
+```
+
+<Info>
+  在 Mac 左上角点击 **Apple 菜单 > 关于本机**，即可查看芯片类型。M1、M2、M3、M4 等芯片请选择 Apple Silicon，较早的 Mac 请选择 Intel。
+</Info>
+
+### Windows
+
+下载 Windows x64 安装程序，双击运行并按照提示完成安装。安装后从开始菜单打开 OpenCode。
+
+如果 Windows SmartScreen 显示安全提示，请先确认安装包来自 `opencode.ai` 官方域名，再选择继续运行。
+
+### Linux
+
+Debian、Ubuntu 及其衍生发行版下载 DEB 安装包，然后在下载目录执行：
+
+```bash
+sudo apt install ./opencode-desktop-*.deb
+```
+
+Fedora、RHEL 及其衍生发行版下载 RPM 安装包，然后执行：
+
+```bash
+sudo dnf install ./opencode-desktop-*.rpm
+```
+
+## 首次使用
+
+1. 打开 OpenCode，并选择需要操作的项目文件夹。
+2. 按照界面提示连接模型提供商，或在 CLI 中输入 `/connect`。
+3. 选择模型后输入任务，例如“分析这个项目并告诉我如何启动”。
+4. 需要使用 Xcompute 中的 Claude、GPT、Gemini 等模型时，按照 [OpenCode 接入教程](/opencode) 添加配置。
+
+## 更新 OpenCode
+
+一键脚本安装的 CLI 可以再次执行安装命令更新：
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+通过包管理器安装时，使用对应的更新命令：
+
+```bash
+# npm
+npm update -g opencode-ai
+
+# Homebrew CLI
+brew upgrade anomalyco/tap/opencode
+
+# Homebrew 桌面端
+brew upgrade --cask opencode-desktop
+```
+
+手动安装桌面端时，可随时访问 [官方下载页面](https://opencode.ai/download) 下载最新安装包。
+
+## 常见问题
+
+### 提示 `opencode: command not found`
+
+先关闭并重新打开终端。如果仍然无法运行，请确认安装目录已经加入 `PATH`，或者改用一键安装脚本重新安装。
+
+### Windows CLI 运行异常
+
+优先改用 WSL 安装。WSL 对 OpenCode 的终端界面、文件权限和开发工具兼容性更好。
+
+### 安装完成后没有可用模型
+
+OpenCode 本身不包含默认 API 额度，需要连接模型提供商。你可以按照 [OpenCode 接入教程](/opencode) 配置 Xcompute API Key 并使用多种模型。
+
+## 官方资源
+
+- [OpenCode 官网](https://opencode.ai)
+- [官方下载页面](https://opencode.ai/download)
+- [官方文档](https://opencode.ai/docs/)
+- [GitHub 仓库](https://github.com/anomalyco/opencode)
