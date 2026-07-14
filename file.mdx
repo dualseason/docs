@@ -44,16 +44,18 @@ description: "中转站核心作用就是一个站点可以给你提供多种模
 ### 3. 快速测试
 
 ```bash
-curl https://xcompute.us/v1/chat/completions \
+curl https://intl.dualseason.com/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Authorization: Bearer 你的API 秘钥" \
   -d '{
-    "model": "gpt-5.5",
+    "model": "gpt-5.6-sol",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
 
----
+<Warning>
+  上面的这个测试代码是在终端
+</Warning>
 
 ## 站点说明
 
