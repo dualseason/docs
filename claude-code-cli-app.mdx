@@ -1,0 +1,300 @@
+---
+title: "Claude Code CLI 与桌面端配置教程"
+description: "手动安装 Claude Code CLI 和 Claude Desktop，通过共用的 settings.json 接入 Xcompute。"
+---
+
+Claude Code CLI 和 Claude Desktop 的 **Code** 标签使用同一份用户配置。你只需要手动修改一次 `~/.claude/settings.json`，两边就都能通过 Xcompute 使用 Claude 模型。
+
+<Tip>
+  本教程只使用 Anthropic 官方 Claude Code、Claude Desktop 和系统自带文本编辑器。**不需要安装 CC Switch 或其他切换、代理软件。**
+</Tip>
+
+如果你不熟悉下载安装包、PowerShell、终端、命令或配置文件，请先阅读 [电脑基础使用扫盲](/computer-basics)。
+
+## CLI 和桌面端如何共用配置
+
+Claude Code 默认从当前用户的 `.claude` 文件夹读取 `settings.json`：
+
+| 系统 | 共用配置文件 |
+| --- | --- |
+| Windows | `%USERPROFILE%\.claude\settings.json` |
+| macOS | `~/.claude/settings.json` |
+| Linux | `~/.claude/settings.json` |
+
+这份文件可以同时保存 Base URL、API Key 和默认模型。同一台电脑、同一个系统账户下，Claude Code CLI 和 Claude Desktop 本地 Code 会话都会读取它。
+
+<Warning>
+  Xcompute 配置只适用于 **Local（本地）** 会话。Claude 云端会话运行在 Anthropic 的服务器上，不会读取你电脑中的 `settings.json`。
+</Warning>
+
+## 第一步：安装 Node.js
+
+如果你已经按照 OpenCode 或 Codex 教程安装了 Node.js 24，执行 `node -v` 和 `npm -v` 能显示版本号，可以直接跳到下一步。
+
+<Tabs>
+  <Tab title="Windows">
+    点击 [下载 Node.js 24 Windows 64 位 MSI](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-x64.msi)，下载后双击安装，并使用默认选项完成安装。
+
+    点击 **开始菜单**，输入 `PowerShell` 并打开，然后执行：
+
+    ```powershell
+    node -v
+    npm -v
+    ```
+  </Tab>
+  <Tab title="macOS">
+    点击 [下载 Node.js 24 macOS PKG](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0.pkg)，下载后双击安装，并按照界面提示完成安装。
+
+    按 `Command + 空格键`，输入“终端”并打开，然后执行：
+
+    ```bash
+    node -v
+    npm -v
+    ```
+  </Tab>
+  <Tab title="Linux">
+    Debian 或 Ubuntu 执行：
+
+    ```bash
+    curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+    sudo apt install -y nodejs
+    ```
+
+    Fedora 或 RHEL 执行：
+
+    ```bash
+    curl -fsSL https://rpm.nodesource.com/setup_24.x | sudo bash -
+    sudo dnf install -y nodejs
+    ```
+  </Tab>
+</Tabs>
+
+需要使用 NVM 或其他架构安装包时，请参考 [OpenCode 安装教程中的 Node.js 章节](/opencode-install#第一步直接安装-nodejs)。
+
+## 第二步：安装 Claude Code CLI
+
+Windows、macOS 和 Linux 都可以使用同一条 npm 命令：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+安装完成后验证：
+
+```bash
+claude --version
+```
+
+看到 Claude Code 版本号即表示安装成功。
+
+<Accordion title="备用：使用官方原生安装脚本">
+  macOS、Linux 和 WSL 执行：
+
+  ```bash
+  curl -fsSL https://claude.ai/install.sh | bash
+  ```
+
+  Windows PowerShell 执行：
+
+  ```powershell
+  irm https://claude.ai/install.ps1 | iex
+  ```
+</Accordion>
+
+## 第三步：安装 Claude Desktop
+
+桌面端是可选项。只使用 CLI 的用户可以直接跳到“创建 `settings.json`”。
+
+建议访问 [Claude 官方下载页面](https://claude.ai/download) 获取最新版本，也可以使用下方官方入口：
+
+| 系统 | 下载地址 |
+| --- | --- |
+| macOS（Intel / Apple Silicon） | [下载 Claude DMG](https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect) |
+| Windows（x64） | [下载 Claude 安装程序](https://claude.ai/api/desktop/win32/x64/setup/latest/redirect) |
+| Windows（ARM64） | [下载 Claude ARM64 安装程序](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect) |
+| Linux（Beta） | [查看官方 Linux 安装说明](https://code.claude.com/docs/en/desktop-linux) |
+
+- macOS：打开 DMG，将 Claude 拖入 **Applications** 文件夹。
+- Windows：打开安装程序，按照界面提示完成安装。
+- Linux：按照官方页面选择 apt 或 DEB 安装方式。
+
+<Note>
+  Windows 的 Claude Desktop Code 标签需要 Git for Windows。如果尚未安装，请从 [Git 官网](https://git-scm.com/downloads/win) 下载并安装，然后完全退出并重新打开 Claude Desktop。
+</Note>
+
+安装后打开 Claude Desktop。真正开始任务前，先完成下面的 Xcompute 配置。
+
+## 第四步：创建 `settings.json`
+
+<Tabs>
+  <Tab title="Windows">
+    点击 **开始菜单**，输入 `PowerShell` 并打开。复制下面两行，粘贴后按 Enter：
+
+    ```powershell
+    New-Item -ItemType Directory -Force "$HOME\.claude"
+    notepad "$HOME\.claude\settings.json"
+    ```
+
+    记事本询问是否创建文件时选择 **是**。保存时按 `Ctrl+S`。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `settings.json`，而不是 `settings.json.txt`。
+  </Tab>
+  <Tab title="macOS / Linux">
+    打开终端，执行：
+
+    ```bash
+    mkdir -p ~/.claude
+    nano ~/.claude/settings.json
+    ```
+
+    使用 nano 时，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
+  </Tab>
+</Tabs>
+
+<Warning>
+  不要把文件放进某个项目的 `.claude` 文件夹。本教程使用用户级 `~/.claude/settings.json`，这样 CLI 和桌面端的所有本地项目都能读取。
+</Warning>
+
+## 第五步：写入 Xcompute 配置
+
+将下面内容完整粘贴到 `settings.json`，把 `在这里填写你的APIKey` 替换为你的 [Xcompute API Key](https://xcompute.us/keys)：
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://intl.dualseason.com",
+    "ANTHROPIC_AUTH_TOKEN": "在这里填写你的APIKey",
+    "ANTHROPIC_MODEL": "claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "claude-fable-5"
+  }
+}
+```
+
+<Info>
+  默认推荐使用 `https://intl.dualseason.com`。如果你具备稳定的科学上网能力，可以改为 `https://xcompute.us`。Claude Code 使用 Anthropic 协议，Base URL **不要添加 `/v1`**。
+</Info>
+
+<Warning>
+  `settings.json` 包含明文 API Key。不要上传到 GitHub、发送给他人或在截图中展示。JSON 最后一项后面不能有逗号。
+</Warning>
+
+### 每个配置项有什么作用
+
+| 配置项 | 作用 |
+| --- | --- |
+| `ANTHROPIC_BASE_URL` | Xcompute 的 Anthropic 协议入口，不包含 `/v1` |
+| `ANTHROPIC_AUTH_TOKEN` | 你的 Xcompute API Key，以 Bearer Token 方式发送 |
+| `ANTHROPIC_MODEL` | 启动时默认使用的模型 |
+| `ANTHROPIC_DEFAULT_SONNET_MODEL` | 将 Sonnet 选项映射到 Xcompute 的 Sonnet 模型 |
+| `ANTHROPIC_DEFAULT_OPUS_MODEL` | 将 Opus 选项映射到 Xcompute 的 Opus 模型 |
+| `ANTHROPIC_DEFAULT_HAIKU_MODEL` | 为后台轻量任务指定可用模型 |
+| `ANTHROPIC_DEFAULT_FABLE_MODEL` | 将 Fable 选项映射到 Xcompute 的 Fable 模型 |
+
+模型 ID 必须与 [Xcompute 模型定价页面](https://xcompute.us/pricing) 中显示的 ID 完全一致。可用模型变化时，请同步修改对应值。
+
+## 第六步：启动并验证 CLI
+
+保存 `settings.json` 后，完全退出之前打开的 Claude Code，再重新打开 PowerShell 或终端。
+
+进入你的项目目录并启动：
+
+```bash
+cd /path/to/your-project
+claude
+```
+
+如果出现“使用检测到的 API Key”之类的提示，请确认使用该 Key。进入 Claude Code 后输入：
+
+```text
+请告诉我当前使用的模型，并分析这个项目的目录结构，不要修改任何文件。
+```
+
+也可以输入 `/status`，检查当前 API provider、Base URL 和模型信息。
+
+## 第七步：启动并验证桌面端
+
+1. 完全退出 Claude Desktop。
+2. 确认 `settings.json` 已保存。
+3. 重新打开 Claude Desktop。
+4. 点击 **Code** 标签。
+5. 新建会话时将 Environment 选择为 **Local**。
+6. 选择一个测试项目文件夹。
+7. 输入“分析这个项目，不要修改文件”。
+
+桌面端和 CLI 使用相同系统账户时，不需要再次填写 Base URL 和 API Key。
+
+<Warning>
+  不要选择 **Remote** 或云端环境来测试 Xcompute。远程会话不会读取本机的 `settings.json`。
+</Warning>
+
+## 如何切换模型
+
+修改 `settings.json` 中的默认模型：
+
+```json
+"ANTHROPIC_MODEL": "其他模型ID"
+```
+
+保存后重新打开 CLI 或桌面端。CLI 中也可以输入 `/model`，选择已映射的 Sonnet、Opus、Fable 等模型。
+
+## 更新 Claude Code
+
+通过 npm 安装时，三个平台都执行：
+
+```bash
+npm update -g @anthropic-ai/claude-code
+claude --version
+```
+
+原生安装版本会在后台自动更新。桌面端可以使用应用内更新，或重新访问 [官方下载页面](https://claude.ai/download)。
+
+## 常见问题
+
+### `claude` 命令不存在
+
+关闭并重新打开 PowerShell 或终端，再执行：
+
+```bash
+node -v
+npm -v
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+### 桌面端没有读取配置
+
+1. 确认桌面端和 CLI 使用的是同一个电脑账户。
+2. 确认文件位于用户目录的 `.claude/settings.json`。
+3. Windows 检查文件是否被保存成 `settings.json.txt`。
+4. 确认新会话选择的是 **Local**，而不是 Remote。
+5. 完全退出桌面端并重新打开。
+
+### 提示未授权或 API Key 无效
+
+确认：
+
+1. `ANTHROPIC_AUTH_TOKEN` 没有前后空格。
+2. API Key 仍然有效且账户有可用额度。
+3. `ANTHROPIC_BASE_URL` 没有 `/v1`。
+4. JSON 使用英文双引号，最后一项后面没有逗号。
+
+### 以前使用过切换工具或本地代理
+
+本教程不需要任何本地代理。检查 `ANTHROPIC_BASE_URL`，不要使用 `127.0.0.1` 或 `localhost`。默认配置应直接指向：
+
+```json
+"ANTHROPIC_BASE_URL": "https://intl.dualseason.com"
+```
+
+### 模型不存在或无法使用
+
+前往 [模型定价页面](https://xcompute.us/pricing) 检查模型 ID。模型名称必须完全一致，不能有多余空格。
+
+## 官方资源
+
+- [Claude Code 官方文档](https://code.claude.com/docs/)
+- [Claude Desktop 官方下载](https://claude.ai/download)
+- [Claude Code 设置说明](https://code.claude.com/docs/en/settings)
+- [Xcompute API Key](https://xcompute.us/keys)
