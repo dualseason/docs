@@ -70,6 +70,7 @@
         "pages": [
           "file",
           "agent",
+          "computer-basics",
           "opencode-install",
           "cc-switch",
           "codex-plus-plus",

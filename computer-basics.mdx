@@ -1,0 +1,251 @@
+---
+title: "电脑基础使用扫盲（安装前必看）"
+description: "学习安装 OpenCode 时需要用到的下载、终端、命令、文件路径和配置文件基础操作。"
+---
+
+这篇教程只讲安装 OpenCode 会用到的电脑基础操作。如果你已经熟悉终端、命令和 JSON 配置文件，可以直接进入 [OpenCode 安装与配置教程](/opencode-install)。
+
+## 先确认你的电脑系统
+
+安装包必须与操作系统匹配，不能混用。
+
+<Tabs>
+  <Tab title="Windows">
+    按 `Windows + R`，输入 `winver`，再按 Enter。
+
+    弹出的窗口会显示 Windows 版本。大多数电脑使用 64 位 Windows，应下载文件名包含 `x64` 或 `64-bit` 的安装包。
+  </Tab>
+  <Tab title="macOS">
+    点击屏幕左上角的 **Apple 菜单 > 关于本机**。
+
+    在“芯片”或“处理器”一栏查看类型：
+
+    - 显示 M1、M2、M3、M4 等，选择 **Apple Silicon** 或 **ARM64**。
+    - 显示 Intel，选择 **Intel** 或 **x64**。
+  </Tab>
+  <Tab title="Linux">
+    按 `Ctrl + Alt + T` 打开终端，输入：
+
+    ```bash
+    uname -m
+    ```
+
+    - 输出 `x86_64`，选择 **x64** 或 **amd64**。
+    - 输出 `aarch64`，选择 **ARM64**。
+  </Tab>
+</Tabs>
+
+## 认识常见安装包
+
+| 文件后缀 | 适用系统 | 如何安装 |
+| --- | --- | --- |
+| `.msi`、`.exe` | Windows | 双击文件，按照安装向导操作 |
+| `.pkg`、`.dmg` | macOS | 双击打开；PKG 按向导安装，DMG 通常拖入 Applications |
+| `.deb` | Debian、Ubuntu | 双击后使用软件中心安装 |
+| `.rpm` | Fedora、RHEL | 双击后使用软件中心安装 |
+| `.zip`、`.tar.gz`、`.tar.xz` | 压缩包 | 需要解压和手动配置，新手优先选择上面的安装包 |
+
+<Tip>
+  下载时优先选择 MSI、PKG、DMG、DEB 或 RPM。除非教程明确要求，否则新手不要下载“源代码”或压缩包。
+</Tip>
+
+## 如何下载和找到文件
+
+1. 点击教程中的下载链接。
+2. 浏览器询问保存位置时，可以直接选择 **下载** 文件夹。
+3. 下载完成后，点击浏览器右上角的下载图标。Windows 浏览器通常也可以按 `Ctrl+J` 打开下载记录。
+4. 点击文件名或 **在文件夹中显示**。
+5. 双击安装包开始安装。
+
+只从教程列出的官网地址下载安装包。不要使用搜索结果中的广告下载站，也不要运行来源不明的安装程序。
+
+## 如何打开命令行窗口
+
+命令行窗口是输入安装命令的地方。教程中的代码不能粘贴到浏览器地址栏、搜索框或聊天窗口。
+
+<Tabs>
+  <Tab title="Windows PowerShell">
+    普通打开方式：
+
+    1. 点击屏幕底部的 **开始菜单**。
+    2. 输入 `PowerShell`。
+    3. 点击 **Windows PowerShell** 或 **PowerShell**。
+
+    需要管理员权限时：
+
+    1. 在搜索结果中右键点击 PowerShell。
+    2. 选择 **以管理员身份运行**。
+    3. 系统询问“是否允许此应用更改你的设备”时，点击 **是**。
+  </Tab>
+  <Tab title="macOS 终端">
+    1. 按 `Command + 空格键` 打开聚焦搜索。
+    2. 输入“终端”或 `Terminal`。
+    3. 按 Enter 打开。
+
+    也可以打开 **访达 > 应用程序 > 实用工具 > 终端**。
+  </Tab>
+  <Tab title="Linux 终端">
+    大多数 Linux 桌面可以按 `Ctrl + Alt + T` 打开终端。
+
+    如果快捷键无效，请打开应用列表，搜索 `Terminal`、“终端”或“Konsole”。
+  </Tab>
+</Tabs>
+
+## 如何复制并执行命令
+
+例如教程显示：
+
+```bash
+npm install -g opencode-ai
+```
+
+正确操作：
+
+1. 只复制灰色代码框中的命令，不要复制代码框外的说明文字。
+2. 点击 PowerShell 或终端窗口。
+3. 粘贴命令。
+4. 按 Enter 执行。
+5. 等待命令执行结束，再执行下一条。
+
+| 系统 | 复制 | 粘贴 |
+| --- | --- | --- |
+| Windows | `Ctrl+C` | `Ctrl+V` 或鼠标右键 |
+| macOS | `Command+C` | `Command+V` |
+| Linux 终端 | `Ctrl+Shift+C` | `Ctrl+Shift+V` |
+
+<Warning>
+  不要复制命令前面的 `$`、`>`、`PS C:\>` 等提示符。教程代码框中没有这些提示符时，不需要自己添加。
+</Warning>
+
+### 命令执行后看起来没有反应
+
+- 有些安装命令需要下载文件，请等待几分钟。
+- 光标仍在闪烁，且没有出现新的输入行，通常表示命令还在运行。
+- 出现新的输入行，表示上一条命令已经结束。
+- 不要连续多次按 Enter 或重复运行安装命令。
+
+### 如何停止卡住的命令
+
+先等待一段时间。如果确认命令长时间没有变化，可以点击终端窗口并按 `Ctrl+C` 停止。这里的 `Ctrl+C` 表示停止命令，不是复制文字。
+
+## 认识文件路径
+
+文件路径表示文件在电脑中的位置。
+
+| 写法 | 含义 |
+| --- | --- |
+| `~` | 当前用户的个人文件夹，macOS 和 Linux 使用 |
+| `$HOME` | 当前用户的个人文件夹，PowerShell、macOS 和 Linux 可识别 |
+| `%USERPROFILE%` | Windows 当前用户的个人文件夹 |
+| `/` | macOS 和 Linux 的路径分隔符 |
+| `\` | Windows 常用的路径分隔符 |
+
+OpenCode 的全局配置文件位置：
+
+- Windows：`%USERPROFILE%\.config\opencode\opencode.json`
+- macOS：`~/.config/opencode/opencode.json`
+- Linux：`~/.config/opencode/opencode.json`
+
+以点开头的 `.config` 文件夹通常是隐藏文件夹。看不到它是正常的，安装教程中的命令会自动创建并打开它。
+
+## 如何编辑配置文件
+
+OpenCode 使用 `opencode.json` 保存模型和接口配置。JSON 是纯文本文件，不是 Word 文档。
+
+### Windows 使用记事本
+
+安装教程会用命令自动打开记事本。粘贴配置后：
+
+1. 按 `Ctrl+S` 保存。
+2. 如果出现“另存为”，将 **保存类型** 选择为 **所有文件**。
+3. 文件名填写 `opencode.json`。
+4. 编码选择 `UTF-8`。
+
+<Warning>
+  文件不能保存为 `opencode.json.txt`。如果名称错误，OpenCode 将无法读取配置。
+</Warning>
+
+### macOS 和 Linux 使用 nano
+
+安装教程会在终端中打开 nano 编辑器：
+
+1. 粘贴配置内容。
+2. 按 `Ctrl+O` 保存。
+3. 按 Enter 确认文件名。
+4. 按 `Ctrl+X` 退出。
+
+nano 底部显示的 `^O` 表示 `Ctrl+O`，不是输入 `^` 字符。
+
+## JSON 配置注意事项
+
+正确的 JSON 使用英文符号：
+
+```json
+{
+  "name": "Xcompute",
+  "enabled": true
+}
+```
+
+常见错误：
+
+- 使用中文引号 `“ ”`，正确写法是英文双引号 `" "`。
+- 使用中文逗号 `，`，正确写法是英文逗号 `,`。
+- 最后一项后面多写了逗号。
+- 不小心删除了 `{`、`}`、`[` 或 `]`。
+- 只复制了配置的一部分。
+
+建议直接完整复制教程中的配置，只替换明确要求修改的 API Key，不要手动调整其他符号。
+
+## 什么是 API Key
+
+API Key 类似服务密码，用于确认账户身份和扣除调用额度。
+
+<Warning>
+  不要把 API Key 发给他人，不要上传到 GitHub，不要在公开截图中展示，也不要让远程协助人员复制。API Key 泄露后应立即前往控制台删除并重新创建。
+</Warning>
+
+复制 API Key 时注意：
+
+- 不要复制前后的空格。
+- 不要添加中文引号。
+- 粘贴到 JSON 后，要保留原有英文双引号。
+
+## 为什么修改后要重启
+
+很多程序只在启动时读取配置。修改 `opencode.json` 后：
+
+1. 保存配置文件。
+2. 完全退出 OpenCode CLI 或桌面端。
+3. 重新打开 OpenCode。
+4. 再检查模型列表。
+
+只关闭项目窗口但没有退出程序，配置可能不会重新加载。
+
+## 遇到错误时怎么求助
+
+不要只说“安装不了”。请提供以下信息：
+
+1. 你的操作系统，例如 Windows 11、macOS 15 或 Ubuntu 24.04。
+2. 正在执行教程的哪一步。
+3. 输入的命令，API Key 必须用 `***` 遮住。
+4. 完整错误文字或截图。
+5. `node -v`、`npm -v` 和 `opencode --version` 的输出。
+
+在 PowerShell 或终端中，可以用鼠标选中错误文字后复制。发送截图前，先检查画面中是否包含 API Key、用户名或其他隐私信息。
+
+## 安装相关名词
+
+| 名词 | 简单说明 |
+| --- | --- |
+| Node.js | 运行 OpenCode CLI 所需的基础环境 |
+| npm | 随 Node.js 安装的软件包管理工具，用来安装 OpenCode |
+| NVM | 管理多个 Node.js 版本的工具，官网安装包失败时再使用 |
+| CLI | 在 PowerShell 或终端中运行的命令行版本 |
+| 桌面端 | 可以点击操作的图形界面版本 |
+| JSON | OpenCode 配置文件使用的文本格式 |
+| API Key | 连接 Xcompute 服务的账户密钥 |
+| Base URL | OpenCode 请求模型时使用的接口地址 |
+| PATH | 系统查找 `node`、`npm`、`opencode` 命令的位置列表 |
+
+完成这些基础操作后，继续阅读 [OpenCode 安装与配置教程](/opencode-install)。
