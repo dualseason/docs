@@ -123,17 +123,16 @@ codex --version
 ## 第四步：创建 `config.toml`
 
 <Tabs>
-  <Tab title="Windows 桌面">
-    <Frame>
-      ![Image](/images/image-27.png)
-    </Frame>
+  <Tab title="Windows">
+    创建文件前，先打开任意文件夹，点击顶部的 **查看**，勾选 **文件扩展名** 和 **隐藏的项目**。
 
     <Frame>
-      ![Image](/images/image-28.png)
+      ![Windows 文件资源管理器中显示文件扩展名和隐藏项目](/images/image-29.png)
     </Frame>
-  </Tab>
-  <Tab title="Windows">
-    点击 **开始菜单**，输入 `PowerShell` 并打开。
+
+    <caption>*勾选这两个选项后，才能确认文件是否真的以 `.toml` 或 `.json` 结尾*</caption>
+
+    然后点击 **开始菜单**，输入 `PowerShell` 并打开。
 
     <Frame>
       ![Windows PowerShell 界面](/images/image-26.png)
@@ -160,12 +159,8 @@ codex --version
   </Tab>
 </Tabs>
 
-<Frame>
-  ![Image](/images/image-29.png)
-</Frame>
-
 <Warning>
-  就在这里新增这两个文件，记得打开后缀，否则不生效，记得最后是json和toml结尾的，而不是txt结尾
+  Windows 必须显示文件扩展名。最终文件名应为 `config.toml` 和 `auth.json`，不能是 `config.toml.txt` 或 `auth.json.txt`。
 </Warning>
 
 ## 第五步：写入 Xcompute 接口配置
@@ -173,12 +168,26 @@ codex --version
 将下面内容完整粘贴到 `config.toml`：
 
 <Frame>
-  ![Image](/images/image-30.png)
+  ![Xcompute 控制台中的 Codex CLI 配置复制入口](/images/image-31.png)
 </Frame>
 
-<Frame>
-  ![Image](/images/image-31.png)
-</Frame>
+<caption>*在 Xcompute 控制台选择模型和 Codex CLI 后，可以分别复制 `config.toml` 与 `auth.json` 内容*</caption>
+
+<Note>
+  上图用于说明复制入口。实际 Base URL 和字段请以下方代码为准，默认推荐使用 `https://intl.dualseason.com/v1`。
+</Note>
+
+```toml
+model = "gpt-5.6-sol"
+model_provider = "xcompute"
+cli_auth_credentials_store = "file"
+
+[model_providers.xcompute]
+name = "Xcompute"
+base_url = "https://intl.dualseason.com/v1"
+wire_api = "responses"
+requires_openai_auth = true
+```
 
 保存文件后，继续创建 `auth.json`。缺少 `auth.json` 时，`Codex` 无法获得 `API Key`。
 
@@ -239,6 +248,16 @@ codex --version
 <Warning>
   `auth.json` 包含明文 API Key。不要上传到 GitHub、发送给他人或在截图中展示。JSON 最后一项后面不能有逗号。
 </Warning>
+
+### Windows 最终文件位置
+
+两个文件创建并保存后，可以在 `C:\Users\你的用户名\.codex` 文件夹中看到它们：
+
+<Frame>
+  ![Windows 用户目录下的 Codex config.toml 和 auth.json](/images/image-27.png)
+</Frame>
+
+<caption>*地址栏应位于当前用户的 `.codex` 文件夹，文件类型应分别显示为 TOML 和 JSON*</caption>
 
 ### 两个文件缺一不可
 
