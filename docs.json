@@ -70,13 +70,13 @@
         "pages": [
           "file",
           "file-1",
+          "agent",
           "cc-switch",
           "codex-plus-plus",
           "codex-jailbreak",
           "codexhub",
           "kelivo",
-          "codex-install",
-          "agent"
+          "codex-install"
         ]
       },
       {
