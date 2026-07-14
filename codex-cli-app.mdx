@@ -176,19 +176,11 @@ codex --version
   ![Image](/images/image-30.png)
 </Frame>
 
-```toml
-model = "gpt-5.6-sol"
-model_provider = "xcompute"
-cli_auth_credentials_store = "file"
+<Frame>
+  ![Image](/images/image-31.png)
+</Frame>
 
-[model_providers.xcompute]
-name = "Xcompute"
-base_url = "https://intl.dualseason.com/v1"
-wire_api = "responses"
-requires_openai_auth = true
-```
-
-保存文件后，继续创建 `auth.json`。缺少 `auth.json` 时，Codex 无法获得 API Key。
+保存文件后，继续创建 `auth.json`。缺少 `auth.json` 时，`Codex` 无法获得 `API Key`。
 
 <Info>
   默认推荐使用 `https://intl.dualseason.com/v1`。如果你具备稳定的科学上网能力，可以把 `base_url` 改为 `https://xcompute.us/v1`。两个地址都必须保留末尾的 `/v1`。
