@@ -1,3 +1,76 @@
 ---
 title: "接入编程Agent（必看）"
+description: "目前主流的编程 Agent 介绍及其桌面端下载地址"
 ---
+
+目前市面上最主流的编程 Agent 主要有三大巨头：**Claude Code**、**Codex** 和 **OpenCode**。三者均支持 CLI 终端和桌面端使用。
+
+## Claude Code
+
+**开发商：** Anthropic
+
+**模型限制：** 仅支持 Claude 系列模型（Claude Sonnet、Claude Opus 等）
+
+**特点：**
+- 由 Anthropic 官方出品，与 Claude 深度集成
+- 支持终端 CLI、VS Code 扩展、JetBrains 插件、桌面应用和 Web 端
+- 提供 MCP（Model Context Protocol）扩展能力，可接入自定义工具和数据源
+- 支持子 Agent 协作、定时任务、远程控制等高级功能
+
+**桌面端下载：**
+- [macOS（Intel / Apple Silicon）](https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect)
+- [Windows（x64）](https://claude.ai/api/desktop/win32/x64/setup/latest/redirect)
+- [Windows（ARM64）](https://claude.ai/api/desktop/win32/arm64/setup/latest/redirect)
+
+## Codex
+
+**开发商：** OpenAI
+
+**模型限制：** 主要接入 GPT 系列模型（GPT-5、GPT-4 等）
+
+**特点：**
+- OpenAI 官方出品，基于 GPT 模型打造
+- 开源（Apache-2.0 协议），使用 Rust 编写，性能高效
+- 支持终端 CLI、桌面应用、IDE 扩展（VS Code / Cursor / Windsurf）
+- 提供本地沙箱隔离执行环境
+- 支持 Git 工作树、可视化的 Diff 审查面板
+
+**桌面端下载：**
+- [macOS（Apple Silicon）](https://persistent.oaistatic.com/codex-app-prod/Codex.dmg)
+- [macOS（Intel）](https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg)
+- [Windows（x64）](https://get.microsoft.com/installer/download/9PLM9XGG6VKS?cid=website_cta_psi)
+
+## OpenCode
+
+**开发商：** Anomaly（开源社区）
+
+**模型限制：** 无限制，可接入所有模型（Claude、GPT、Gemini 及 75+ 供应商），也支持本地模型
+
+**特点：**
+- 完全开源，160K+ GitHub Stars，900+ 贡献者
+- 支持所有主流模型供应商，通过 Models.dev 可接入 75+ 模型
+- 支持终端 CLI（curl/npm/bun/brew 安装）、桌面应用、VS Code/Cursor/Zed/Windsurf 扩展
+- 内置 LSP 支持，自动为 LLM 提供代码智能
+- 支持多会话并行、会话分享链接
+- 可登录 GitHub Copilot、ChatGPT Plus/Pro 账号使用
+- 注重隐私，不存储用户代码和上下文数据
+
+**桌面端下载（Beta）：**
+- [macOS（Apple Silicon）](https://opencode.ai/download/stable/darwin-aarch64-dmg)
+- [macOS（Intel）](https://opencode.ai/download/stable/darwin-x64-dmg)
+- [Windows（x64）](https://opencode.ai/download/stable/windows-x64-nsis)
+- [Linux（.deb）](https://opencode.ai/download/stable/linux-x64-deb)
+- [Linux（.rpm）](https://opencode.ai/download/stable/linux-x64-rpm)
+
+## 快速对比
+
+| 特性 | Claude Code | Codex | OpenCode |
+| --- | --- | --- | --- |
+| 开发商 | Anthropic | OpenAI | Anomaly（开源） |
+| 开源 | ❌ | ✅（Apache-2.0） | ✅ |
+| 模型支持 | 仅 Claude | GPT 系列 | 所有模型 |
+| CLI | ✅ | ✅ | ✅ |
+| 桌面端 | ✅ | ✅ | ✅（Beta） |
+| IDE 扩展 | ✅（VS Code / JetBrains） | ✅（VS Code / Cursor / Windsurf） | ✅（VS Code / Cursor / Zed / Windsurf） |
+| MCP 支持 | ✅ | ✅ | ✅ |
+| 隐私保护 | - | - | 不存储代码数据 |
