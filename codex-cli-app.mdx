@@ -1,16 +1,16 @@
 ---
 title: "Codex CLI 与 ChatGPT App 配置教程"
-description: "手动安装 Codex CLI 和 Codex 桌面 App，通过共用的 config.toml 接入 Xcompute。"
+description: "手动安装 Codex CLI 和 Codex 桌面 App，通过共用的 config.toml 与 auth.json 接入 Xcompute。"
 ---
 
-Codex CLI 和 Codex 桌面 App 使用同一套 Codex 配置。你只需要手动修改一次 `config.toml`，两边就都能通过 Xcompute 使用 GPT 模型。
+Codex CLI 和 Codex 桌面 App 使用同一个 `.codex` 目录。你需要创建 `config.toml` 和 `auth.json` 两个文件，配置一次后两边都能通过 Xcompute 使用 GPT 模型。
 
 <Tip>
   本教程只使用 OpenAI 官方 Codex 和系统自带的文本编辑器。**不需要安装 CC Switch、Codex++、CodexHub，也不需要运行本地代理软件。**
 </Tip>
 
 <Warning>
-  普通 ChatGPT 聊天客户端与 Codex 编程 App 不是同一个功能。本文中的“ChatGPT App”指 OpenAI 官方 Codex 桌面编程 App，它会读取 `.codex/config.toml`。
+  普通 ChatGPT 聊天客户端与 Codex 编程 App 不是同一个功能。本文中的“ChatGPT App”指 OpenAI 官方 Codex 桌面编程 App，它会读取 `.codex/config.toml` 和 `.codex/auth.json`。
 </Warning>
 
 如果你不熟悉 PowerShell、终端、复制命令或配置文件，请先阅读 [电脑基础使用扫盲](/computer-basics)。
@@ -24,18 +24,18 @@ Codex CLI 和 Codex 桌面 App 使用同一套 Codex 配置。你只需要手动
 
 ## CLI 和 App 如何共用配置
 
-Codex 默认从当前用户的 `.codex` 文件夹读取配置：
+Codex 默认从当前用户的 `.codex` 文件夹读取两个必备文件：
 
-| 系统 | 共用配置文件 |
-| --- | --- |
-| Windows | `%USERPROFILE%\.codex\config.toml` |
-| macOS | `~/.codex/config.toml` |
-| Linux | `~/.codex/config.toml` |
+| 系统 | 模型与接口配置 | API Key 配置 |
+| --- | --- | --- |
+| Windows | `%USERPROFILE%\.codex\config.toml` | `%USERPROFILE%\.codex\auth.json` |
+| macOS | `~/.codex/config.toml` | `~/.codex/auth.json` |
+| Linux | `~/.codex/config.toml` | `~/.codex/auth.json` |
 
-同一台电脑、同一个系统账户下，Codex CLI 和 Codex App 都会读取这个文件。修改配置后，需要完全退出并重新打开 CLI 或 App。
+`config.toml` 保存模型、Base URL 和认证方式，`auth.json` 保存 API Key。同一台电脑、同一个系统账户下，Codex CLI 和 Codex App 都会读取这两个文件。
 
 <Note>
-  不要把配置放进项目里的 `.codex` 文件夹。模型提供商和 API Key 应放在上表所示的用户级配置文件中。
+  不要把配置放进项目里的 `.codex` 文件夹。两个文件都必须放在上表所示的用户级 `.codex` 目录中。
 </Note>
 
 ## 第一步：安装 Node.js
@@ -120,7 +120,7 @@ codex --version
 
 安装完成后先不要急着开始任务。继续创建共用配置文件，配置完成后再重新打开 App。
 
-## 第四步：创建共用配置文件
+## 第四步：创建 `config.toml`
 
 <Tabs>
   <Tab title="Windows">
@@ -151,30 +151,27 @@ codex --version
   </Tab>
 </Tabs>
 
-## 第五步：写入 Xcompute 配置
+## 第五步：写入 Xcompute 接口配置
 
-将下面内容完整粘贴到 `config.toml`，把 `在这里填写你的APIKey` 替换为你的 Xcompute API Key：
+将下面内容完整粘贴到 `config.toml`：
 
 ```toml
 model = "gpt-5.6-sol"
 model_provider = "xcompute"
+cli_auth_credentials_store = "file"
 
 [model_providers.xcompute]
 name = "Xcompute"
 base_url = "https://intl.dualseason.com/v1"
 wire_api = "responses"
-experimental_bearer_token = "在这里填写你的APIKey"
+requires_openai_auth = true
 ```
 
-保存文件后，Codex CLI 和 Codex App 会共同使用这份配置。
+保存文件后，继续创建 `auth.json`。缺少 `auth.json` 时，Codex 无法获得 API Key。
 
 <Info>
   默认推荐使用 `https://intl.dualseason.com/v1`。如果你具备稳定的科学上网能力，可以把 `base_url` 改为 `https://xcompute.us/v1`。两个地址都必须保留末尾的 `/v1`。
 </Info>
-
-<Warning>
-  `experimental_bearer_token` 会将 API Key 以明文保存在 `config.toml` 中。这种方式最简单，适合个人电脑上的新手用户，但不要上传、分享或截图展示该文件。
-</Warning>
 
 ### 每个配置项有什么作用
 
@@ -182,16 +179,62 @@ experimental_bearer_token = "在这里填写你的APIKey"
 | --- | --- |
 | `model` | Codex 默认使用的模型 ID |
 | `model_provider` | 指定使用下面的 `xcompute` 提供商 |
+| `cli_auth_credentials_store` | 强制 Codex 从文件读取凭据，确保 CLI 和 App 共用 `auth.json` |
 | `name` | 在 Codex 中显示的提供商名称 |
 | `base_url` | Xcompute 接口地址，必须包含 `/v1` |
 | `wire_api` | Codex 当前使用 Responses API，应保持为 `responses` |
-| `experimental_bearer_token` | 你的 Xcompute API Key |
+| `requires_openai_auth` | 让当前提供商读取 Codex 保存的 API Key |
 
 <Warning>
   不要把 `wire_api` 写成 `chat`。当前 Codex 应使用 `responses`。
 </Warning>
 
-## 第六步：启动并验证
+## 第六步：创建 `auth.json`
+
+`auth.json` 与 `config.toml` 位于同一个 `.codex` 文件夹，用于保存 Xcompute API Key。
+
+<Tabs>
+  <Tab title="Windows">
+    在 PowerShell 中执行：
+
+    ```powershell
+    notepad "$HOME\.codex\auth.json"
+    ```
+
+    记事本询问是否创建文件时选择 **是**。粘贴下方 JSON 后按 `Ctrl+S` 保存。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `auth.json`，而不是 `auth.json.txt`。
+  </Tab>
+  <Tab title="macOS / Linux">
+    在终端中执行：
+
+    ```bash
+    nano ~/.codex/auth.json
+    ```
+
+    粘贴下方 JSON 后，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
+  </Tab>
+</Tabs>
+
+把 `在这里填写你的APIKey` 替换为你的 Xcompute API Key：
+
+```json
+{
+  "auth_mode": "apikey",
+  "OPENAI_API_KEY": "在这里填写你的APIKey"
+}
+```
+
+<Warning>
+  `auth.json` 包含明文 API Key。不要上传到 GitHub、发送给他人或在截图中展示。JSON 最后一项后面不能有逗号。
+</Warning>
+
+### 两个文件缺一不可
+
+| 文件 | 缺失后的结果 |
+| --- | --- |
+| `config.toml` | Codex 不知道要使用哪个模型和 Base URL |
+| `auth.json` | Codex 找不到 Xcompute API Key，会提示未登录或未授权 |
+
+## 第七步：启动并验证
 
 ### 验证 Codex CLI
 
@@ -213,12 +256,12 @@ codex
 ### 验证 Codex App
 
 1. 完全退出 Codex App。
-2. 确认 `config.toml` 已保存。
+2. 确认 `config.toml` 和 `auth.json` 都已保存。
 3. 重新打开 Codex App。
 4. 选择一个测试项目文件夹。
 5. 输入“分析这个项目，不要修改文件”。
 
-App 和 CLI 使用相同系统账户时，不需要再次填写 Base URL 和 API Key。
+App 和 CLI 使用相同系统账户时，会共同读取这两个文件，不需要再次填写 Base URL 和 API Key。
 
 ## 如何切换模型
 
@@ -231,33 +274,6 @@ model = "其他模型ID"
 模型 ID 必须与 [Xcompute 模型定价页面](https://xcompute.us/pricing) 中显示的 ID 完全一致。保存后，完全退出并重新打开 Codex CLI 或 App。
 
 CLI 中也可以输入 `/model` 查看当前版本支持的模型切换功能。
-
-## 可选：更安全地保存 API Key
-
-如果不希望把 API Key 明文写入 `config.toml`，可以删除 `experimental_bearer_token`，改为：
-
-```toml
-requires_openai_auth = true
-```
-
-然后在 PowerShell 或终端执行：
-
-<Tabs>
-  <Tab title="Windows PowerShell">
-    ```powershell
-    $env:XCOMPUTE_API_KEY="你的APIKey"
-    $env:XCOMPUTE_API_KEY | codex login --with-api-key
-    ```
-  </Tab>
-  <Tab title="macOS / Linux">
-    ```bash
-    export XCOMPUTE_API_KEY="你的APIKey"
-    printf '%s' "$XCOMPUTE_API_KEY" | codex login --with-api-key
-    ```
-  </Tab>
-</Tabs>
-
-Codex 会把登录凭据保存在同一个 `.codex` 用户目录中，CLI 和 App 仍然可以共用。新手建议先用前面的直接配置方式跑通，再考虑切换。
 
 ## 常见问题
 
@@ -275,19 +291,20 @@ codex --version
 ### App 没有读取新配置
 
 1. 确认 App 和 CLI 使用的是同一个电脑账户。
-2. 确认文件位于用户目录的 `.codex/config.toml`。
-3. Windows 检查文件是否被保存成 `config.toml.txt`。
-4. 完全退出 App，而不是只关闭当前项目窗口。
-5. 重新打开 App。
+2. 确认 `config.toml` 和 `auth.json` 都位于用户目录的 `.codex` 文件夹。
+3. Windows 检查文件是否被保存成 `config.toml.txt` 或 `auth.json.txt`。
+4. 确认 `config.toml` 包含 `cli_auth_credentials_store = "file"`。
+5. 完全退出 App，而不是只关闭当前项目窗口，然后重新打开。
 
 ### 提示未授权或 API Key 无效
 
 确认：
 
-1. API Key 没有前后空格。
-2. API Key 仍然有效且账户有可用额度。
-3. `base_url` 包含 `/v1`。
-4. `wire_api` 是 `responses`。
+1. `auth.json` 中包含 `"auth_mode": "apikey"`。
+2. `OPENAI_API_KEY` 的值没有前后空格。
+3. API Key 仍然有效且账户有可用额度。
+4. `config.toml` 中的 `requires_openai_auth` 是 `true`。
+5. `base_url` 包含 `/v1`，`wire_api` 是 `responses`。
 
 ### 以前使用过切换工具或本地代理
 
