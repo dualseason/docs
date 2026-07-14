@@ -1,84 +1,140 @@
 ---
 title: '图像生成'
+description: '使用 GPT Image 2 根据文本提示词生成图片'
 api: 'POST /v1/images/generations'
 ---
 
-- 图像生成接口
-- 该接口通过 OpenAI 中转
-- 目前仅支持 `gpt-image-2`
+使用 `gpt-image-2` 根据文本提示词生成图片。接口兼容 OpenAI Images API，并在图片生成完成后同步返回结果。
 
-## 说明
+<Info>
+  图片生成通常需要几十秒到数分钟。建议将客户端请求超时时间设置为至少 `300` 秒。
+</Info>
 
-- 官方 `1k` 图像通常需要 `60-90s`
-- 实际生图耗时 `1-5 分钟` 都属于正常情况
-- `4k` 高质量通常是最慢的
-
-## 计费
-
-- 目前仅按次付费
-- 单次价格约 `0.03 USD`
-- 折合大约 `2` 毛钱左右
-- 价格会随 OpenAI 对中国风控和封号情况波动
-
-## 支持模型
-
-- `gpt-image-2`
+## 请求示例
 
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
     --url https://xcompute.us/v1/images/generations \
-    --header 'Authorization: Bearer <token>' \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
     --header 'Content-Type: application/json' \
     --data '{
       "model": "gpt-image-2",
       "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
       "n": 1,
-      "size": "16:9",
-      "resolution": "2k"
+      "size": "1024x1024"
     }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.post(
+      "https://xcompute.us/v1/images/generations",
+      headers={"Authorization": "Bearer YOUR_API_KEY"},
+      json={
+          "model": "gpt-image-2",
+          "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
+          "n": 1,
+          "size": "1024x1024",
+      },
+      timeout=300,
+  )
+  response.raise_for_status()
+  print(response.json())
+  ```
+
+  ```javascript JavaScript theme={null}
+  const response = await fetch('https://xcompute.us/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-image-2',
+      prompt: '一只橘猫坐在窗台上看夕阳，水彩画风格',
+      n: 1,
+      size: '1024x1024',
+    }),
+  });
+
+  if (!response.ok) throw new Error(await response.text());
+  console.log(await response.json());
   ```
 </RequestExample>
 
-<ParamField body="model" type="string" required>
+## 请求参数
+
+<ParamField header="Authorization" type="string" required>
+  Bearer API Key，例如 `Bearer sk-xxxxxxxx`。
+</ParamField>
+
+<ParamField body="model" type="string" default="gpt-image-2" required>
   固定填写 `gpt-image-2`。
 </ParamField>
 
 <ParamField body="prompt" type="string" required>
-  图像描述文本。
+  图片生成提示词。支持中文和英文。
 </ParamField>
 
-<ParamField body="size" type="string">
-  图片比例，例如 `16:9`、`1:1`。
+<ParamField body="n" type="integer" default="1">
+  生成图片数量。建议使用 `1`；实际可用范围取决于当前渠道。
 </ParamField>
 
-## 调用方法
+<ParamField body="size" type="string" default="1024x1024">
+  输出尺寸，例如 `1024x1024`。实际支持的尺寸取决于当前渠道。
+</ParamField>
 
-直接调用 `POST /v1/images/generations`，请求体里把 `model` 写成 `gpt-image-2` 即可。
+<ParamField body="quality" type="string">
+  图片质量，例如 `auto`、`standard`、`high`。该参数可能因渠道不同而被忽略。
+</ParamField>
 
-```bash
-curl --request POST \
-  --url https://xcompute.us/v1/images/generations \
-  --header 'Authorization: Bearer YOUR_API_KEY' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "model": "gpt-image-2",
-    "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
-    "n": 1,
-    "size": "16:9",
-    "resolution": "2k"
-  }'
-```
+<ParamField body="response_format" type="string">
+  期望的返回格式，可传 `url` 或 `b64_json`。客户端应同时兼容这两种实际返回形式。
+</ParamField>
+
+## 成功响应
+
+图片通常通过 `b64_json` 或 `url` 返回。
 
 <ResponseExample>
-  ```json 200 theme={null}
+  ```json 200 - Base64 theme={null}
   {
-    "code": 200,
-    "data": {
-      "id": "task_01JNXXXXXXXXXXXXXXXXXX",
-      "status": "submitted",
-      "progress": 0
+    "created": 1784039704,
+    "data": [
+      {
+        "b64_json": "iVBORw0KGgoAAAANSUhEUgAA..."
+      }
+    ]
+  }
+  ```
+
+  ```json 200 - URL theme={null}
+  {
+    "created": 1784039704,
+    "data": [
+      {
+        "url": "https://example.com/generated-image.png"
+      }
+    ]
+  }
+  ```
+
+  ```json 400 theme={null}
+  {
+    "error": {
+      "message": "prompt is required",
+      "type": "invalid_request_error"
     }
   }
   ```
 </ResponseExample>
+
+## 保存 Base64 图片
+
+```bash
+jq -r '.data[0].b64_json' response.json | base64 --decode > result.png
+```
+
+需要基于参考图片生成内容时，请使用[图片修改接口](/api-reference/images/new-images-edits)。
