@@ -1,59 +1,203 @@
 ---
-title: '文字转语音'
+title: '可灵文字转语音'
+description: '通过 OpenAI 兼容请求或可灵原生接口异步生成语音。'
 api: 'POST /v1/audio/speech'
 ---
 
-- 文字转语音接口
-- 输出高质量音频格式
-- 最大输入文本 4096 个字符
+当前文字转语音能力由可灵渠道提供。你可以使用 OpenAI Speech 请求字段提交任务，也可以直接使用可灵原生兼容接口。
+
+<Warning>
+  可灵 TTS 是异步任务。`POST /v1/audio/speech` 在模型路由到可灵渠道时返回任务 JSON，不会像 OpenAI TTS 一样直接返回二进制音频流。
+</Warning>
 
 ## 支持模型
 
-- `gpt-4o-mini-tts`
+- `kling-v3`
 
-## 参数字段
+模型与音色的实际可用性取决于当前渠道，请以 [模型广场](https://xcompute.us/models) 和上游可用音色为准。
 
-<ParamField body="model" type="string" default="gpt-4o-mini-tts" required>
-  固定填写 `gpt-4o-mini-tts`。
+## OpenAI 兼容请求
+
+<ParamField body="model" type="string" default="kling-v3" required>
+  填写路由到可灵渠道的模型 ID。
 </ParamField>
 
 <ParamField body="input" type="string" required>
-  要转换成语音的文本内容。
+  需要合成的文本。内部映射为可灵的 `text`。
 </ParamField>
 
-<ParamField body="voice" type="string" required>
-  音色名称。
-
-  可选值：`alloy`、`echo`、`fable`、`onyx`、`nova`、`shimmer`。
+<ParamField body="voice" type="string">
+  可灵已有音色 ID。内部映射为 `voice_id`。
 </ParamField>
 
-<ParamField body="response_format" type="string" default="wav">
-  输出格式。
-
-  可选值：`wav`、`opus`、`aac`、`flac`、`pcm`。
+<ParamField body="speed" type="number" default="1">
+  语速，范围 `0.25` 到 `4.0`。内部映射为 `voice_speed`。
 </ParamField>
 
-<ParamField body="speed" type="number" default="1.0">
-  播放速度，范围 `0.25 ~ 4.0`。
+<ParamField body="instructions" type="string">
+  可选的语音风格或表达要求。内部映射为可灵提示字段。
 </ParamField>
+
+<ParamField body="language" type="string">
+  Xcompute 扩展字段，例如 `zh` 或 `en`。内部映射为 `voice_language`。
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  可灵扩展字段，例如 `callback_url` 和 `external_task_id`。
+</ParamField>
+
+<Info>
+  `response_format` 和 `stream_format` 当前不会改变可灵异步任务的输出格式。最终音频格式由可灵上游结果决定。
+</Info>
 
 <RequestExample>
   ```bash cURL theme={null}
   curl --request POST \
     --url https://xcompute.us/v1/audio/speech \
-    --header 'Authorization: Bearer <token>' \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
     --header 'Content-Type: application/json' \
     --data '{
-      "model": "gpt-4o-mini-tts",
-      "input": "今天天气真好,适合出去散步。",
-      "voice": "alloy",
-      "response_format": "opus",
-      "speed": 1.0
-    }' \
-    --output speech.opus
+      "model": "kling-v3",
+      "input": "欢迎使用 Xcompute 可灵语音合成接口。",
+      "voice": "YOUR_VOICE_ID",
+      "speed": 1.0,
+      "language": "zh"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.post(
+      "https://xcompute.us/v1/audio/speech",
+      headers={"Authorization": "Bearer YOUR_API_KEY"},
+      json={
+          "model": "kling-v3",
+          "input": "欢迎使用 Xcompute 可灵语音合成接口。",
+          "voice": "YOUR_VOICE_ID",
+          "speed": 1.0,
+          "language": "zh",
+      },
+  )
+
+  print(response.json())
   ```
 </RequestExample>
 
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+    "task_id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+    "object": "video",
+    "model": "kling-v3",
+    "status": "queued",
+    "progress": 0,
+    "created_at": 1784080000
+  }
+  ```
+</ResponseExample>
+
 <Note>
-  成功时返回二进制音频数据流，可以直接保存为音频文件或播放。
+  `object` 当前沿用统一异步多媒体任务结构，可能显示为 `video`。这不影响最终返回音频 URL。
 </Note>
+
+## 可灵原生接口
+
+原生接口使用可灵字段，返回与 OpenAI 兼容入口相同的异步任务结构。
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/kling/v1/audio/tts \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "text": "欢迎使用 Xcompute 可灵语音合成接口。",
+    "voice_id": "YOUR_VOICE_ID",
+    "voice_language": "zh",
+    "voice_speed": 1.0
+  }'
+```
+
+| 原生字段 | OpenAI 兼容字段 | 说明 |
+| --- | --- | --- |
+| `model_name` | `model` | 可灵模型 ID |
+| `text` | `input` | 需要合成的文本 |
+| `voice_id` | `voice` | 已有音色 ID |
+| `voice_speed` | `speed` | 语速 |
+| `voice_language` | `language` | 语音语言 |
+
+<Warning>
+  `voice` 或 `voice_id` 用于选择已有音色。当前没有独立的音色克隆接口。
+</Warning>
+
+## 多模态通用任务接口
+
+需要统一管理图片、视频和音频任务时，也可以使用多模态接口：
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/multimodal/audio/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "kling-v3",
+    "task_type": "tts",
+    "metadata": {
+      "text": "欢迎使用 Xcompute 可灵语音合成接口。",
+      "voice_id": "YOUR_VOICE_ID",
+      "voice_language": "zh",
+      "voice_speed": 1.0
+    }
+  }'
+```
+
+## 查询任务
+
+### 统一任务查询
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/v1/tasks/task_01KXXXXXXXXXXXXXXXXXXXX \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+### 可灵原生查询
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/kling/v1/audio/tts/task_01KXXXXXXXXXXXXXXXXXXXX \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+| 状态 | 说明 |
+| --- | --- |
+| `queued` | 已进入队列 |
+| `in_progress` | 正在生成语音 |
+| `completed` | 生成完成 |
+| `failed` | 生成失败 |
+
+任务完成后，响应中的 `metadata.url` 为音频结果地址：
+
+```json
+{
+  "id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "object": "video",
+  "model": "kling-v3",
+  "status": "completed",
+  "progress": 100,
+  "metadata": {
+    "url": "https://example.com/generated-audio.mp3"
+  }
+}
+```
+
+<Columns cols={2}>
+  <Card title="可灵能力总览" icon="clapperboard" href="/api-reference/kling/capabilities">
+    查看可灵视频、音频、口型同步、数字人和图片能力。
+  </Card>
+  <Card title="统一任务查询" icon="refresh-cw" href="/api-reference/tasks/new-status">
+    查看异步任务状态与结果字段。
+  </Card>
+</Columns>
