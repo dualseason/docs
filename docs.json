@@ -76,10 +76,10 @@
           "claude-code-cli-app",
           "cc-switch",
           "codex-plus-plus",
-          "codex-jailbreak",
           "codexhub",
           "kelivo",
-          "codex-install"
+          "codex-install",
+          "codex-jailbreak"
         ]
       },
       {
