@@ -1,0 +1,394 @@
+---
+title: '大模型基础：架构、精度与量化'
+description: '通过 Dense、MoE、注意力、上下文、数据精度和量化方法理解本地大模型部署。'
+icon: 'microchip'
+---
+
+当企业提出网络安全、数据本地化或私有化部署要求时，选模型只是第一步。你还需要理解模型架构、显存占用、计算精度、量化格式和推理框架，才能判断一张消费级显卡与多张数据中心显卡分别能做什么。
+
+<Warning>
+  本文包含 Transformer 与 GPU 推理的入门性解释。为便于理解会使用类比和简化描述，不应作为严格的架构证明或硬件兼容性承诺。生产部署前请查阅模型、推理框架和硬件厂商的最新文档。
+</Warning>
+
+<Columns cols={2}>
+  <Card title="开源模型篇" icon="unlock" href="/guides/open-source-models">
+    对比 DeepSeek、Qwen、GLM、Kimi、MiniMax 等开源模型。
+  </Card>
+  <Card title="闭源模型篇" icon="lock" href="/guides/closed-source-models">
+    对比 GPT、Gemini、Claude、Grok、Qwen 和豆包。
+  </Card>
+</Columns>
+
+## 模型从哪里找
+
+开放权重模型通常托管在以下平台：
+
+- [Hugging Face](https://huggingface.co)：全球使用最广泛的模型与数据集平台之一。
+- [ModelScope 魔搭](https://modelscope.cn)：国内常用的模型、数据集和应用托管平台。
+- [HF-Mirror](https://hf-mirror.com)：Hugging Face 的第三方镜像入口。
+
+下载大文件时可以使用平台官方 CLI、`huggingface-cli`、`modelscope` CLI 或支持断点续传的下载工具。使用第三方镜像时，应校验仓库来源、文件大小和哈希，不要直接运行来源不明的模型代码。
+
+常见信息源包括模型官方博客、Hugging Face Model Card、GitHub Release、论文、[r/LocalLLaMA](https://www.reddit.com/r/LocalLLaMA/) 和国内技术社区。社区体验适合发现线索，模型规格仍应回到官方仓库确认。
+
+## 先认识参数量
+
+模型名称中的 `B` 表示十亿参数：
+
+- `7B` 约为 70 亿参数。
+- `32B` 约为 320 亿参数。
+- `235B-A22B` 表示总参数约 2350 亿，每个 Token 推理时激活约 220 亿参数。
+
+参数量影响权重存储、显存需求和计算量，但不能单独代表能力。训练数据、架构、后训练、上下文机制和推理配置同样重要。
+
+## Dense 与 MoE
+
+在 2026 年，大型模型普遍使用 MoE，小型和中型模型仍常见 Dense。两者的关键区别是每个 Token 经过前馈网络时使用多少参数。
+
+### Dense 密集模型
+
+Dense 模型的每一层都会使用该层的全部权重。可以把它理解为由同一支完整团队处理每个请求。
+
+**优点**：
+
+- 权重参与路径稳定，实现和调优相对直接。
+- 同等总参数规模下，单 Token 使用的计算容量通常更高。
+- 小规模部署时更容易预测延迟和行为。
+
+**缺点**：
+
+- 总参数越大，每个 Token 的计算量通常越高。
+- 大型 Dense 模型吞吐低，对计算资源要求高。
+
+### MoE 混合专家模型
+
+MoE 在部分层中设置多个专家前馈网络，并由路由器为每个 Token 选择少量专家。它像一个拥有多个专科的团队，由分诊系统选择本次参与的成员。
+
+**优点**：
+
+- 总参数可以很大，同时将单 Token 激活参数控制在较低水平。
+- 在权重能够被高效读取的前提下，计算量通常低于同等总参数的 Dense 模型。
+- 可以用更大总容量容纳知识和技能。
+
+**缺点**：
+
+- 所有专家权重通常仍需要存入显存或内存；激活参数少不等于权重占用少。
+- 路由、专家并行和跨卡通信增加部署复杂度。
+- 激活参数较小时，注意力主干和单 Token 计算容量可能更接近小模型。
+
+<Info>
+  “Dense 一定更聪明”或“MoE 一定更快”都不准确。合理比较应同时固定训练质量、激活参数、总参数、硬件、批量和推理框架。
+</Info>
+
+## 用 Qwen3 对比 Dense 与 MoE
+
+下面使用参数规模接近、结构不同的 Qwen3-32B 和 Qwen3-30B-A3B 作为例子。
+
+| 项目 | Qwen3-32B | Qwen3-30B-A3B |
+| --- | ---: | ---: |
+| 架构 | Dense | MoE |
+| 总参数 | 32.8B | 30.5B |
+| 激活参数 | 约 32.8B | 约 3.3B |
+| 非 Embedding 参数 | 31.2B | 29.9B |
+| Transformer 层数 | 64 | 48 |
+| Query / KV 头 | 64 / 8 | 32 / 4 |
+| 专家数量 | 不适用 | 128 |
+| 每 Token 激活专家 | 不适用 | 8 |
+| 原生上下文 | 32,768 | 32,768 |
+| YaRN 扩展上下文 | 131,072 | 131,072 |
+
+MoE 模型的大量总参数位于专家前馈网络中，而 Attention、Embedding 等共享主干更接近激活规模。它可能拥有较大的知识容量和较低计算量，但加载完整权重时仍需要接近 30B 模型的存储空间。
+
+## 如何阅读 Model Card
+
+模型 ID 常写成 `组织名/模型名`，例如 `Qwen/Qwen3-32B`。仓库首页的 Model Card 通常提供：
+
+- 模型架构与训练阶段
+- 参数量和激活参数量
+- 上下文长度
+- 支持语言和任务
+- 推荐推理框架与最低版本
+- 聊天模板和调用示例
+- 许可证、限制和评测结果
+
+### 常见术语
+
+| 字段 | 含义 |
+| --- | --- |
+| Causal Language Model | 根据已有 Token 自回归预测后续 Token 的语言模型 |
+| Pretraining | 使用大规模数据学习语言、知识和通用模式 |
+| Post-training | 通过 SFT、偏好优化、强化学习等改善可用性和对齐 |
+| Base | 通常只完成预训练，未针对聊天指令充分后训练 |
+| Instruct | 经过指令数据后训练，适合直接对话和任务执行 |
+| Thinking / Reasoning | 针对多步推理进行强化的版本或运行模式 |
+
+不要只看仓库名称。社区量化、微调和合并模型可能沿用基础模型名字，但许可证、聊天模板和能力已经发生变化。
+
+## Embedding 与隐藏维度
+
+文本进入 Transformer 前，会先被分词器转换为 Token ID，再由 Embedding 矩阵映射为向量。基础估算公式为：
+
+```text
+Embedding 参数量 = vocab_size × hidden_size
+```
+
+如果输入 Embedding 与输出语言模型头不共享权重，即 `tie_word_embeddings: false`，两套矩阵需要分别计算。
+
+Qwen3 系列使用约 151,936 的词表：
+
+- Qwen3-32B 的 `hidden_size=5120`，单个矩阵约 7.78 亿参数。
+- Qwen3-30B-A3B 的 `hidden_size=2048`，单个矩阵约 3.11 亿参数。
+- 两者都不绑定输入输出权重，因此对应部分需要乘以 2。
+
+隐藏维度决定每个 Token 在模型内部表示的宽度。更大的维度提供更高表示容量，但也增加矩阵计算、参数量和缓存成本。它不是可以独立比较的“理解精度”分数。
+
+## 层数与前馈网络
+
+`num_hidden_layers` 表示 Transformer 模块堆叠数量。更多层允许进行更多次表示变换，但模型能力不由层数单独决定。
+
+`intermediate_size` 通常表示 Dense 模型前馈网络的中间宽度；MoE 模型可能使用 `moe_intermediate_size` 表示每个专家的前馈宽度。
+
+| 字段 | 作用 |
+| --- | --- |
+| `hidden_size` | Token 隐藏状态宽度 |
+| `num_hidden_layers` | Transformer 层数 |
+| `intermediate_size` | Dense 前馈网络中间宽度 |
+| `moe_intermediate_size` | 单个 MoE 专家的中间宽度 |
+| `num_experts` | 专家总数 |
+| `num_experts_per_tok` | 每个 Token 每层选择的专家数 |
+
+## MHA、MQA 与 GQA
+
+注意力会把隐藏状态投影为 Query、Key 和 Value。多个注意力头可以学习不同的表示子空间，但不能简单等同于明确的“思考角度”。
+
+| 结构 | Query 头与 KV 头 | 特点 |
+| --- | --- | --- |
+| MHA | Query 与 KV 头数量相同 | 表示容量高，KV Cache 较大 |
+| MQA | 多个 Query 头共享一组 KV | KV Cache 小、推理快，表达折中更明显 |
+| GQA | 多个 Query 头按组共享 KV | 在质量、缓存和速度之间折中 |
+
+Qwen3-32B 使用 64 个 Query 头和 8 个 KV 头；Qwen3-30B-A3B 使用 32 个 Query 头和 4 个 KV 头。两者都是 GQA。
+
+### KV Cache 为什么重要
+
+自回归生成时，已经处理过的 Key 和 Value 会缓存在显存中，避免每生成一个 Token 都重新计算全部历史。KV Cache 随以下因素增长：
+
+- 上下文长度
+- 并发请求数
+- Transformer 层数
+- KV 头数与单头维度
+- Cache 数据精度
+
+因此“权重刚好装进显存”不代表模型能够处理目标上下文和并发。
+
+## 原生上下文、RoPE 与 YaRN
+
+原生上下文通常表示模型训练或后训练时重点覆盖的长度。超过原生长度后，即使框架允许继续输入，召回和推理质量也可能下降。
+
+RoPE 使用旋转方式把位置信息编码进 Query 和 Key。YaRN 是一种 RoPE 扩展方法，通过调整不同频率的位置编码，使模型能够在超过原生训练长度时继续工作。
+
+<Note>
+  YaRN 并不是把 128K 文本直接压缩成 32K 文本。更准确地说，它重新缩放位置编码，使模型能够表示更远的位置关系。外推仍可能损失局部精度、检索能力和长距离一致性。
+</Note>
+
+评估长上下文时，应测试：
+
+- 开头、中间和结尾的信息召回
+- 多个相似事实之间的区分
+- 跨文件引用和约束保持
+- 输入长度增加后的速度与显存变化
+- 有效答案是否随上下文变长而退化
+
+## 学会阅读仓库文件
+
+模型仓库通常包含以下文件：
+
+| 文件 | 内容 |
+| --- | --- |
+| `*.safetensors` | 模型权重，通常按多个分片保存 |
+| `model.safetensors.index.json` | 权重名称到分片文件的索引 |
+| `config.json` | 架构、层数、隐藏维度、注意力和精度等配置 |
+| `tokenizer.json` | 分词器词表和分词规则 |
+| `tokenizer_config.json` | 特殊 Token、聊天模板和分词器设置 |
+| `generation_config.json` | 默认温度、采样和结束 Token 等生成参数 |
+
+### Dense 配置示例
+
+```json
+{
+  "architectures": ["Qwen3ForCausalLM"],
+  "model_type": "qwen3",
+  "hidden_size": 5120,
+  "intermediate_size": 25600,
+  "num_hidden_layers": 64,
+  "num_attention_heads": 64,
+  "num_key_value_heads": 8,
+  "head_dim": 128,
+  "max_position_embeddings": 40960,
+  "rope_theta": 1000000,
+  "tie_word_embeddings": false,
+  "torch_dtype": "bfloat16",
+  "vocab_size": 151936
+}
+```
+
+### MoE 配置示例
+
+```json
+{
+  "architectures": ["Qwen3MoeForCausalLM"],
+  "model_type": "qwen3_moe",
+  "hidden_size": 2048,
+  "intermediate_size": 6144,
+  "moe_intermediate_size": 768,
+  "num_hidden_layers": 48,
+  "num_attention_heads": 32,
+  "num_key_value_heads": 4,
+  "num_experts": 128,
+  "num_experts_per_tok": 8,
+  "norm_topk_prob": true,
+  "router_aux_loss_coef": 0.001,
+  "tie_word_embeddings": false,
+  "torch_dtype": "bfloat16",
+  "vocab_size": 151936
+}
+```
+
+加载带有自定义架构的模型时，`architectures`、`model_type` 和 `transformers_version` 很重要。推理框架版本过旧时，可能无法识别模型或使用正确算子。
+
+## 数据精度
+
+数据精度影响权重大小、计算吞吐和数值误差。需要区分“硬件可以存储”“框架可以模拟执行”和“硬件原生高速计算”。
+
+| 精度 | 每参数理论大小 | 常见用途 | 原生高速硬件概览 |
+| --- | ---: | --- | --- |
+| FP32 | 4 字节 | 少量训练、调试 | 现代 GPU 均支持，LLM 推理很少使用 |
+| FP16 | 2 字节 | 训练与推理 | Volta 及更新 Tensor Core 较常见 |
+| BF16 | 2 字节 | 训练与推理 | Ampere 及更新架构常用 |
+| FP8 | 1 字节 | 高吞吐训练和推理 | Ada、Hopper 及更新架构支持情况不同 |
+| INT8 | 1 字节 | 权重或权重激活量化 | Turing 及更新 Tensor Core 方案较成熟 |
+| INT4 | 0.5 字节 | 低显存权重量化 | 实际支持取决于 GPU 与推理内核 |
+| FP4 / NVFP4 | 0.5 字节 | 新一代低精度推理 | Blackwell 原生支持更完整 |
+
+<Warning>
+  Ampere 没有原生 FP8 Tensor Core。部分框架可以把 FP8 权重通过 Marlin 等内核以 W8A16 方式运行，但这不等于原生 FP8 计算，而且只兼容部分缩放格式。下载 FP8 权重前必须检查量化配置和推理框架文档。
+</Warning>
+
+查看 NVIDIA 官方的 [CUDA GPU Compute Capability](https://developer.nvidia.com/cuda-gpus) 可以确认 GPU 架构，但具体模型格式是否可用仍由推理框架和量化内核决定。
+
+## 常见量化格式
+
+量化通过较低精度保存权重或激活值，减少显存与带宽开销。不同格式不是简单的质量排名，还需要匹配硬件和推理后端。
+
+| 格式 | 类别 | 特点 | 常见后端 |
+| --- | --- | --- | --- |
+| GGUF | 多种整数或浮点量化 | CPU、GPU 和混合卸载兼容性强 | llama.cpp、Ollama |
+| GPTQ | 训练后仅权重量化 | 老牌 INT4 方案，生态成熟 | ExLlama、部分 vLLM 后端 |
+| AWQ | 激活感知仅权重量化 | 常见 W4A16 方案，质量与速度较均衡 | vLLM、SGLang、Transformers |
+| EXL2 | 混合位宽仅权重量化 | 显存利用和单用户速度优秀 | ExLlamaV2 |
+| HQQ | 无校准或轻校准量化 | 转换速度快，后端支持范围需确认 | Transformers、部分推理后端 |
+| AQLM | 加法码本低位量化 | 适合极高压缩率，依赖专用内核 | AQLM 兼容后端 |
+| SmoothQuant | W8A8 | 平滑激活异常值，适合高吞吐服务 | TensorRT-LLM、部分 vLLM 配置 |
+| bitsandbytes INT8 | 混合 INT8 | 易于使用，但不一定是最快服务方案 | Transformers |
+| FP8 | 浮点权重或 W8A8 | 精度损失较低，格式和缩放方式较多 | vLLM、TensorRT-LLM、SGLang |
+| NF4 | 4-bit 量化 | 主要用于 QLoRA 微调，不是默认生产推理格式 | bitsandbytes |
+| MLX | Apple Silicon 格式 | 利用统一内存，适合 Mac 推理和微调 | MLX、MLX-LM |
+
+参考 [vLLM Quantization 文档](https://docs.vllm.ai/en/latest/features/quantization/) 检查硬件与量化方法的当前兼容矩阵。
+
+## 显存怎么估算
+
+权重的最低理论占用可以粗略估算为：
+
+```text
+权重显存 ≈ 参数量 × 每参数位数 ÷ 8
+```
+
+例如 32B 模型：
+
+| 格式 | 权重理论大小 |
+| --- | ---: |
+| BF16 / FP16 | 约 64 GB |
+| FP8 / INT8 | 约 32 GB |
+| INT4 | 约 16 GB |
+
+实际占用还包括：
+
+- 量化比例、零点和元数据
+- KV Cache
+- CUDA Context 和计算工作区
+- 激活值与临时张量
+- 推理框架自身开销
+- 多卡通信缓冲区
+
+因此应预留显存余量。MoE 模型虽然激活参数少，完整专家权重仍通常需要加载；只有使用 CPU 或磁盘卸载时，才可能减少 GPU 权重占用，但会牺牲速度。
+
+## 按硬件选择格式
+
+下面是经验性起点，不是绝对兼容表：
+
+| 硬件 | 建议优先尝试 |
+| --- | --- |
+| Blackwell | 原生 BF16、FP8、NVFP4，以及框架明确支持的低精度格式 |
+| Ada / Hopper | BF16、FP16、原生支持的 FP8、AWQ |
+| Ampere | BF16、FP16、AWQ、SmoothQuant，以及明确支持 Marlin 的权重 |
+| Turing | FP16、INT8、部分 AWQ / GPTQ，取决于后端 |
+| Volta | FP16、GPTQ 或 GGUF，重点检查推理内核 |
+| Pascal | GGUF、GPTQ 等兼容格式；缺少新 Tensor Core 加速 |
+| AMD GPU | 优先检查 ROCm 与框架支持；不确定时使用 llama.cpp / GGUF 路线验证 |
+| Apple Silicon | 优先 MLX，也可以使用 GGUF / llama.cpp |
+| 纯 CPU | GGUF，并根据 CPU 指令集选择合适构建版本 |
+
+<Note>
+  GPU 型号不能单独决定最佳格式。相同架构的消费卡和数据中心卡还会受到显存容量、显存带宽、互联方式和驱动版本影响。
+</Note>
+
+## 推理框架怎么选
+
+| 需求 | 常见选择 |
+| --- | --- |
+| 单机 API 服务、高吞吐 | vLLM、SGLang |
+| NVIDIA 企业级优化 | TensorRT-LLM |
+| CPU、消费级 GPU、混合卸载 | llama.cpp |
+| 本地快速体验 | Ollama、LM Studio |
+| NVIDIA 单用户低位量化 | ExLlamaV2 |
+| Apple Silicon | MLX-LM |
+
+部署前确认框架是否支持模型架构、聊天模板、量化格式、Tensor Parallel、Prefix Cache 和目标上下文长度。
+
+## 一套实际部署流程
+
+<Steps>
+  <Step title="定义业务负载">
+    明确模型用途、上下文长度、并发、响应时间、结构化输出、工具调用和多模态要求。
+  </Step>
+  <Step title="盘点硬件">
+    记录 GPU 架构、显存容量、显存带宽、GPU 数量、互联方式、系统内存和存储速度。
+  </Step>
+  <Step title="筛选模型与精度">
+    先按能力筛选模型，再根据权重、KV Cache 和运行开销选择 BF16、FP8、AWQ、GGUF 等格式。
+  </Step>
+  <Step title="选择推理框架">
+    根据硬件和并发选择 vLLM、SGLang、TensorRT-LLM、llama.cpp 或 MLX，并核对兼容矩阵。
+  </Step>
+  <Step title="小上下文启动">
+    先用较短上下文和低并发确认模型能正确加载，再逐步增加上下文、批量和并发。
+  </Step>
+  <Step title="运行真实评估">
+    使用业务任务记录准确率、首 Token 延迟、输出速度、显存、吞吐和失败率。
+  </Step>
+  <Step title="再决定采购">
+    用实测数据判断需要一张消费卡、多卡工作站还是数据中心 GPU，不要只按参数量采购。
+  </Step>
+</Steps>
+
+## 常见误区
+
+- **激活参数少，所以显存占用也少**：MoE 的全部专家权重通常仍需加载。
+- **上下文标称 128K，就能准确使用 128K**：标称窗口不等于有效召回和推理能力。
+- **量化位数越高，效果一定越好**：校准方法、层级敏感度和推理内核同样重要。
+- **模型文件能加载，就代表硬件原生加速**：框架可能进行了反量化、类型转换或兼容执行。
+- **层数或注意力头越多，模型一定越聪明**：这些参数必须结合隐藏维度、训练和整体架构理解。
+- **公开榜单领先，就适合本地业务**：部署质量最终取决于真实任务、延迟、成本和稳定性。
+
+理解 Model Card、`config.json`、数据精度与量化格式之后，你就能先排除明显不匹配的方案，再通过实际测试选择模型和硬件，而不是依赖一份通用部署教程。

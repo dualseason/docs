@@ -1,0 +1,222 @@
+---
+title: '可灵多媒体能力总览'
+description: '可灵视频、音频、语音、口型同步、数字人和图片接口的能力与调用方式。'
+icon: 'clapperboard'
+---
+
+Xcompute 提供可灵原生兼容接口和统一多媒体接口。可灵任务均为异步任务：提交成功后获得任务 ID，再通过对应的查询接口获取结果。
+
+<Info>
+  接口能力会受到模型版本和上游渠道影响。模型与功能的实时可用性请以 [模型广场](https://xcompute.us/models) 为准。
+</Info>
+
+## 接入信息
+
+| 配置项 | 内容 |
+| --- | --- |
+| Base URL | `https://xcompute.us` |
+| 鉴权方式 | `Authorization: Bearer YOUR_API_KEY` |
+| 视频与音频前缀 | `/kling/v1` |
+| 图片前缀 | `/api/klingai/v1` |
+| 统一视频接口 | `POST /v1/videos/generations` |
+
+## 支持模型
+
+可灵渠道适配器支持以下模型 ID：
+
+- `kling-v1`
+- `kling-v1-5`
+- `kling-v1-6`
+- `kling-v2-5-turbo`
+- `kling-v2-6`
+- `kling-v3`
+- `kling-v3-omni`
+
+部分统一视频渠道还提供 `kling-video-o1`。调用前请确认所选渠道已经配置对应模型。
+
+## 能力矩阵
+
+| 类别 | 能力 | 状态 | 主要输入 |
+| --- | --- | --- | --- |
+| 视频 | 文生视频 | 支持 | `model_name`、`prompt`、时长、比例 |
+| 视频 | 图生视频 | 支持 | 图片、`prompt`、首尾帧、镜头控制 |
+| 视频 | 多图参考生视频 | 支持 | `image_list`、多图提示词 |
+| 视频 | 视频特效 | 支持 | `effect_scene`、`input` |
+| 视频 | 视频续写 | 支持 | `video_id` 或 `video_url` |
+| 视频 | 动作控制 | 支持 | 参考图、参考视频、动作参数 |
+| 视频 | Omni 多模态视频 | 支持 | 图片、视频、提示词、`sound` |
+| 数字人 | 图片数字人视频 | 支持 | 人物图片、音频、人物朝向 |
+| 人脸 | 人脸识别 | 支持 | 图片或视频素材 |
+| 口型 | 高级口型同步 | 支持 | 视频、人脸选择、音频素材 |
+| 音频 | 文本生成音频 | 支持 | `prompt` |
+| 音频 | 视频生成音频 | 支持 | `video_id` 或 `video_url` |
+| 语音 | 文本转语音 TTS | 支持 | `text`、`voice_id`、语言、语速 |
+| 图片 | 图片生成 | 支持 | `prompt`、分辨率、数量 |
+| 图片 | 多图生图 | 支持 | 主体图、场景图、风格图 |
+| 图片 | 智能扩图 | 支持 | 图片、四个方向的扩展比例 |
+| 语音 | 音色克隆 | 暂不支持 | 当前没有独立的音色克隆任务接口 |
+
+## 视频接口
+
+| 能力 | 提交接口 | 查询接口 |
+| --- | --- | --- |
+| 文生视频 | `POST /kling/v1/videos/text2video` | `GET /kling/v1/videos/text2video/{task_id}` |
+| 图生视频 | `POST /kling/v1/videos/image2video` | `GET /kling/v1/videos/image2video/{task_id}` |
+| 多图生视频 | `POST /kling/v1/videos/multi-image2video` | `GET /kling/v1/videos/multi-image2video/{task_id}` |
+| 视频特效 | `POST /kling/v1/videos/effects` | `GET /kling/v1/videos/effects/{task_id}` |
+| 人脸识别 | `POST /kling/v1/videos/identify-face` | `GET /kling/v1/videos/identify-face/{task_id}` |
+| 口型同步 | `POST /kling/v1/videos/advanced-lip-sync` | `GET /kling/v1/videos/advanced-lip-sync/{task_id}` |
+| 视频续写 | `POST /kling/v1/videos/video-extend` | `GET /kling/v1/videos/video-extend/{task_id}` |
+| 图片数字人 | `POST /kling/v1/videos/avatar/image2video` | `GET /kling/v1/videos/avatar/image2video/{task_id}` |
+| Omni 视频 | `POST /kling/v1/videos/omni-video` | `GET /kling/v1/videos/omni-video/{task_id}` |
+| 动作控制 | `POST /kling/v1/videos/motion-control` | `GET /kling/v1/videos/motion-control/{task_id}` |
+
+### 常用视频参数
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `model_name` | string | 可灵模型 ID；也兼容 `model` |
+| `prompt` | string | 视频内容描述 |
+| `negative_prompt` | string | 不希望出现的内容 |
+| `image` | string | 首帧图片 URL 或 Base64 |
+| `image_tail` | string | 尾帧图片 URL 或 Base64 |
+| `mode` | string | 生成模式，例如 `std` 或 `pro` |
+| `duration` | string | 视频时长，具体范围取决于模型 |
+| `aspect_ratio` | string | 画面比例，例如 `16:9`、`9:16`、`1:1` |
+| `sound` | string | Omni 或支持原生音频的模型声音设置 |
+| `camera_control` | object | 平移、倾斜、旋转和变焦等镜头控制 |
+| `callback_url` | string | 任务状态回调地址 |
+| `external_task_id` | string | 调用方自定义任务标识 |
+
+详细的视频生成参数与示例：
+
+<Columns cols={2}>
+  <Card title="Kling 2.6" href="/api-reference/videos/kling-v2-6/generation">
+    文生视频、图生视频与有声视频。
+  </Card>
+  <Card title="Kling 2.6 动作控制" href="/api-reference/videos/kling-v2-6/kling-v2-6-motion-control-generation">
+    使用参考图和参考视频驱动动作。
+  </Card>
+  <Card title="Kling 3" href="/api-reference/videos/kling-v3/generation">
+    支持标准、专业、4K 和有声视频模式。
+  </Card>
+  <Card title="Kling 3 Omni" href="/api-reference/videos/kling-v3-omni/generation">
+    统一处理文本、图片、视频和声音输入。
+  </Card>
+  <Card title="Kling Video O1" href="/api-reference/videos/kling-video-o1/generation">
+    推理增强的视频生成接口。
+  </Card>
+</Columns>
+
+## 音频与语音接口
+
+### 文本生成音频
+
+```bash
+curl https://xcompute.us/kling/v1/audio/text-to-audio \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "kling-v3",
+    "prompt": "雨夜街道的环境声，远处偶尔传来汽车经过的声音"
+  }'
+```
+
+### 视频生成音频
+
+```bash
+curl https://xcompute.us/kling/v1/audio/video-to-audio \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "kling-v3",
+    "video_url": "https://example.com/input.mp4"
+  }'
+```
+
+### 文本转语音 TTS
+
+```bash
+curl https://xcompute.us/kling/v1/audio/tts \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_name": "kling-v3",
+    "text": "欢迎使用 Xcompute 可灵语音合成接口。",
+    "voice_id": "YOUR_VOICE_ID",
+    "voice_language": "zh",
+    "voice_speed": 1
+  }'
+```
+
+| TTS 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `text` | string | 必填，需要合成的文本 |
+| `voice_id` | string | 上游支持的音色 ID |
+| `voice_language` | string | 语音语言 |
+| `voice_speed` | integer | 语速设置，范围以当前上游模型为准 |
+
+<Warning>
+  当前接口支持选择已有音色，但不提供独立的音色克隆任务。不要将 `voice_id` 选择与音色克隆混为一谈。
+</Warning>
+
+## 口型同步与数字人
+
+高级口型同步可使用以下字段组合：
+
+- `video_id` 或视频素材
+- `audio_id` 或 `sound_file`
+- `face_choose`，指定需要同步的人脸
+- `session_id`，关联人脸识别任务
+
+图片数字人接口还支持 `image_url` 和 `character_orientation`。不同渠道对素材格式、文件大小和时长可能有额外限制。
+
+## 图片接口
+
+| 能力 | 提交接口 | 查询接口 |
+| --- | --- | --- |
+| 图片生成 | `POST /api/klingai/v1/images/generations` | `GET /api/klingai/v1/images/generations/{task_id}` |
+| 多图生图 | `POST /api/klingai/v1/images/multi-image2image` | `GET /api/klingai/v1/images/multi-image2image/{task_id}` |
+| 智能扩图 | `POST /api/klingai/v1/images/editing/expand` | `GET /api/klingai/v1/images/editing/expand/{task_id}` |
+
+图片任务支持的主要字段包括：
+
+- `image_list`、`image_reference`
+- `subject_image_list`
+- `scene_image`、`style_image`
+- `image_fidelity`、`human_fidelity`
+- `resolution`、`n`
+- `up_expansion_ratio`、`down_expansion_ratio`
+- `left_expansion_ratio`、`right_expansion_ratio`
+
+## 查询任务
+
+提交成功后会返回公开任务 ID：
+
+```json
+{
+  "id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "status": "queued"
+}
+```
+
+使用与提交能力对应的 GET 接口查询。也可以通过统一任务查询接口获取状态：
+
+```bash
+curl https://xcompute.us/v1/tasks/task_01KXXXXXXXXXXXXXXXXXXXX \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+任务常见状态包括 `queued`、`in_progress`、`completed` 和 `failed`。任务完成后，响应中的 `metadata.url` 或结果字段会包含视频、音频或图片地址。
+
+<Card title="统一任务查询接口" icon="refresh-cw" href="/api-reference/tasks/new-status">
+  查询异步任务的进度、状态和结果。
+</Card>
+
+## 使用建议
+
+1. 先用较短时长、标准模式验证提示词和素材，再提高分辨率或切换专业模式。
+2. 将用户侧任务 ID 与返回的 `task_id` 一并保存，方便重试和排查。
+3. 对视频、音频和图片结果进行持久化，不要长期依赖上游临时 URL。
+4. 高级能力的字段组合依赖具体模型。切换模型时重新检查素材限制。
+5. 生产环境优先使用任务查询或回调，不要高频无间隔轮询。

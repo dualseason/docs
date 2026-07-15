@@ -83,6 +83,20 @@
         ]
       },
       {
+        "tab": "模型指南",
+        "icon": "scale",
+        "groups": [
+          {
+            "group": "基础与选型",
+            "pages": [
+              "guides/llm-fundamentals",
+              "guides/open-source-models",
+              "guides/closed-source-models"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "新版接口",
         "icon": "plug",
         "groups": [
@@ -109,6 +123,12 @@
             "group": "音频接口",
             "pages": [
               "api-reference/audios/new-audio-speech"
+            ]
+          },
+          {
+            "group": "可灵能力",
+            "pages": [
+              "api-reference/kling/capabilities"
             ]
           },
           {
