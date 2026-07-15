@@ -84,7 +84,6 @@
       },
       {
         "tab": "模型指南",
-        "icon": "scale",
         "groups": [
           {
             "group": "基础与选型",
@@ -98,7 +97,6 @@
       },
       {
         "tab": "新版接口",
-        "icon": "plug",
         "groups": [
           {
             "group": "概览",
