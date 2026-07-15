@@ -409,7 +409,7 @@ api: 'POST /v1/seedance2/private-avatar'
 
 ## 查询审核结果
 
-素材提交后为异步审核任务，使用 [获取任务状态](/cn/api-reference/tasks/status) 接口查询：
+素材提交后为异步审核任务，使用 [获取任务状态](/api-reference/tasks/new-status) 接口查询：
 
 ```http theme={null}
 GET /v1/tasks/{id}
@@ -510,7 +510,7 @@ GET /v1/tasks/{id}
 
 ## 审核后使用素材
 
-审核通过后，将 `asset://...` URL 直接传入 [Seedance 2.0 视频生成](/cn/api-reference/videos/doubao-seedance-2-0/generation) 接口：
+审核通过后，将 `asset://...` URL 直接传入 [Seedance 2.0 视频生成](/api-reference/videos/doubao-seedance-2-0/generation) 接口：
 
 ```json theme={null}
 {
