@@ -99,12 +99,6 @@
         "tab": "新版接口",
         "groups": [
           {
-            "group": "概览",
-            "pages": [
-              "new-api-reference"
-            ]
-          },
-          {
             "group": "文本接口",
             "pages": [
               "api-reference/texts/general/new-chat-completions"
