@@ -15,10 +15,9 @@ api: 'POST /v1/video/generations'
 | 模型 | 说明 |
 | --- | --- |
 | `grok-imagine-video-1.5` | Grok 文生视频与单图生视频 |
-| `veo-3.1-generate-preview` | Veo 3.1 高质量视频生成 |
-| `veo-3.1-fast-generate-preview` | Veo 3.1 快速视频生成 |
+| `veo-3.1-flash` | Veo 3.1 快速视频生成 |
+| `veo-3.1-pro` | Veo 3.1 高质量视频生成 |
 | `sora-2` | Sora 2 标准视频生成 |
-| `sora-2-pro` | Sora 2 Pro 视频生成 |
 
 模型的实时可用性取决于当前渠道，请以[模型广场](https://xcompute.us/models)为准。
 
@@ -65,7 +64,6 @@ api: 'POST /v1/video/generations'
 | 模型 | 时长 | 画面与分辨率 | 参考输入 |
 | --- | --- | --- | --- |
 | `sora-2` | `8` 或 `12` 秒，默认 `8` | `1280x720` 或 `720x1280`，仅 720p | 支持参考图片，不支持参考视频或音频 |
-| `sora-2-pro` | `4`、`8` 或 `12` 秒 | 支持横向和纵向尺寸；使用 `resolution` 时填写 `720p` | 支持参考图片，不支持参考视频或音频 |
 | Veo 3.1 | 默认 `8` 秒 | 使用 `metadata.aspectRatio` 和 `metadata.resolution` 控制；支持范围由上游渠道决定 | 支持单张参考图片 |
 | Grok | 由当前渠道决定 | 使用 `size` 或 `aspect_ratio` | 支持单张或多张参考图片字段 |
 
@@ -114,7 +112,7 @@ curl --request POST 'https://xcompute.us/v1/video/generations' \
   --header 'Authorization: Bearer YOUR_API_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
-    "model": "veo-3.1-fast-generate-preview",
+    "model": "veo-3.1-flash",
     "prompt": "雨夜城市街道，镜头贴近地面向前推进，写实电影质感",
     "metadata": {
       "durationSeconds": 8,
