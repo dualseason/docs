@@ -118,6 +118,12 @@
             ]
           },
           {
+            "group": "视频接口",
+            "pages": [
+              "api-reference/videos/generations"
+            ]
+          },
+          {
             "group": "可灵视频",
             "pages": [
               "api-reference/kling/videos/text-to-video",

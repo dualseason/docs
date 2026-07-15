@@ -1,0 +1,158 @@
+---
+title: '统一视频生成'
+description: '通过同一个异步接口调用 Grok、Veo 3.1 和 Sora 2 视频模型。'
+api: 'POST /v1/video/generations'
+---
+
+使用统一接口提交文生视频或图生视频任务。Grok、Veo 3.1 和 Sora 2 使用相同的提交与查询流程。
+
+<Info>
+  视频生成是异步任务。提交成功后保存 `task_id`，再通过 `GET /v1/tasks/{task_id}` 查询状态和结果。
+</Info>
+
+## 支持模型
+
+| 模型 | 说明 |
+| --- | --- |
+| `grok-imagine-video-1.5` | Grok 文生视频与单图生视频 |
+| `veo-3.1-generate-preview` | Veo 3.1 高质量视频生成 |
+| `veo-3.1-fast-generate-preview` | Veo 3.1 快速视频生成 |
+| `sora-2` | Sora 2 标准视频生成 |
+| `sora-2-pro` | Sora 2 Pro 视频生成 |
+
+模型的实时可用性取决于当前渠道，请以[模型广场](https://xcompute.us/models)为准。
+
+## 请求参数
+
+<ParamField body="model" type="string" required>
+  视频模型 ID。填写上表中的一个公开模型 ID。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  视频内容、动作、镜头和风格描述。
+</ParamField>
+
+<ParamField body="image" type="string">
+  单张参考图片 URL 或 Base64 图片数据。传入后，任务按图生视频处理。
+</ParamField>
+
+<ParamField body="images" type="array<string>">
+  参考图片数组。Veo 3.1 当前使用第一张图片；各模型支持的图片数量以当前渠道为准。
+</ParamField>
+
+<ParamField body="seconds" type="string">
+  视频时长，单位为秒。也可以使用整数类型的 `duration`。
+</ParamField>
+
+<ParamField body="size" type="string">
+  输出尺寸，例如 `1280x720` 或 `720x1280`。
+</ParamField>
+
+<ParamField body="aspect_ratio" type="string">
+  输出比例，例如 `16:9` 或 `9:16`。
+</ParamField>
+
+<ParamField body="resolution" type="string">
+  输出分辨率档位，例如 `720p`、`1080p` 或 `4k`。实际支持范围取决于模型。
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  模型扩展参数。Veo 支持 `durationSeconds`、`aspectRatio`、`resolution`、`negativePrompt`、`personGeneration`、`seed` 和 `generateAudio`。
+</ParamField>
+
+## 模型参数差异
+
+| 模型 | 时长 | 画面与分辨率 | 参考输入 |
+| --- | --- | --- | --- |
+| `sora-2` | `8` 或 `12` 秒，默认 `8` | `1280x720` 或 `720x1280`，仅 720p | 支持参考图片，不支持参考视频或音频 |
+| `sora-2-pro` | `4`、`8` 或 `12` 秒 | 支持横向和纵向尺寸；使用 `resolution` 时填写 `720p` | 支持参考图片，不支持参考视频或音频 |
+| Veo 3.1 | 默认 `8` 秒 | 使用 `metadata.aspectRatio` 和 `metadata.resolution` 控制；支持范围由上游渠道决定 | 支持单张参考图片 |
+| Grok | 由当前渠道决定 | 使用 `size` 或 `aspect_ratio` | 支持单张或多张参考图片字段 |
+
+<Warning>
+  `sora-2` 的 `seconds` 只接受 `8` 或 `12`。其他值会在路由阶段被拒绝。
+</Warning>
+
+## 文生视频示例
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/video/generations' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "sora-2",
+    "prompt": "清晨的海边公路，一辆复古汽车驶过，电影感跟拍镜头",
+    "seconds": "8",
+    "size": "1280x720"
+  }'
+```
+</RequestExample>
+
+## 图生视频示例
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/video/generations' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "grok-imagine-video-1.5",
+    "prompt": "保持主体外观一致，人物缓慢转头看向窗外",
+    "image": "https://example.com/input.png",
+    "seconds": "8",
+    "aspect_ratio": "16:9"
+  }'
+```
+</RequestExample>
+
+## Veo 3.1 示例
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/video/generations' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "veo-3.1-fast-generate-preview",
+    "prompt": "雨夜城市街道，镜头贴近地面向前推进，写实电影质感",
+    "metadata": {
+      "durationSeconds": 8,
+      "aspectRatio": "16:9",
+      "resolution": "1080p",
+      "generateAudio": true
+    }
+  }'
+```
+</RequestExample>
+
+## 提交响应
+
+<ResponseExample>
+```json 200
+{
+  "status": "queued",
+  "task_id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "progress": "0%",
+  "code": "success"
+}
+```
+</ResponseExample>
+
+## 查询任务
+
+```bash
+curl --request GET \
+  --url 'https://xcompute.us/v1/tasks/task_01KXXXXXXXXXXXXXXXXXXXX' \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+任务状态包括 `queued`、`in_progress`、`completed` 和 `failed`。任务完成后，响应中的结果 URL 字段包含生成的视频地址。
+
+<Card title="任务查询" icon="refresh-cw" href="/api-reference/tasks/new-status">
+  查看统一异步任务状态与结果字段。
+</Card>
+
+## OpenAI 兼容入口
+
+需要使用 OpenAI Videos API 路径时，也可以将同一请求发送到 `POST /v1/videos`，并通过 `GET /v1/videos/{task_id}` 查询。新接入建议使用本页的统一接口和统一任务查询流程。
