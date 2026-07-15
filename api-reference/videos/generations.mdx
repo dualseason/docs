@@ -1,10 +1,10 @@
 ---
 title: '统一视频生成'
-description: '通过同一个异步接口调用 Grok、Veo 3.1 和 Sora 2 视频模型。'
+description: '通过同一个异步接口调用 Grok、Veo 3.1、Sora 2 和 Seedance 视频模型。'
 api: 'POST /v1/video/generations'
 ---
 
-使用统一接口提交文生视频或图生视频任务。Grok、Veo 3.1 和 Sora 2 使用相同的提交与查询流程。
+使用统一接口提交文生视频或图生视频任务。Grok、Veo 3.1、Sora 2 和 Seedance 使用相同的提交与查询流程。
 
 <Info>
   视频生成是异步任务。提交成功后保存 `task_id`，再通过 `GET /v1/tasks/{task_id}` 查询状态和结果。
@@ -18,6 +18,12 @@ api: 'POST /v1/video/generations'
 | `veo-3.1-flash` | Veo 3.1 快速视频生成 |
 | `veo-3.1-pro` | Veo 3.1 高质量视频生成 |
 | `sora-2` | Sora 2 标准视频生成 |
+| `seedance-1.0-fast` | Seedance 1.0 快速视频生成 |
+| `seedance-1.0-mini` | Seedance 1.0 Mini 视频生成 |
+| `seedance-1.0-pro` | Seedance 1.0 Pro 视频生成 |
+| `seedance-1.5-pro` | Seedance 1.5 Pro 视频生成 |
+| `seedance-2.0` | Seedance 2.0 视频生成 |
+| `seedance-2.0-fast` | Seedance 2.0 快速视频生成 |
 
 模型的实时可用性取决于当前渠道，请以[模型广场](https://xcompute.us/models)为准。
 
@@ -36,11 +42,11 @@ api: 'POST /v1/video/generations'
 </ParamField>
 
 <ParamField body="images" type="array<string>">
-  参考图片数组。Veo 3.1 当前使用第一张图片；各模型支持的图片数量以当前渠道为准。
+  参考图片数组。Veo 3.1 当前使用第一张图片；Seedance 建议使用该字段传入图生视频参考图。各模型支持的图片数量以当前渠道为准。
 </ParamField>
 
 <ParamField body="seconds" type="string">
-  视频时长，单位为秒。也可以使用整数类型的 `duration`。
+  视频时长，单位为秒。Seedance 请优先使用整数类型的 `duration`，以兼容全部渠道。
 </ParamField>
 
 <ParamField body="size" type="string">
@@ -66,6 +72,9 @@ api: 'POST /v1/video/generations'
 | `sora-2` | `8` 或 `12` 秒，默认 `8` | `1280x720` 或 `720x1280`，仅 720p | 支持参考图片，不支持参考视频或音频 |
 | Veo 3.1 | 默认 `8` 秒 | 使用 `metadata.aspectRatio` 和 `metadata.resolution` 控制；支持范围由上游渠道决定 | 支持单张参考图片 |
 | Grok | 由当前渠道决定 | 使用 `size` 或 `aspect_ratio` | 支持单张或多张参考图片字段 |
+| Seedance 1.0 | `10` 秒可选择对应的 10 秒模型变体；其他时长由渠道决定 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
+| `seedance-1.5-pro` | `10` 或 `12` 秒可选择对应时长变体 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
+| Seedance 2.0 | 由当前渠道决定；部分渠道支持 `4` 到 `15` 秒并默认 `5` 秒 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
 
 <Warning>
   `sora-2` 的 `seconds` 只接受 `8` 或 `12`。其他值会在路由阶段被拒绝。
@@ -123,6 +132,30 @@ curl --request POST 'https://xcompute.us/v1/video/generations' \
   }'
 ```
 </RequestExample>
+
+## Seedance 示例
+
+Seedance 建议使用 `duration` 和 `images`，这组字段可以覆盖当前接入的不同 Seedance 渠道。
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/video/generations' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "seedance-2.0",
+    "prompt": "保持人物外观一致，镜头在日出时缓慢环绕主体",
+    "duration": 5,
+    "aspect_ratio": "16:9",
+    "resolution": "720p",
+    "images": [
+      "https://example.com/reference.jpg"
+    ]
+  }'
+```
+</RequestExample>
+
+Seedance 渠道还可以通过 `metadata` 传递 `generate_audio`、`return_last_frame`、`camera_fixed`、`seed` 和 `watermark` 等扩展字段。字段是否生效取决于具体模型和当前渠道。
 
 ## 提交响应
 
