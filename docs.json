@@ -118,12 +118,6 @@
             ]
           },
           {
-            "group": "可灵能力总览",
-            "pages": [
-              "api-reference/kling/capabilities"
-            ]
-          },
-          {
             "group": "可灵视频",
             "pages": [
               "api-reference/kling/videos/text-to-video",
