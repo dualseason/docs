@@ -9,14 +9,22 @@ api: 'POST /v1/chat/completions'
 
 ## 支持模型
 
-- `claude-opus-4-8`
-- `claude-opus-4-7`
-- `claude-opus-4-6`
-- `claude-sonnet-4-6`
-- `claude-haiku-4-5`
-- `gpt-5.5-pro`
-- `gpt-5.5`
-- `gpt-5.4`
+| 系列 | 支持的模型 ID |
+| --- | --- |
+| GPT | `gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-5.6-luna`、`gpt-5.5`、`gpt-5.4` |
+| Claude | `claude-fable-5`、`claude-sonnet-5`、`claude-opus-4-8` |
+| Gemini | `gemini-3.1-pro-high`、`gemini-3.1-pro-preview`、`gemini-3.1-pro-preview-think`、`gemini-3.5-flash` |
+| Grok | `grok-4.5`、`grok-4.3` |
+| GLM | `glm-5`、`glm-5-turbo`、`glm-5.1`、`glm-5.2`、`glm-5v-turbo` |
+| Kimi | `kimi-k2.5`、`kimi-k2.6`、`kimi-k2.7-code` |
+| DeepSeek | `deepseek-v3.2`、`deepseek-v4-flash`、`deepseek-v4-pro` |
+| Qwen | `qwen3.5-plus`、`qwen3.6-plus`、`qwen3.7-plus`、`qwen3.7-max` |
+| MiniMax | `minimax-m3`、`minimax-m2.5`、`minimax-m2.7`、`MiniMax-M2.7-highspeed` |
+| Mimo | `mimo-v2.5`、`mimo-v2.5-pro`、`mimo-v2-pro`、`mimo-v2-omni` |
+
+<Info>
+  模型可用性可能随渠道调整，请以 [模型广场](https://xcompute.us/models) 中显示的模型 ID 为准。
+</Info>
 
 <RequestExample>
   ```bash cURL theme={null}
@@ -25,7 +33,7 @@ api: 'POST /v1/chat/completions'
     --header 'Authorization: Bearer <token>' \
     --header 'Content-Type: application/json' \
     --data '{
-      "model": "gpt-4o",
+      "model": "gpt-5.6-sol",
       "messages": [
         {
           "role": "user",
@@ -37,7 +45,7 @@ api: 'POST /v1/chat/completions'
 </RequestExample>
 
 <ParamField body="model" type="string" required>
-  模型名，例如 `claude-opus-4-8`。
+  模型 ID，例如 `gpt-5.6-sol`。
 </ParamField>
 
 <ParamField body="messages" type="array" required>
