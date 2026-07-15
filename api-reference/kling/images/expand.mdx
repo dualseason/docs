@@ -1,0 +1,40 @@
+---
+title: '可灵智能扩图'
+description: '按指定方向扩展图片画布并补全内容。'
+api: 'POST /api/klingai/v1/images/editing/expand'
+---
+
+向图片的上、下、左、右扩展画布，并由模型补全新增区域。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image" type="string" required>需要扩展的原始图片。</ParamField>
+<ParamField body="prompt" type="string">扩展区域的内容要求。</ParamField>
+<ParamField body="up_expansion_ratio" type="number">向上扩展的比例。</ParamField>
+<ParamField body="down_expansion_ratio" type="number">向下扩展的比例。</ParamField>
+<ParamField body="left_expansion_ratio" type="number">向左扩展的比例。</ParamField>
+<ParamField body="right_expansion_ratio" type="number">向右扩展的比例。</ParamField>
+<ParamField body="n" type="integer" default="1">生成图片数量。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/api/klingai/v1/images/editing/expand' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image": "https://example.com/input.png",
+    "prompt": "自然延续原图中的城市街景",
+    "left_expansion_ratio": 0.5,
+    "right_expansion_ratio": 0.5
+  }'
+```
+</RequestExample>
+
+<Info>至少设置一个大于 `0` 的方向扩展比例。具体可用范围由上游模型决定。</Info>
+
+## 查询任务
+
+`GET /api/klingai/v1/images/editing/expand/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

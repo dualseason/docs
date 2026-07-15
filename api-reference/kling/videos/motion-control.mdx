@@ -1,0 +1,36 @@
+---
+title: '可灵动作控制'
+description: '使用参考视频控制图片主体的动作。'
+api: 'POST /kling/v1/videos/motion-control'
+---
+
+将参考视频中的动作迁移到输入图片中的人物或主体。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image_url" type="string" required>需要驱动的主体图片 URL。</ParamField>
+<ParamField body="video_url" type="string" required>动作参考视频 URL。</ParamField>
+<ParamField body="prompt" type="string" required>动作和画面要求。</ParamField>
+<ParamField body="character_orientation" type="string">人物朝向配置。</ParamField>
+<ParamField body="mode" type="string" default="std">生成模式，例如 `std` 或 `pro`。</ParamField>
+<ParamField body="duration" type="string" default="5">输出视频时长，单位为秒。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/motion-control' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image_url": "https://example.com/character.png",
+    "video_url": "https://example.com/motion.mp4",
+    "prompt": "保持人物身份和服装一致"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/motion-control/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

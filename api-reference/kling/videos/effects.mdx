@@ -1,0 +1,35 @@
+---
+title: '可灵视频特效'
+description: '使用预设特效创建可灵视频任务。'
+api: 'POST /kling/v1/videos/effects'
+---
+
+将图片和预设特效场景组合为视频。可用的特效标识取决于当前上游渠道。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image" type="string" required>应用特效的输入图片。</ParamField>
+<ParamField body="effect_scene" type="string" required>预设特效场景标识。</ParamField>
+<ParamField body="duration" type="string" default="5">视频时长，单位为秒。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+<ParamField body="external_task_id" type="string">调用方自定义任务标识。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/effects' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image": "https://example.com/input.png",
+    "effect_scene": "YOUR_EFFECT_SCENE"
+  }'
+```
+</RequestExample>
+
+通过[预设元素接口](/api-reference/kling/general/presets-elements)获取当前渠道返回的预设数据。
+
+## 查询任务
+
+`GET /kling/v1/videos/effects/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

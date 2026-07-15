@@ -1,0 +1,32 @@
+---
+title: '可灵文生音效'
+description: '根据文本描述生成环境声、拟音或其他音频。'
+api: 'POST /kling/v1/audio/text-to-audio'
+---
+
+根据文本提示词异步生成音效或环境音频。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="prompt" type="string" required>目标声音的文本描述。</ParamField>
+<ParamField body="duration" type="string">音频时长，单位为秒。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+<ParamField body="external_task_id" type="string">调用方自定义任务标识。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/audio/text-to-audio' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "prompt": "雨夜街道的环境声，远处偶尔有汽车经过",
+    "duration": "5"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/audio/text-to-audio/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。任务完成后，音频地址位于 `metadata.url`。

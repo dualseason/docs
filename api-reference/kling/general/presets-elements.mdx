@@ -1,0 +1,23 @@
+---
+title: '可灵预设元素查询'
+description: '查询当前可灵渠道提供的预设元素。'
+api: 'GET /kling/v1/general/presets-elements'
+---
+
+获取当前可灵渠道返回的预设元素数据，可用于视频特效等需要预设标识的能力。
+
+<RequestExample>
+```bash cURL
+curl --request GET 'https://xcompute.us/kling/v1/general/presets-elements' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Accept: application/json'
+```
+</RequestExample>
+
+该接口会透传查询字符串、上游状态码和响应内容。可用的查询参数及响应字段以当前渠道实际返回为准。
+
+<Warning>预设元素会随上游渠道变化。请不要在客户端永久写死未经刷新验证的预设 ID。</Warning>
+
+<Card title="视频特效" icon="wand-sparkles" href="/api-reference/kling/videos/effects">
+  使用查询到的特效场景标识创建视频任务。
+</Card>

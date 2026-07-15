@@ -1,0 +1,30 @@
+---
+title: '可灵人脸识别'
+description: '识别图片中的可用人脸，为口型同步任务获取人脸信息。'
+api: 'POST /kling/v1/videos/identify-face'
+---
+
+识别输入图片中的人脸。提交响应和任务结果会在 `metadata.faces` 或 `metadata.face_infos` 中保留上游返回的人脸信息。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image" type="string" required>需要识别人脸的图片 URL 或上游支持的图片数据。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+<ParamField body="external_task_id" type="string">调用方自定义任务标识。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/identify-face' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image": "https://example.com/portrait.png"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/identify-face/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

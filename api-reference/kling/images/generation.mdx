@@ -1,0 +1,35 @@
+---
+title: '可灵图片生成'
+description: '根据文本提示词生成可灵图片。'
+api: 'POST /api/klingai/v1/images/generations'
+---
+
+根据文本描述异步生成一张或多张图片。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="prompt" type="string" required>图片生成提示词。</ParamField>
+<ParamField body="negative_prompt" type="string">不希望出现在图片中的内容。</ParamField>
+<ParamField body="aspect_ratio" type="string">画面比例，例如 `1:1`、`16:9` 或 `9:16`。</ParamField>
+<ParamField body="resolution" type="string">输出分辨率或质量档位。</ParamField>
+<ParamField body="n" type="integer" default="1">生成图片数量。实际上限取决于当前模型和渠道。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/api/klingai/v1/images/generations' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "prompt": "玻璃温室中的热带植物，清晨自然光，写实摄影",
+    "aspect_ratio": "1:1",
+    "n": 1
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /api/klingai/v1/images/generations/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。任务完成后，首张图片地址位于 `metadata.url`，完整数组位于 `metadata.images`。

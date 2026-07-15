@@ -1,0 +1,40 @@
+---
+title: '可灵多图生视频'
+description: '使用多张参考图创建可灵视频任务。'
+api: 'POST /kling/v1/videos/multi-image2video'
+---
+
+使用多张图片约束人物、物体或镜头内容并生成视频。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image_list" type="array" required>
+  参考图片数组。每项支持 `image`，并可通过 `prompt` 描述该图片。
+</ParamField>
+<ParamField body="prompt" type="string" required>视频整体提示词。</ParamField>
+<ParamField body="negative_prompt" type="string">反向提示词。</ParamField>
+<ParamField body="mode" type="string" default="std">生成模式。</ParamField>
+<ParamField body="duration" type="string" default="5">视频时长，单位为秒。</ParamField>
+<ParamField body="aspect_ratio" type="string">输出画面比例。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/multi-image2video' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "prompt": "保持人物外观一致，在城市街道中向前行走",
+    "image_list": [
+      {"image": "https://example.com/person.png", "prompt": "人物参考"},
+      {"image": "https://example.com/street.png", "prompt": "场景参考"}
+    ]
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/multi-image2video/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

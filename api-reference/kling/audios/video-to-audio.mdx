@@ -1,0 +1,32 @@
+---
+title: '可灵视频生音频'
+description: '根据视频画面自动生成匹配的音频。'
+api: 'POST /kling/v1/audio/video-to-audio'
+---
+
+分析视频内容并异步生成匹配的音效或背景音频。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="video_id" type="string">可灵上游视频 ID，与 `video_url` 选择其一。</ParamField>
+<ParamField body="video_url" type="string">公网视频 URL，与 `video_id` 选择其一。</ParamField>
+<ParamField body="prompt" type="string">希望生成的声音描述。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/audio/video-to-audio' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "video_url": "https://example.com/input.mp4",
+    "prompt": "生成与画面动作同步的自然环境音"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/audio/video-to-audio/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。任务完成后，音频地址位于 `metadata.url`。

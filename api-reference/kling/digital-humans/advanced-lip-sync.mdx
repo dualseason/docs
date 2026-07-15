@@ -1,0 +1,39 @@
+---
+title: '可灵高级口型同步'
+description: '为视频中的选定人脸生成口型同步结果。'
+api: 'POST /kling/v1/videos/advanced-lip-sync'
+---
+
+使用已有视频和音频驱动指定人脸的口型。多人画面可通过 `face_choose` 指定处理对象。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="video_id" type="string">可灵上游视频 ID，与 `video_url` 选择其一。</ParamField>
+<ParamField body="video_url" type="string">公网视频 URL，与 `video_id` 选择其一。</ParamField>
+<ParamField body="audio_id" type="string">可灵上游音频 ID。</ParamField>
+<ParamField body="sound_file" type="string">上游支持的音频文件地址或数据。</ParamField>
+<ParamField body="face_choose" type="array">需要同步口型的人脸选择信息。建议先调用人脸识别接口获取。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/advanced-lip-sync' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "video_url": "https://example.com/speaker.mp4",
+    "sound_file": "https://example.com/speech.mp3",
+    "face_choose": [{"face_id": "YOUR_FACE_ID"}]
+  }'
+```
+</RequestExample>
+
+<Card title="人脸识别" icon="scan-face" href="/api-reference/kling/digital-humans/identify-face">
+  获取口型同步需要的人脸信息。
+</Card>
+
+## 查询任务
+
+`GET /kling/v1/videos/advanced-lip-sync/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

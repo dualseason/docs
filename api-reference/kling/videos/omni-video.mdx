@@ -1,0 +1,42 @@
+---
+title: '可灵 Omni Video'
+description: '使用文本和多种参考素材创建 Omni Video 任务。'
+api: 'POST /kling/v1/videos/omni-video'
+---
+
+使用可灵 Omni 模型完成文生视频或带参考素材的视频生成。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3-omni">推荐使用 `kling-v3-omni`，也可以使用 `model`。</ParamField>
+<ParamField body="prompt" type="string" required>视频提示词。</ParamField>
+<ParamField body="image" type="string">单张参考图片。</ParamField>
+<ParamField body="image_tail" type="string">尾帧参考图片。</ParamField>
+<ParamField body="image_list" type="array">多张参考图片。</ParamField>
+<ParamField body="subject_image_list" type="array">主体参考图数组，每项包含 `subject_image`。</ParamField>
+<ParamField body="video_url" type="string">参考视频 URL。</ParamField>
+<ParamField body="mode" type="string" default="std">生成模式，例如 `std` 或 `pro`。</ParamField>
+<ParamField body="duration" type="string" default="5">视频时长，单位为秒。</ParamField>
+<ParamField body="quality" type="string">输出质量，例如模型支持时可传 `4k`。</ParamField>
+<ParamField body="multi_shot" type="boolean">是否启用多镜头。</ParamField>
+<ParamField body="multi_prompt" type="array">分镜提示数组，每项支持 `index`、`prompt` 和 `duration`。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/omni-video' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3-omni",
+    "prompt": "参考人物走进明亮的现代展厅",
+    "subject_image_list": [
+      {"subject_image": "https://example.com/subject.png"}
+    ],
+    "duration": "5"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/omni-video/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

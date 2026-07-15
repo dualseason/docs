@@ -118,9 +118,51 @@
             ]
           },
           {
-            "group": "可灵能力",
+            "group": "可灵能力总览",
             "pages": [
               "api-reference/kling/capabilities"
+            ]
+          },
+          {
+            "group": "可灵视频",
+            "pages": [
+              "api-reference/kling/videos/text-to-video",
+              "api-reference/kling/videos/image-to-video",
+              "api-reference/kling/videos/multi-image-to-video",
+              "api-reference/kling/videos/effects",
+              "api-reference/kling/videos/video-extend",
+              "api-reference/kling/videos/omni-video",
+              "api-reference/kling/videos/motion-control"
+            ]
+          },
+          {
+            "group": "可灵数字人",
+            "pages": [
+              "api-reference/kling/digital-humans/identify-face",
+              "api-reference/kling/digital-humans/advanced-lip-sync",
+              "api-reference/kling/digital-humans/image-avatar-video"
+            ]
+          },
+          {
+            "group": "可灵音频",
+            "pages": [
+              "api-reference/kling/audios/text-to-audio",
+              "api-reference/kling/audios/video-to-audio",
+              "api-reference/kling/audios/text-to-speech"
+            ]
+          },
+          {
+            "group": "可灵图片",
+            "pages": [
+              "api-reference/kling/images/generation",
+              "api-reference/kling/images/multi-image-to-image",
+              "api-reference/kling/images/expand"
+            ]
+          },
+          {
+            "group": "可灵通用",
+            "pages": [
+              "api-reference/kling/general/presets-elements"
             ]
           },
           {

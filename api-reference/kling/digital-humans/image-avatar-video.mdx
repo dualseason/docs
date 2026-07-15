@@ -1,0 +1,33 @@
+---
+title: '可灵图片数字人'
+description: '使用人物图片和音频创建数字人视频。'
+api: 'POST /kling/v1/videos/avatar/image2video'
+---
+
+让人物图片根据输入音频生成说话视频。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image_url" type="string" required>数字人人物图片 URL。</ParamField>
+<ParamField body="audio_id" type="string">可灵上游音频 ID，与 `sound_file` 选择其一。</ParamField>
+<ParamField body="sound_file" type="string">上游支持的音频文件地址或数据，与 `audio_id` 选择其一。</ParamField>
+<ParamField body="prompt" type="string">人物动作或画面补充说明。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/avatar/image2video' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image_url": "https://example.com/avatar.png",
+    "sound_file": "https://example.com/speech.mp3"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/avatar/image2video/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

@@ -1,0 +1,42 @@
+---
+title: '可灵多图生图'
+description: '使用主体、场景和风格参考图生成新图片。'
+api: 'POST /api/klingai/v1/images/multi-image2image'
+---
+
+通过多种参考图片约束主体身份、场景和视觉风格。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="prompt" type="string" required>目标图片提示词。</ParamField>
+<ParamField body="image_list" type="array">通用参考图数组，每项支持 `image` 和 `prompt`。</ParamField>
+<ParamField body="subject_image_list" type="array">主体参考图数组，每项包含 `subject_image`。</ParamField>
+<ParamField body="scene_image" type="string">场景参考图。</ParamField>
+<ParamField body="style_image" type="string">风格参考图。</ParamField>
+<ParamField body="image_reference" type="string">其他图片参考。</ParamField>
+<ParamField body="image_fidelity" type="number">图片参考保真度。</ParamField>
+<ParamField body="human_fidelity" type="number">人物身份保真度。</ParamField>
+<ParamField body="resolution" type="string">输出分辨率。</ParamField>
+<ParamField body="n" type="integer" default="1">生成图片数量。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/api/klingai/v1/images/multi-image2image' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "prompt": "人物站在参考场景中央，保持面部特征一致",
+    "subject_image_list": [
+      {"subject_image": "https://example.com/person.png"}
+    ],
+    "scene_image": "https://example.com/scene.png",
+    "n": 1
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /api/klingai/v1/images/multi-image2image/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

@@ -1,0 +1,38 @@
+---
+title: '可灵图生视频'
+description: '根据首帧图片创建可灵视频任务。'
+api: 'POST /kling/v1/videos/image2video'
+---
+
+让输入图片中的内容产生动态。图片可使用公网 URL 或上游支持的 Base64 数据。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="image" type="string" required>起始帧图片。</ParamField>
+<ParamField body="image_tail" type="string">可选的结束帧图片。</ParamField>
+<ParamField body="prompt" type="string">动作和镜头提示词。</ParamField>
+<ParamField body="negative_prompt" type="string">反向提示词。</ParamField>
+<ParamField body="mode" type="string" default="std">生成模式，例如 `std` 或 `pro`。</ParamField>
+<ParamField body="duration" type="string" default="5">视频时长，单位为秒。</ParamField>
+<ParamField body="aspect_ratio" type="string">输出画面比例。</ParamField>
+<ParamField body="camera_control" type="object">运镜类型和六轴运镜参数。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/image2video' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "image": "https://example.com/start.png",
+    "prompt": "人物缓慢转头看向镜头",
+    "duration": "5"
+  }'
+```
+</RequestExample>
+
+## 查询任务
+
+`GET /kling/v1/videos/image2video/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

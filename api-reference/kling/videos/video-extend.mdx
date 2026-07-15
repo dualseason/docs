@@ -1,0 +1,35 @@
+---
+title: '可灵视频续写'
+description: '延长已有可灵视频任务的内容。'
+api: 'POST /kling/v1/videos/video-extend'
+---
+
+基于已有视频任务继续生成后续画面。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="video_id" type="string" required>需要续写的可灵视频 ID。</ParamField>
+<ParamField body="prompt" type="string">后续内容提示词。</ParamField>
+<ParamField body="negative_prompt" type="string">反向提示词。</ParamField>
+<ParamField body="duration" type="string" default="5">续写时长，单位为秒。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/videos/video-extend' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "video_id": "UPSTREAM_VIDEO_ID",
+    "prompt": "镜头继续向前移动并逐渐升高"
+  }'
+```
+</RequestExample>
+
+<Note>`video_id` 是上游视频 ID，不是 Xcompute 返回的公开任务 ID。</Note>
+
+## 查询任务
+
+`GET /kling/v1/videos/video-extend/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。

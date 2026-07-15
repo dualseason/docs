@@ -1,0 +1,39 @@
+---
+title: '可灵文字转语音'
+description: '使用可灵原生字段异步生成语音。'
+api: 'POST /kling/v1/audio/tts'
+---
+
+通过可灵原生接口将文本合成为语音。该能力是异步任务。
+
+## 请求参数
+
+<ParamField body="model_name" type="string" default="kling-v3">可灵模型 ID，也可以使用 `model`。</ParamField>
+<ParamField body="text" type="string" required>需要合成的文本。</ParamField>
+<ParamField body="voice_id" type="string">已有音色 ID。</ParamField>
+<ParamField body="voice_language" type="string">语音语言，例如 `zh` 或 `en`。</ParamField>
+<ParamField body="voice_speed" type="number" default="1">语速。实际范围取决于当前模型和渠道。</ParamField>
+<ParamField body="callback_url" type="string">任务状态回调地址。</ParamField>
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/kling/v1/audio/tts' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model_name": "kling-v3",
+    "text": "欢迎使用 Xcompute 可灵语音合成接口。",
+    "voice_id": "YOUR_VOICE_ID",
+    "voice_language": "zh",
+    "voice_speed": 1.0
+  }'
+```
+</RequestExample>
+
+<Warning>`voice_id` 用于选择已有音色。当前接入没有独立的音色克隆接口。</Warning>
+
+OpenAI Speech 字段兼容调用请参阅[可灵 TTS 兼容接口](/api-reference/audios/new-audio-speech)。
+
+## 查询任务
+
+`GET /kling/v1/audio/tts/{task_id}`，也可以使用[统一任务查询接口](/api-reference/tasks/new-status)。任务完成后，音频地址位于 `metadata.url`。
