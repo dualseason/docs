@@ -76,10 +76,10 @@
           "claude-code-cli-app",
           "cc-switch",
           "codex-plus-plus",
-          "codex-jailbreak",
           "codexhub",
           "kelivo",
-          "codex-install"
+          "codex-install",
+          "codex-jailbreak"
         ]
       },
       {
@@ -98,12 +98,6 @@
       {
         "tab": "新版接口",
         "groups": [
-          {
-            "group": "概览",
-            "pages": [
-              "new-api-reference"
-            ]
-          },
           {
             "group": "文本接口",
             "pages": [
