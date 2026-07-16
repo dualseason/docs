@@ -137,4 +137,4 @@ api: 'POST /v1/images/generations'
 jq -r '.data[0].b64_json' response.json | base64 --decode > result.png
 ```
 
-需要基于参考图片生成内容时，请使用[图片修改接口](/api-reference/images/new-images-edits)。
+需要基于参考图像生成内容时，请使用[图像编辑接口](/api-reference/images/new-images-edits)。

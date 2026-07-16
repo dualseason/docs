@@ -1,6 +1,6 @@
 ---
-title: "环境准备：NVM、Node.js 22 和 npm"
-description: "先完成 Windows、macOS、Linux 的 NVM 和 Node.js 22 安装，再统一用 npm 安装 Claude Code、Codex 和 OpenCode。"
+title: "Node.js 开发环境准备"
+description: "在 Windows、macOS 和 Linux 上安装 NVM、Node.js 与 npm，为编程 Agent 准备运行环境。"
 ---
 
 适用对象：Xcompute API 中转站用户，需要配置 Node.js 开发环境以运行 Claude Code、Codex、OpenCode 等 AI 编程工具。
@@ -462,14 +462,14 @@ $env:HTTPS_PROXY = "http://127.0.0.1:7890"
 ## 下一步：进入具体接入
 
 <Columns cols={2}>
+  <Card title="OpenCode 接入 Xcompute（推荐）" icon="code" href="/opencode">
+    使用 OpenAI 兼容 provider 配置 Xcompute。
+  </Card>
   <Card title="Claude Code 接入" icon="terminal" href="/claude-code">
     用 Anthropic 官方 CLI 接入 Xcompute。
   </Card>
-  <Card title="Codex 接入" icon="code" href="/codex-install">
+  <Card title="Codex 接入" icon="code" href="/codex">
     用 OpenAI 官方 Codex CLI 接入 Xcompute。
-  </Card>
-  <Card title="OpenCode 接入" icon="code" href="/opencode">
-    用 OpenAI 兼容 provider 配置接入 Xcompute。
   </Card>
 </Columns>
 
