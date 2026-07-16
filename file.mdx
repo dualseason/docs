@@ -3,50 +3,54 @@ title: "快速入门"
 description: "获取 Xcompute API Key，并通过 OpenAI 兼容接口调用多种 AI 模型。"
 ---
 
-### 1. 获取 API Key
+## 1. 获取 API Key
 
-登录 [Xcompute 控制台](https://xcompute.us/keys) → 个人中心 → API Keys → 创建新密钥
+登录 [Xcompute 控制台](https://xcompute.us/keys)，依次进入 **个人中心**、**API Keys**，然后点击 **创建新密钥**。
 
 <Frame>
-  ![Image](/images/image-23.png)
+  ![Xcompute 控制台中的 API Key 页面](/images/image-23.png)
 </Frame>
 
 <Frame>
-  ![Image](/images/image-24.png)
+  ![Xcompute 控制台中的创建 API Key 窗口](/images/image-24.png)
 </Frame>
 
-创建Key的时候记得选择你的分组，一般如果你是使用GPT系列的话选择`0.9折`福利渠道这个分组，他就会在请求的时候扣钱会按`0.09`倍率给你扣费，如果你是想要用Claude系列的话就选`0.18`的`Kiro`这个分组，如果你想要用视频或者图片的话就选择默认default这个分组。
+创建 API Key 时，请根据用途选择分组：
+
+| 用途 | 推荐分组 |
+| --- | --- |
+| GPT 系列 | GPT 福利渠道（0.9 折，按官网价格的 0.09 倍计费） |
+| Claude 系列 | Kiro 渠道（1.8 折） |
+| 图像或视频模型 | `default` |
 
 <Info>
-  如果你开了翻译插件的话记得关闭一下，否则显示的内容会错位乱码
+  如果页面出现文字错位或乱码，请暂时关闭浏览器翻译插件后刷新页面。
 </Info>
 
 <Warning>
-  以及如果你使用的浏览器出现500报错的话，试一下换个浏览器，因为有可能是你的浏览器对新的技术不支持导致的
+  如果控制台页面出现 500 错误，请先刷新页面或使用无痕窗口重试。问题仍然存在时，请更换现代浏览器并联系技术支持。
 </Warning>
 
-### 2. 基础配置
+## 2. 基础配置
 
-在`OpenAI`协议下接入只需要三个东西，分别是`URL`、`Key`、`ModelID`
+通过 OpenAI 兼容协议接入时，需要配置以下三个参数：
 
-<Info>
-  **URL**: [https://intl.dualseason.com/v1](https://intl.dualseason.com/v1)
-
-  **Key:** 就是你第一步获取的API 秘钥
-
-  **ModelID:** 这个就是你要用模型的`ID`，只能填标准的`ID`，也就是我们模型广场的复制按钮的名称
-</Info>
+| 参数 | 值 |
+| --- | --- |
+| Base URL | `https://intl.dualseason.com/v1` |
+| API Key | 第一步创建的 API Key |
+| Model ID | 模型广场复制按钮提供的标准模型 ID |
 
 <Frame>
-  ![Image](/images/image-25.png)
+  ![Xcompute 模型广场中的模型 ID 复制按钮](/images/image-25.png)
 </Frame>
 
-### 3. 快速测试
+## 3. 快速测试
 
 ```bash
 curl https://intl.dualseason.com/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer 你的API 秘钥" \
+  -H "Authorization: Bearer 你的APIKey" \
   -d '{
     "model": "gpt-5.6-sol",
     "messages": [{"role": "user", "content": "Hello!"}]
@@ -54,7 +58,7 @@ curl https://intl.dualseason.com/v1/chat/completions \
 ```
 
 <Warning>
-  上面的这个测试代码是在终端输入，而且上面中文部分你的API 秘钥这几个字要换成你的第一步获取的API 秘钥才行
+  在终端中运行这段命令前，请将 `你的APIKey` 替换为第一步创建的 API Key。
 </Warning>
 
 ## 为什么选择 Xcompute

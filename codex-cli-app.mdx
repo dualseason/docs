@@ -10,7 +10,7 @@ Codex CLI 和 Codex 桌面 App 使用同一个 `.codex` 目录。你需要创建
 </Tip>
 
 <Warning>
-  普通 ChatGPT 聊天客户端与 Codex 编程 App 不是同一个功能。本文中的“ChatGPT App”指 OpenAI 官方 Codex 桌面编程 App，它会读取 `.codex/config.toml` 和 `.codex/auth.json`。
+  普通 ChatGPT 聊天客户端与 Codex App 不是同一个功能。本文介绍的是 OpenAI 官方 Codex 桌面编程 App，它会读取 `.codex/config.toml` 和 `.codex/auth.json`。
 </Warning>
 
 如果你不熟悉 PowerShell、终端、复制命令或配置文件，请先阅读 [电脑基础操作](/computer-basics)。
@@ -42,7 +42,7 @@ Codex 默认从当前用户的 `.codex` 文件夹读取两个必备文件：
 
 ## 第一步：安装 Node.js
 
-如果你已经完成 `OpenCode `教程中的 `Node.js 24` 安装，执行 `node -v` 和 `npm -v` 能显示版本号，可以直接跳到下一步。
+如果你已经完成 OpenCode 教程中的 Node.js 24 安装，执行 `node -v` 和 `npm -v` 能显示版本号，可以直接跳到下一步。
 
 <Tabs>
   <Tab title="Windows">
@@ -86,7 +86,7 @@ Codex 默认从当前用户的 `.codex` 文件夹读取两个必备文件：
 
 ## 第二步：安装 Codex CLI
 
-`Windows`、`macOS` 和 `Linux `都使用同一条`npm` 命令：
+Windows、macOS 和 Linux 都使用同一条 `npm` 命令：
 
 ```bash
 npm install -g @openai/codex
@@ -126,17 +126,26 @@ codex --version
 
 <Tabs>
   <Tab title="Windows">
-    打开Windows电脑的资源管理器，打开C盘用户目录下的.codex文件夹，这个文件夹是隐藏目录来的，你得打开查看里面的隐藏目录才能看得见，如下图所示。
-
     创建文件前，先打开任意文件夹，点击顶部的 **查看**，勾选 **文件扩展名** 和 **隐藏的项目**。
-
-    如果没有这个目录的话你就先打开一下`chatGPT`这个桌面端，然后他就会自动创建了。
 
     <Frame>
       ![Windows 文件资源管理器中显示文件扩展名和隐藏项目](/images/image-29.png)
     </Frame>
 
     _勾选这两个选项后，才能确认文件是否真的以 `.toml` 或 `.json` 结尾。_
+
+    然后点击 **开始菜单**，搜索并打开 **Windows PowerShell**。
+
+    <Frame>
+      ![Windows 开始菜单中搜索 Windows PowerShell](/images/image-30.png)
+    </Frame>
+
+    复制下面两行到 PowerShell，按 Enter 执行：
+
+    ```powershell
+    New-Item -ItemType Directory -Force "$HOME\.codex"
+    notepad "$HOME\.codex\config.toml"
+    ```
 
     记事本询问是否创建文件时选择 **是**。保存时按 `Ctrl+S`。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `config.toml`，而不是 `config.toml.txt`。
   </Tab>
@@ -158,7 +167,7 @@ codex --version
 
 ## 第五步：写入 Xcompute 接口配置
 
-将下面内容完整粘贴到 `config.toml` 和`auth.json` 里面，如果没有这两个文件就自己创建。
+将下面内容完整粘贴到 `config.toml`：
 
 <Frame>
   ![Xcompute 控制台中的 Codex CLI 配置复制入口](/images/image-31.png)
@@ -171,16 +180,17 @@ _在 Xcompute 控制台选择模型和 Codex CLI 后，可以分别复制 `confi
 </Note>
 
 ```toml
-model_provider = "OpenAI"
+model_provider = "xcompute"
 model = "gpt-5.6-sol"
 review_model = "gpt-5.6-sol"
 model_reasoning_effort = "xhigh"
 disable_response_storage = true
 network_access = "enabled"
 windows_wsl_setup_acknowledged = true
+cli_auth_credentials_store = "file"
 
-[model_providers.OpenAI]
-name = "OpenAI"
+[model_providers.xcompute]
+name = "Xcompute"
 base_url = "https://intl.dualseason.com/v1"
 wire_api = "responses"
 requires_openai_auth = true
@@ -206,6 +216,44 @@ requires_openai_auth = true
 
 <Warning>
   不要把 `wire_api` 写成 `chat`。当前 Codex 应使用 `responses`。
+</Warning>
+
+## 第六步：创建 `auth.json`
+
+`auth.json` 与 `config.toml` 位于同一个 `.codex` 文件夹，用于保存 Xcompute API Key。
+
+<Tabs>
+  <Tab title="Windows">
+    在 PowerShell 中执行：
+
+    ```powershell
+    notepad "$HOME\.codex\auth.json"
+    ```
+
+    记事本询问是否创建文件时选择 **是**。粘贴下方 JSON 后按 `Ctrl+S` 保存。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `auth.json`，而不是 `auth.json.txt`。
+  </Tab>
+  <Tab title="macOS / Linux">
+    在终端中执行：
+
+    ```bash
+    nano ~/.codex/auth.json
+    ```
+
+    粘贴下方 JSON 后，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
+  </Tab>
+</Tabs>
+
+把 `在这里填写你的APIKey` 替换为你的 Xcompute API Key：
+
+```json
+{
+  "auth_mode": "apikey",
+  "OPENAI_API_KEY": "在这里填写你的APIKey"
+}
+```
+
+<Warning>
+  `auth.json` 包含明文 API Key。不要上传到 GitHub、发送给他人或在截图中展示。JSON 最后一项后面不能有逗号。
 </Warning>
 
 ### Windows 最终文件位置
@@ -310,3 +358,4 @@ base_url = "https://intl.dualseason.com/v1"
 - [Codex 官方仓库](https://github.com/openai/codex)
 - [Codex App 官方页面](https://chatgpt.com/codex?app-landing-page=true)
 - [Codex 官方文档](https://developers.openai.com/codex)
+- [Xcompute API Key](https://xcompute.us/keys)
