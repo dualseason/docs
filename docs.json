@@ -83,7 +83,7 @@
         ]
       },
       {
-        "tab": "模型指南",
+        "tab": "深入模型",
         "groups": [
           {
             "group": "基础与选型",
@@ -91,6 +91,12 @@
               "guides/llm-fundamentals",
               "guides/open-source-models",
               "guides/closed-source-models"
+            ]
+          },
+          {
+            "group": "Agent 实战",
+            "pages": [
+              "deepagents-in-action"
             ]
           }
         ]
@@ -199,12 +205,6 @@
               "n8n"
             ]
           }
-        ]
-      },
-      {
-        "tab": "其他",
-        "pages": [
-          "deepagents-in-action"
         ]
       }
     ]
