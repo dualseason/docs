@@ -200,6 +200,12 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "其他",
+        "pages": [
+          "deepagents-in-action"
+        ]
       }
     ]
   },
