@@ -67,19 +67,39 @@
     "tabs": [
       {
         "tab": "快速开始",
-        "pages": [
-          "file",
-          "agent",
-          "computer-basics",
-          "opencode-install",
-          "codex-cli-app",
-          "claude-code-cli-app",
-          "cc-switch",
-          "codex-plus-plus",
-          "codexhub",
-          "kelivo",
-          "codex-install",
-          "codex-jailbreak"
+        "groups": [
+          {
+            "group": "入门必读",
+            "pages": [
+              "file",
+              "agent",
+              "computer-basics"
+            ]
+          },
+          {
+            "group": "编程 Agent 安装",
+            "pages": [
+              "opencode-install",
+              "codex-cli-app",
+              "claude-code-cli-app",
+              "codex-install"
+            ]
+          },
+          {
+            "group": "第三方客户端与管理工具",
+            "pages": [
+              "cc-switch",
+              "codex-plus-plus",
+              "codexhub",
+              "kelivo"
+            ]
+          },
+          {
+            "group": "进阶指南",
+            "pages": [
+              "codex-jailbreak"
+            ]
+          }
         ]
       },
       {
