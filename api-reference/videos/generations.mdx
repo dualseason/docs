@@ -1,10 +1,10 @@
 ---
 title: '统一视频生成'
-description: '通过同一个异步接口调用 Grok、Veo 3.1、Sora 2 和 Seedance 视频模型。'
+description: '通过同一个异步接口调用 Veo 3.1、Sora 2 和 Seedance 视频模型。'
 api: 'POST /v1/video/generations'
 ---
 
-使用统一接口提交文生视频或图生视频任务。Grok、Veo 3.1、Sora 2 和 Seedance 使用相同的提交与查询流程。
+使用统一接口提交文生视频或图生视频任务。Veo 3.1、Sora 2 和 Seedance 使用相同的提交与查询流程。
 
 <Info>
   视频生成是异步任务。提交成功后保存 `task_id`，再通过 `GET /v1/tasks/{task_id}` 查询状态和结果。
@@ -14,7 +14,6 @@ api: 'POST /v1/video/generations'
 
 | 模型 | 说明 |
 | --- | --- |
-| `grok-imagine-video-1.5` | Grok 文生视频与单图生视频 |
 | `veo-3.1-flash` | Veo 3.1 快速视频生成 |
 | `veo-3.1-pro` | Veo 3.1 高质量视频生成 |
 | `sora-2` | Sora 2 标准视频生成 |
@@ -71,7 +70,6 @@ api: 'POST /v1/video/generations'
 | --- | --- | --- | --- |
 | `sora-2` | `8` 或 `12` 秒，默认 `8` | `1280x720` 或 `720x1280`，仅 720p | 支持参考图片，不支持参考视频或音频 |
 | Veo 3.1 | 默认 `8` 秒 | 使用 `metadata.aspectRatio` 和 `metadata.resolution` 控制；支持范围由上游渠道决定 | 支持单张参考图片 |
-| Grok | 由当前渠道决定 | 使用 `size` 或 `aspect_ratio` | 支持单张或多张参考图片字段 |
 | Seedance 1.0 | `10` 秒可选择对应的 10 秒模型变体；其他时长由渠道决定 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
 | `seedance-1.5-pro` | `10` 或 `12` 秒可选择对应时长变体 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
 | Seedance 2.0 | 由当前渠道决定；部分渠道支持 `4` 到 `15` 秒并默认 `5` 秒 | 使用 `aspect_ratio` 和 `resolution` | 支持参考图片，数量限制由渠道决定 |
@@ -92,23 +90,6 @@ curl --request POST 'https://xcompute.us/v1/video/generations' \
     "prompt": "清晨的海边公路，一辆复古汽车驶过，电影感跟拍镜头",
     "seconds": "8",
     "size": "1280x720"
-  }'
-```
-</RequestExample>
-
-## 图生视频示例
-
-<RequestExample>
-```bash cURL
-curl --request POST 'https://xcompute.us/v1/video/generations' \
-  --header 'Authorization: Bearer YOUR_API_KEY' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "model": "grok-imagine-video-1.5",
-    "prompt": "保持主体外观一致，人物缓慢转头看向窗外",
-    "image": "https://example.com/input.png",
-    "seconds": "8",
-    "aspect_ratio": "16:9"
   }'
 ```
 </RequestExample>
