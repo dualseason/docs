@@ -151,7 +151,8 @@
           {
             "group": "视频生成",
             "pages": [
-              "api-reference/videos/generations"
+              "api-reference/videos/generations",
+              "api-reference/videos/grok-imagine-video-1.5"
             ]
           },
           {

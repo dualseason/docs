@@ -186,4 +186,8 @@ curl --request GET \
 
 ## OpenAI 兼容入口
 
-需要使用 OpenAI Videos API 路径时，也可以将同一请求发送到 `POST /v1/videos`，并通过 `GET /v1/videos/{task_id}` 查询。新接入建议使用本页的统一接口和统一任务查询流程。
+需要使用 OpenAI Videos API 路径时，也可以通过 `POST /v1/videos` 创建任务，并通过 `GET /v1/videos/{task_id}` 查询。该入口使用 `multipart/form-data`，与本页的统一 JSON 请求格式不同。
+
+<Card title="Grok Imagine 1.5 视频生成" icon="video" href="/api-reference/videos/grok-imagine-video-1.5">
+  查看 Grok 的 multipart 参数、任务查询、视频下载、参考图限制和完整示例。
+</Card>

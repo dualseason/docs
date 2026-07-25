@@ -1,0 +1,245 @@
+---
+title: 'Grok Imagine 1.5 视频生成'
+description: '使用 OpenAI Videos 兼容接口创建 Grok 文生视频和参考图视频任务。'
+api: 'POST /v1/videos'
+---
+
+`grok-imagine-video-1.5` 使用异步 OpenAI Videos 兼容协议。创建任务后保存公开 `task_id`，再查询任务状态和获取视频。
+
+<Info>
+  推荐模型名为 `grok-imagine-video-1.5`。兼容别名 `grok-imagine-1.5-video` 仅用于已有客户端，新接入不要使用别名。
+</Info>
+
+## 接口概览
+
+| 操作 | 方法与路径 |
+| --- | --- |
+| 创建任务 | `POST /v1/videos` |
+| 查询任务 | `GET /v1/videos/{task_id}` |
+| 获取视频内容 | `GET /v1/videos/{task_id}/content` |
+
+所有请求都需要以下鉴权头：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+## 支持参数
+
+| 参数 | 必填 | 说明 |
+| --- | --- | --- |
+| `model` | 是 | 固定使用 `grok-imagine-video-1.5` |
+| `prompt` | 是 | 视频主体、动作、镜头、场景和风格描述 |
+| `seconds` | 是 | `6`、`10`、`12`、`16` 或 `20` |
+| `size` | 是 | 横屏 `1280x720` 或竖屏 `720x1280` |
+| `quality` | 是 | 固定使用 `high` |
+| `input_reference` | 否 | JPEG、PNG 或 WebP 参考图文件，单张不超过 20 MB |
+
+请求必须使用 `multipart/form-data`。不要手动填写 multipart boundary，让 HTTP 客户端自动生成 `Content-Type`。
+
+<Warning>
+  当前渠道的参考图转发不稳定，图生视频可能返回 `decode_input_reference_failed_at_index_0`、`Uploaded file must be an image` 或渠道熔断错误。文生视频不经过参考图解析链路，稳定性更高。生产环境接入图生视频前请先完成实际验证。
+</Warning>
+
+## 文生视频
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/videos' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Accept: application/json' \
+  --form 'model=grok-imagine-video-1.5' \
+  --form 'prompt=清晨的海边公路，一辆复古汽车向前行驶，镜头平稳跟拍，电影质感' \
+  --form 'seconds=6' \
+  --form 'size=1280x720' \
+  --form 'quality=high'
+```
+</RequestExample>
+
+## 图生视频
+
+重复使用同一个 `input_reference` 字段可以提交多张参考图。不要使用 `input_reference[]`、`image` 或 `images` 代替该字段。
+
+<RequestExample>
+```bash cURL
+curl --request POST 'https://xcompute.us/v1/videos' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Accept: application/json' \
+  --form 'model=grok-imagine-video-1.5' \
+  --form 'prompt=保持参考图中的人物和场景一致，人物缓慢转头，镜头轻微向前推进' \
+  --form 'seconds=10' \
+  --form 'size=720x1280' \
+  --form 'quality=high' \
+  --form 'input_reference=@./reference-1.jpg;type=image/jpeg' \
+  --form 'input_reference=@./reference-2.png;type=image/png'
+```
+</RequestExample>
+
+<Note>
+  接口不直接接收参考视频或参考音频。需要基于视频生成时，请在客户端提取视频首个可解码画面，将其转换为 JPEG、PNG 或 WebP，再作为 `input_reference` 提交。视频首帧方案本质上仍是图生视频，并非直接的视频编辑。
+</Note>
+
+## 创建响应
+
+创建成功只表示任务已经进入异步队列。
+
+<ResponseExample>
+```json 200
+{
+  "id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "task_id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "request_id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "object": "video",
+  "model": "grok-imagine-video-1.5",
+  "status": "queued",
+  "progress": 0,
+  "created_at": 1784984895,
+  "seconds": "6",
+  "size": "1280x720"
+}
+```
+</ResponseExample>
+
+客户端必须保存响应中的公开 `task_id`。后续查询和下载应继续使用创建任务时相同的 API Key。
+
+## 查询任务
+
+```bash
+curl --request GET \
+  --url 'https://xcompute.us/v1/videos/task_01KXXXXXXXXXXXXXXXXXXXX' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Accept: application/json'
+```
+
+建议每 5 秒查询一次。视频生成时间可能超过 5 分钟，客户端建议保留至少 30 分钟的轮询窗口。
+
+| `status` | 含义 | 客户端操作 |
+| --- | --- | --- |
+| `queued` | 已排队 | 继续查询 |
+| `in_progress` / `processing` | 正在生成 | 继续查询 |
+| `completed` | 生成成功 | 读取结果 URL 或获取视频内容 |
+| `failed` / `cancelled` | 任务失败 | 显示 `error.message` 并停止查询 |
+
+<Warning>
+  不要仅凭 `progress: 100` 判断任务成功。上游可能在进度达到 100 后仍返回 `in_progress`，只有 `status: completed` 且存在有效视频结果时才算成功。
+</Warning>
+
+成功响应可能直接包含临时视频地址：
+
+<ResponseExample>
+```json 200
+{
+  "id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "task_id": "task_01KXXXXXXXXXXXXXXXXXXXX",
+  "object": "video",
+  "model": "grok-imagine-video-1.5",
+  "status": "completed",
+  "progress": 100,
+  "result_url": "https://object.example.com/temporary-video/result.mp4",
+  "video_url": "https://object.example.com/temporary-video/result.mp4",
+  "url": "https://object.example.com/temporary-video/result.mp4"
+}
+```
+</ResponseExample>
+
+结果 URL 是临时地址。下载后请保存到自己的持久存储，不要将其作为永久素材地址。
+
+## 获取视频内容
+
+如果查询响应没有直接返回结果 URL，或者你希望始终通过鉴权接口下载，可以使用：
+
+```bash
+curl --location \
+  --url 'https://xcompute.us/v1/videos/task_01KXXXXXXXXXXXXXXXXXXXX/content' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --output output.mp4
+```
+
+浏览器不能把需要 Bearer Token 的 `/content` 地址直接写入 `<video src>`。请先使用带鉴权头的 `fetch` 下载 Blob，再用 `URL.createObjectURL` 播放。
+
+## JavaScript 完整示例
+
+```javascript
+const baseUrl = "https://xcompute.us"
+const apiKey = "YOUR_API_KEY"
+
+const form = new FormData()
+form.append("model", "grok-imagine-video-1.5")
+form.append("prompt", "一只橘猫在窗边缓慢转头，镜头稳定，柔和自然光")
+form.append("seconds", "6")
+form.append("size", "1280x720")
+form.append("quality", "high")
+
+let response = await fetch(`${baseUrl}/v1/videos`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+    Accept: "application/json",
+  },
+  body: form,
+})
+
+if (!response.ok) throw new Error(await response.text())
+const created = await response.json()
+const taskId = created.task_id || created.id
+
+const deadline = Date.now() + 30 * 60 * 1000
+let completed
+
+while (Date.now() < deadline) {
+  await new Promise((resolve) => setTimeout(resolve, 5000))
+  response = await fetch(`${baseUrl}/v1/videos/${encodeURIComponent(taskId)}`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  })
+  if (!response.ok) throw new Error(await response.text())
+
+  const task = await response.json()
+  const status = String(task.status || "").toLowerCase()
+  if (status === "completed") {
+    completed = task
+    break
+  }
+  if (["failed", "cancelled"].includes(status)) {
+    throw new Error(task.error?.message || "视频生成失败")
+  }
+}
+
+if (!completed) throw new Error("视频仍在生成，请保存 task_id 后继续查询")
+
+const resultUrl = completed.result_url || completed.video_url || completed.url
+if (resultUrl) {
+  document.querySelector("video").src = resultUrl
+} else {
+  response = await fetch(`${baseUrl}/v1/videos/${encodeURIComponent(taskId)}/content`, {
+    headers: { Authorization: `Bearer ${apiKey}` },
+  })
+  if (!response.ok) throw new Error(await response.text())
+  document.querySelector("video").src = URL.createObjectURL(await response.blob())
+}
+```
+
+## 常见错误
+
+| 错误 | 原因与处理 |
+| --- | --- |
+| `insufficient_user_quota` | 余额不足以完成视频预扣费。充值或降低生成时长后重试。 |
+| `do request failed` | 网关连接上游失败，常见原因是 TLS 握手或网络超时。确认扣费已退回后再重试。 |
+| `decode_input_reference_failed_at_index_0` | 上游未正确解析参考图。确认文件是真实 JPEG、PNG 或 WebP；当前渠道仍可能出现该问题。 |
+| `channel_circuit_open` | 上游连续失败后触发临时熔断。等待错误提示中的恢复时间后再试。 |
+| 长时间停在 `100% / in_progress` | 上游尚未返回最终视频 URL。继续查询，不能强制当作成功。 |
+| `视频生成超时` | 客户端停止等待，但后端任务不一定失败。保存 `task_id` 并继续查询原任务，不要立即重复创建。 |
+
+## 重试与计费
+
+- 创建失败且没有返回 `task_id` 时，先检查错误和余额是否已经返还。
+- 创建请求超时后不要立即并发重试。请求可能已经到达上游，重复提交可能创建多个任务。
+- 已经获得 `task_id` 时，只查询原任务，不要再次创建。
+- 视频按实际站点价格和时长预扣费。请以模型广场或账户账单显示为准。
+- 失败任务的退款状态以账户账单为准。如发现未退款，请提供公开 `task_id` 和请求 ID 联系支持。
+
+## 安全建议
+
+- 不要在公开仓库、浏览器日志或错误截图中暴露完整 API Key。
+- 服务端调用优先于公开网页内硬编码 API Key。
+- 保存任务日志时只记录公开 `task_id`、HTTP 状态和脱敏错误。
+- 临时结果下载完成后应转存到自己的持久存储。
