@@ -1,0 +1,143 @@
+---
+title: 'GPT Image 2 异步图像生成'
+description: '提交 gpt-image-2-async 任务并轮询获取 1K、2K 或 4K 图片。'
+api: 'POST /v1/images/generations/async'
+---
+
+`gpt-image-2-async` 会立即返回任务 ID。你可以通过统一任务查询接口轮询状态，不需要保持生成请求的 HTTP 连接。
+
+## 价格
+
+| 分辨率 | 推荐 `size` | 单张价格 |
+| --- | --- | --- |
+| 1K | `1024x1024` | $0.03 |
+| 2K | `2048x2048` | $0.045 |
+| 4K | `4096x4096` | $0.045 |
+
+异步和同步模型使用相同的分辨率倍率与计费规则。
+
+## 提交任务
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/images/generations/async \
+    --header 'Authorization: Bearer <token>' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-image-2-async",
+      "prompt": "未来城市夜景，电影感灯光，无文字",
+      "size": "4096x4096",
+      "quality": "medium",
+      "n": 1,
+      "response_format": "url"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  headers = {
+      "Authorization": "Bearer <token>",
+      "Content-Type": "application/json",
+  }
+
+  task = requests.post(
+      "https://xcompute.us/v1/images/generations/async",
+      headers=headers,
+      json={
+          "model": "gpt-image-2-async",
+          "prompt": "未来城市夜景，电影感灯光，无文字",
+          "size": "4096x4096",
+          "quality": "medium",
+          "n": 1,
+          "response_format": "url",
+      },
+      timeout=30,
+  ).json()
+
+  print(task["task_id"])
+  ```
+</RequestExample>
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "task_mpoMLrCRXOvEWSJVlQ3XdwEAHFQYZZo5",
+    "task_id": "task_mpoMLrCRXOvEWSJVlQ3XdwEAHFQYZZo5",
+    "object": "image_generation",
+    "created_at": 1785781080,
+    "model": "gpt-image-2-async",
+    "status": "queued"
+  }
+  ```
+</ResponseExample>
+
+请求参数与同步接口一致，但 `model` 必须填写 `gpt-image-2-async`。支持 `auto`、`low`、`medium`、`high` 四种质量。
+
+## 查询任务
+
+使用提交响应中的 `task_id` 查询结果：
+
+```bash cURL theme={null}
+curl --request GET \
+  --url https://xcompute.us/v1/tasks/task_mpoMLrCRXOvEWSJVlQ3XdwEAHFQYZZo5 \
+  --header 'Authorization: Bearer <token>'
+```
+
+任务完成后返回统一结果：
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "status": "completed",
+    "task_id": "task_mpoMLrCRXOvEWSJVlQ3XdwEAHFQYZZo5",
+    "progress": "100%",
+    "result_url": "https://example.com/generated-image.png",
+    "mime_type": "image/png",
+    "result": {
+      "model": "gpt-image-2",
+      "data": [
+        {
+          "url": "https://example.com/generated-image.png"
+        }
+      ]
+    }
+  }
+  ```
+</ResponseExample>
+
+优先读取顶层 `result_url`。如果为空，再读取 `result.data[0].url`。
+
+## 状态说明
+
+| `status` | 含义 |
+| --- | --- |
+| `queued` | 已进入队列 |
+| `processing` | 正在生成 |
+| `completed` | 已完成，可以读取结果 |
+| `failed` | 生成失败，查看 `message` |
+
+建议每 3 到 5 秒查询一次，最长等待 10 分钟。客户端取消轮询不会取消服务端任务。
+
+## 异步图像编辑
+
+带参考图时使用 `POST /v1/images/edits/async`，模型仍填写 `gpt-image-2-async`：
+
+```bash cURL theme={null}
+curl --request POST \
+  --url https://xcompute.us/v1/images/edits/async \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-image-2-async",
+    "prompt": "把主体改成水彩画风格",
+    "images": ["https://example.com/reference.png"],
+    "size": "2048x2048",
+    "quality": "medium"
+  }'
+```
+
+## 输出尺寸说明
+
+XCompute 按请求中的 `size` 选择 1K、2K 或 4K 路由并计费。异步上游可能根据模型能力调整最终像素尺寸，因此最终图片尺寸应以下载后的文件为准。例如，正方形 1K 或 4K 请求可能返回接近该档位、但不严格等于 `1024x1024` 或 `4096x4096` 的 PNG。

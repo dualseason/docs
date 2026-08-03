@@ -1,0 +1,243 @@
+---
+title: 'DualSeason Duomi SUNO'
+description: '在 dualseason.com 生成音乐和歌词，并处理、上传或查询 SUNO 音频任务。'
+---
+
+Duomi SUNO 仅在 `https://dualseason.com` 提供。除老版歌词外，接口均采用异步任务模式：提交后保存公开 `task_id`，再查询任务状态和结果。
+
+## 操作与价格
+
+| Action | 模型 | 用途 | 价格 |
+| --- | --- | --- | --- |
+| `music` | `suno_music` | 生成音乐，通常返回两个候选 | $0.40/次 |
+| `lyrics` | `suno_lyrics` | 老版同步歌词生成 | $0.003/次 |
+| `lyrics-v2` | `suno_lyrics-v2` | 新版异步歌词生成 | $0.003/次 |
+| `concat` | `suno_concat` | 将续写部分合并为完整歌曲 | $0.003/次 |
+| `video` | `suno_video` | 生成音乐视频 | $0.005/次 |
+| `wav` | `suno_wav` | 将音乐转换为 WAV | $0.005/次 |
+| `speed` | `suno_speed` | 调整播放速度 | $0.001/次 |
+| `crop` | `suno_crop` | 裁剪音乐 | $0.001/次 |
+| `timing` | `suno_timing` | 生成歌词音频时间线 | $0.002/次 |
+| `upload` | `suno_upload` | 上传公网音频 | 免费 |
+| `midi` | `suno_midi` | 生成 MIDI | $0.005/次 |
+| `add-instrumental` | `suno_add-instrumental` | 为上传音频添加伴奏 | $0.40/次 |
+| `add-vocals` | `suno_add-vocals` | 为上传音频添加人声 | $0.40/次 |
+
+<Info>
+  查询任务不单独计费。异步任务提交失败或最终生成失败时，系统会退还本次预扣费用。
+</Info>
+
+## 生成音乐
+
+使用 `POST /suno/submit/music` 提交音乐任务。
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://dualseason.com/suno/submit/music \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "custom_mode": 0,
+      "make_instrumental": true,
+      "gpt_description_prompt": "A calm ambient piano piece",
+      "mv": "chirp-v4"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.post(
+      "https://dualseason.com/suno/submit/music",
+      headers={"Authorization": "Bearer YOUR_API_KEY"},
+      json={
+          "custom_mode": 0,
+          "make_instrumental": True,
+          "gpt_description_prompt": "A calm ambient piano piece",
+          "mv": "chirp-v4",
+      },
+      timeout=60,
+  )
+  response.raise_for_status()
+  print(response.json())
+  ```
+</RequestExample>
+
+<ParamField body="custom_mode" type="boolean | integer">
+  使用自定义模式。可传 `true`、`false`、`1` 或 `0`。
+</ParamField>
+
+<ParamField body="gpt_description_prompt" type="string">
+  非自定义模式下的歌曲描述。
+</ParamField>
+
+<ParamField body="prompt" type="string">
+  自定义模式下的歌词内容。纯音乐任务可以留空。
+</ParamField>
+
+<ParamField body="tags" type="string">
+  自定义模式下的风格标签，例如 `ambient, piano`。
+</ParamField>
+
+<ParamField body="title" type="string">
+  自定义模式下的歌曲标题。
+</ParamField>
+
+<ParamField body="make_instrumental" type="boolean">
+  是否生成纯音乐。
+</ParamField>
+
+<ParamField body="mv" type="string">
+  SUNO 模型版本。示例使用 `chirp-v4`。
+</ParamField>
+
+## 生成歌词
+
+老版歌词使用 `POST /suno/submit/lyrics`。它是同步接口，通常需要约 20 秒，成功后直接返回标题和歌词。
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/lyrics \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{"prompt":"A short song about summer rain"}'
+```
+
+新版歌词使用 `POST /suno/submit/lyrics-v2`。它会返回公开任务 ID，之后通过查询接口获取结果。
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/lyrics-v2 \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{"prompt":"A short song about summer rain"}'
+```
+
+## 上传音频
+
+使用 `POST /suno/submit/upload` 提交公网音频 URL。默认扩展名为 `mp3`。
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/upload \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "file":"https://example.com/input.mp3",
+    "extension":"mp3"
+  }'
+```
+
+<Warning>
+  `file` 必须是 Duomi 可以访问的公网 HTTP(S) 音频 URL。重复录音、无效音频或不可访问的 URL 可能被上游拒绝。
+</Warning>
+
+## 音乐后处理
+
+以下操作都使用 `POST /suno/submit/{action}`。`task_id` 必须是原始 SUNO 上游任务 ID，可从音乐任务查询结果的 `task_id` 字段获取，不要传 DualSeason 的 `task_...` 公开 ID。
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/crop \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "task_id":"UPSTREAM_SUNO_TASK_ID",
+    "crop_start_s":0,
+    "crop_end_s":30,
+    "is_crop_remove":false
+  }'
+```
+
+| Action | 必填或常用字段 |
+| --- | --- |
+| `concat` | `task_id`，可选 `callback_url` |
+| `video` | `task_id` |
+| `wav` | `task_id` |
+| `speed` | `task_id`、`speed_multiplier`，可选 `keep_pitch` |
+| `crop` | `task_id`、`crop_start_s`、`crop_end_s`、`is_crop_remove` |
+| `timing` | `task_id` |
+| `midi` | `task_id` |
+
+## 添加伴奏或人声
+
+先通过 `upload` 上传音频，并从成功结果中取得 `clip_id`。
+
+添加伴奏：
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/add-instrumental \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "underpainting_clip_id":"UPLOADED_CLIP_ID",
+    "underpainting_start_s":0,
+    "underpainting_end_s":30,
+    "tags":"ambient, piano",
+    "title":"Add Instrumental"
+  }'
+```
+
+添加人声：
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/submit/add-vocals \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "overpainting_clip_id":"UPLOADED_CLIP_ID",
+    "overpainting_start_s":0,
+    "overpainting_end_s":30,
+    "prompt":"Lyrics to sing",
+    "tags":"soft pop vocal",
+    "title":"Add Vocals"
+  }'
+```
+
+## 提交响应
+
+异步操作提交成功后返回 DualSeason 公开任务 ID。音乐生成通常包含两个上游候选，但只返回一个公开任务 ID，也只计费一次。
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "code": "success",
+    "message": "success",
+    "data": "task_6uFdSiuEP0FJBCJMLG79IaaOZhRNfiPv"
+  }
+  ```
+</ResponseExample>
+
+## 查询任务
+
+使用提交响应中的公开任务 ID查询单个任务。建议每 5 至 10 秒查询一次。
+
+```bash
+curl --request GET \
+  --url https://dualseason.com/suno/fetch/YOUR_PUBLIC_TASK_ID \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+也可以批量查询：
+
+```bash
+curl --request POST \
+  --url https://dualseason.com/suno/fetch \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{"ids":["task_xxx","task_yyy"]}'
+```
+
+任务状态会映射为：
+
+- `queued`：等待处理。
+- `in_progress`：正在生成。
+- `completed`：生成成功。
+- `failed`：生成失败，查看结果中的 `msg` 或错误字段。
+
+<Info>
+  音乐生成成功后，结果通常包含两个候选对象。可从候选对象中的 `audio_url` 下载音频，并使用其中的 `task_id` 或 `clip_id` 发起后处理操作。
+</Info>
