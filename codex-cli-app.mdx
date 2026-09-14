@@ -1,361 +1,54 @@
 ---
-title: "Codex CLI 与桌面端配置"
-description: "手动安装 Codex CLI 和 Codex 桌面 App，通过共用的 config.toml 与 auth.json 接入 Xcompute。"
+title: "Codex 订阅与项目协作"
+description: "已有 Codex 订阅时，保留订阅并用 OpenCode 或 WorkBuddy 协作处理项目。"
 ---
 
-Codex CLI 和 Codex 桌面 App 使用同一个 `.codex` 目录。你需要创建 `config.toml` 和 `auth.json` 两个文件，配置一次后两边都能通过 Xcompute 使用 GPT 模型。
+如果你已经购买 Codex 官方订阅，继续在 Codex 官方 App 或 CLI 登录订阅账号即可。不要为了使用同一个项目再把 Xcompute API Key 配进 Codex。
 
 <Tip>
-  本教程只使用 OpenAI 官方 Codex 和系统自带的文本编辑器。**不需要安装 CC Switch、Codex\+\+、CodexHub，也不需要运行本地代理软件。**
+  对电脑初学者，推荐将 Codex 订阅、OpenCode 和 WorkBuddy 分工使用：Codex 保留官方订阅；OpenCode 处理代码；WorkBuddy 处理日常材料和说明文字。
 </Tip>
 
-<Warning>
-  普通 ChatGPT 聊天客户端与 Codex App 不是同一个功能。本文介绍的是 OpenAI 官方 Codex 桌面编程 App，它会读取 `.codex/config.toml` 和 `.codex/auth.json`。
-</Warning>
+## 先登录 Codex 订阅
 
-如果你不熟悉 PowerShell、终端、复制命令或配置文件，请先阅读 [电脑基础操作](/computer-basics)。
+1. 从 [Codex 官方页面](https://chatgpt.com/codex?app-landing-page=true) 安装或打开 Codex。
+2. 使用购买订阅的 OpenAI 账号登录。
+3. 按 Codex 界面提示选择或打开项目文件夹。
+4. 先输入“请分析这个项目，不要修改任何文件”，确认可以正常使用。
 
-## 你需要准备什么
+Codex 订阅按 OpenAI 官方规则计费。Xcompute API Key 是另一种独立的计费方式，两者不需要混用。
 
-1. 一台 Windows、macOS 或 Linux 电脑。
-2. 一个可用的 [Xcompute API Key](https://xcompute.us/keys)。
-3. Node.js 22 或更高版本，本文推荐 Node.js 24。
-4. Codex CLI，或 Windows/macOS 版 Codex App。
+## 如何与 OpenCode、WorkBuddy 协作
 
-## CLI 和 App 如何共用配置
+项目文件夹就是保存网站、程序或代码的文件夹，例如桌面的 `my-website` 文件夹。三个工具可以先后打开同一个项目文件夹。
 
-Codex 默认从当前用户的 `.codex` 文件夹读取两个必备文件：
+推荐工作顺序：
 
-| 系统 | 模型与接口配置 | API Key 配置 |
-| --- | --- | --- |
-| Windows | `%USERPROFILE%\.codex\config.toml` | `%USERPROFILE%\.codex\auth.json` |
-| macOS | `~/.codex/config.toml` | `~/.codex/auth.json` |
-| Linux | `~/.codex/config.toml` | `~/.codex/auth.json` |
-
-`config.toml` 保存模型、Base URL 和认证方式，`auth.json` 保存 API Key。
-
-同一台电脑、同一个系统账户下，`Codex CLI` 和 `Codex App` 都会读取这两个文件。
-
-<Note>
-  不要把配置放进项目里的 `.codex` 文件夹。两个文件都必须放在上表所示的用户级 `.codex` 目录中。
-</Note>
-
-## 第一步：安装 Node.js
-
-如果你已经完成 OpenCode 教程中的 Node.js 24 安装，执行 `node -v` 和 `npm -v` 能显示版本号，可以直接跳到下一步。
-
-<Tabs>
-  <Tab title="Windows">
-    点击 [下载 Node.js 24 Windows 64 位 MSI](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-x64.msi)，下载后双击安装，并使用默认选项完成安装。
-
-    安装完成后，点击 **开始菜单**，输入 `PowerShell` 并打开。执行：
-
-    ```powershell
-    node -v
-    npm -v
-    ```
-  </Tab>
-  <Tab title="macOS">
-    点击 [下载 Node.js 24 macOS PKG](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0.pkg)，下载后双击安装，并按照界面提示完成安装。
-
-    按 `Command + 空格键`，输入“终端”并打开。执行：
-
-    ```bash
-    node -v
-    npm -v
-    ```
-  </Tab>
-  <Tab title="Linux">
-    Debian 或 Ubuntu 执行：
-
-    ```bash
-    curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
-    sudo apt install -y nodejs
-    ```
-
-    Fedora 或 RHEL 执行：
-
-    ```bash
-    curl -fsSL https://rpm.nodesource.com/setup_24.x | sudo bash -
-    sudo dnf install -y nodejs
-    ```
-  </Tab>
-</Tabs>
-
-需要使用 NVM 或其他架构安装包时，请参考 [OpenCode 安装教程中的 Node.js 章节](/opencode-install#第一步直接安装-nodejs)。
-
-## 第二步：安装 Codex CLI
-
-Windows、macOS 和 Linux 都使用同一条 `npm` 命令：
-
-```bash
-npm install -g @openai/codex
-```
-
-安装完成后验证：
-
-```bash
-codex --version
-```
-
-看到 Codex 版本号即表示安装成功。
-
-<Info>
-  Windows 如果提示没有权限，请关闭 PowerShell，再右键选择 **以管理员身份运行**，然后重新执行安装命令。
-</Info>
-
-## 第三步：安装 Codex 桌面 App
-
-桌面端是可选项。只使用 CLI 的用户可以直接跳到“创建共用配置文件”。
-
-建议访问 [Codex App 官方页面](https://chatgpt.com/codex?app-landing-page=true) 获取最新版本，也可以使用下方下载入口：
-
-| 系统 | 下载地址 |
-| --- | --- |
-| macOS（Apple Silicon） | [下载 Codex DMG](https://persistent.oaistatic.com/codex-app-prod/Codex.dmg) |
-| macOS（Intel） | [下载 Codex Intel DMG](https://persistent.oaistatic.com/codex-app-prod/Codex-latest-x64.dmg) |
-| Windows（x64） | [下载 Codex App](https://get.microsoft.com/installer/download/9PLM9XGG6VKS?cid=website_cta_psi) |
-
-- macOS：打开 DMG，将 Codex 拖入 **Applications** 文件夹。
-- Windows：打开安装程序，按照界面提示完成安装。
-- Linux：目前优先使用 Codex CLI。
-
-安装完成后先不要急着开始任务。继续创建共用配置文件，配置完成后再重新打开 App。
-
-## 第四步：创建 `config.toml`
-
-<Tabs>
-  <Tab title="Windows">
-    创建文件前，先打开任意文件夹，点击顶部的 **查看**，勾选 **文件扩展名** 和 **隐藏的项目**。
-
-    <Frame>
-      ![Windows 文件资源管理器中显示文件扩展名和隐藏项目](/images/image-29.png)
-    </Frame>
-
-    _勾选这两个选项后，才能确认文件是否真的以 `.toml` 或 `.json` 结尾。_
-
-    然后点击 **开始菜单**，搜索并打开 **Windows PowerShell**。
-
-    <Frame>
-      ![Windows 开始菜单中搜索 Windows PowerShell](/images/image-30.png)
-    </Frame>
-
-    复制下面两行到 PowerShell，按 Enter 执行：
-
-    ```powershell
-    New-Item -ItemType Directory -Force "$HOME\.codex"
-    notepad "$HOME\.codex\config.toml"
-    ```
-
-    记事本询问是否创建文件时选择 **是**。保存时按 `Ctrl+S`。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `config.toml`，而不是 `config.toml.txt`。
-  </Tab>
-  <Tab title="macOS / Linux">
-    打开终端，执行：
-
-    ```bash
-    mkdir -p ~/.codex
-    nano ~/.codex/config.toml
-    ```
-
-    使用 nano 时，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
-  </Tab>
-</Tabs>
+1. 用 WorkBuddy 整理需求、客户材料或待办事项。
+2. 选择 Codex 或 OpenCode 其中一个修改项目代码。
+3. 修改完成后，运行测试或打开网站确认结果。
+4. 再用 WorkBuddy 整理修改说明、发布内容或交付清单。
 
 <Warning>
-  Windows 必须显示文件扩展名。最终文件名应为 `config.toml` 和 `auth.json`，不能是 `config.toml.txt` 或 `auth.json.txt`。
+  不要同时让 Codex 和 OpenCode 修改同一个文件。完成一个工具的任务后，先检查并保存文件，再关闭该工具或停止任务，然后再使用另一个工具。
 </Warning>
 
-## 第五步：写入 Xcompute 接口配置
+## 什么时候使用 OpenCode
 
-将下面内容完整粘贴到 `config.toml`：
+需要用 Xcompute 模型修改代码、在国内网络环境下进行代码任务，或者希望由 Xcompute API 计费时，请使用 [OpenCode 代码任务安装与配置](/opencode-install)。
 
-<Frame>
-  ![Xcompute 控制台中的 Codex CLI 配置复制入口](/images/image-31.png)
-</Frame>
-
-_在 Xcompute 控制台选择模型和 Codex CLI 后，可以分别复制 `config.toml` 与 `auth.json` 内容。_
-
-<Note>
-  上图用于说明复制入口。实际 Base URL 和字段请以下方代码为准，默认推荐使用 `https://intl.dualseason.com/v1`。
-</Note>
-
-```toml
-model_provider = "xcompute"
-model = "gpt-5.6-sol"
-review_model = "gpt-5.6-sol"
-model_reasoning_effort = "xhigh"
-disable_response_storage = true
-network_access = "enabled"
-windows_wsl_setup_acknowledged = true
-cli_auth_credentials_store = "file"
-
-[model_providers.xcompute]
-name = "Xcompute"
-base_url = "https://intl.dualseason.com/v1"
-wire_api = "responses"
-requires_openai_auth = true
-```
-
-保存文件后，继续创建 `auth.json`。缺少 `auth.json` 时，`Codex` 无法获得 `API Key`。
-
-<Info>
-  默认推荐使用 `https://intl.dualseason.com/v1`。如果你具备稳定的科学上网能力，可以把 `base_url` 改为 `https://xcompute.us/v1`。两个地址都必须保留末尾的 `/v1`。
-</Info>
-
-### 每个配置项有什么作用
-
-| 配置项 | 作用 |
-| --- | --- |
-| `model` | Codex 默认使用的模型 ID |
-| `model_provider` | 指定使用下面的 `xcompute` 提供商 |
-| `cli_auth_credentials_store` | 强制 Codex 从文件读取凭据，确保 CLI 和 App 共用 `auth.json` |
-| `name` | 在 Codex 中显示的提供商名称 |
-| `base_url` | Xcompute 接口地址，必须包含 `/v1` |
-| `wire_api` | Codex 当前使用 Responses API，应保持为 `responses` |
-| `requires_openai_auth` | 让当前提供商读取 Codex 保存的 API Key |
-
-<Warning>
-  不要把 `wire_api` 写成 `chat`。当前 Codex 应使用 `responses`。
-</Warning>
-
-## 第六步：创建 `auth.json`
-
-`auth.json` 与 `config.toml` 位于同一个 `.codex` 文件夹，用于保存 Xcompute API Key。
-
-<Tabs>
-  <Tab title="Windows">
-    在 PowerShell 中执行：
-
-    ```powershell
-    notepad "$HOME\.codex\auth.json"
-    ```
-
-    记事本询问是否创建文件时选择 **是**。粘贴下方 JSON 后按 `Ctrl+S` 保存。如果出现“另存为”，将 **保存类型** 改为 **所有文件**，确保文件名是 `auth.json`，而不是 `auth.json.txt`。
-  </Tab>
-  <Tab title="macOS / Linux">
-    在终端中执行：
-
-    ```bash
-    nano ~/.codex/auth.json
-    ```
-
-    粘贴下方 JSON 后，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
-  </Tab>
-</Tabs>
-
-把 `在这里填写你的APIKey` 替换为你的 Xcompute API Key：
-
-```json
-{
-  "auth_mode": "apikey",
-  "OPENAI_API_KEY": "在这里填写你的APIKey"
-}
-```
-
-<Warning>
-  `auth.json` 包含明文 API Key。不要上传到 GitHub、发送给他人或在截图中展示。JSON 最后一项后面不能有逗号。
-</Warning>
-
-### Windows 最终文件位置
-
-两个文件创建并保存后，可以在 `C:\Users\你的用户名\.codex` 文件夹中看到它们：
-
-<Frame>
-  ![Windows 用户目录下的 Codex config.toml 和 auth.json](/images/image-27.png)
-</Frame>
-
-_地址栏应位于当前用户的 `.codex` 文件夹，文件类型应分别显示为 TOML 和 JSON。_
-
-### 两个文件缺一不可
-
-| 文件 | 缺失后的结果 |
-| --- | --- |
-| `config.toml` | Codex 不知道要使用哪个模型和 Base URL |
-| `auth.json` | Codex 找不到 Xcompute API Key，会提示未登录或未授权 |
-
-## 第七步：启动并验证
-
-### 验证 Codex CLI
-
-先完全关闭之前打开的 Codex，再重新打开 PowerShell 或终端。进入你的项目目录：
-
-```bash
-cd /path/to/your-project
-codex
-```
-
-进入 Codex 后，先输入一个不会修改文件的任务：
-
-```text
-请告诉我你当前使用的模型，并分析这个项目的目录结构，不要修改任何文件。
-```
-
-能正常返回内容，说明 Xcompute 配置已经生效。
-
-### 验证 Codex App
-
-1. 完全退出 Codex App。
-2. 确认 `config.toml` 和 `auth.json` 都已保存。
-3. 重新打开 Codex App。
-4. 选择一个测试项目文件夹。
-5. 输入“分析这个项目，不要修改文件”。
-
-App 和 CLI 使用相同系统账户时，会共同读取这两个文件，不需要再次填写 Base URL 和 API Key。
-
-## 如何切换模型
-
-最简单的方法是修改 `config.toml` 第一行：
-
-```toml
-model = "其他模型ID"
-```
-
-模型 ID 必须与 [Xcompute 模型定价页面](https://xcompute.us/pricing) 中显示的 ID 完全一致。保存后，完全退出并重新打开 Codex CLI 或 App。
-
-CLI 中也可以输入 `/model` 查看当前版本支持的模型切换功能。
+OpenCode 桌面端和 Codex 都可以打开同一个项目文件夹。打开文件夹前，确认没有未保存的改动。
 
 ## 常见问题
 
-### `codex` 命令不存在
+### 我有 Codex 订阅，还需要 API Key 吗？
 
-关闭并重新打开 PowerShell 或终端，再执行：
+只使用 Codex 订阅时不需要。只有使用 OpenCode 调用 Xcompute 时，才需要 Xcompute API Key。
 
-```bash
-node -v
-npm -v
-npm install -g @openai/codex
-codex --version
-```
+### 我能让 WorkBuddy 修改代码吗？
 
-### App 没有读取新配置
+WorkBuddy 适合需求整理、资料处理和日常内容。代码修改优先使用 OpenCode 或 Codex。
 
-1. 确认 App 和 CLI 使用的是同一个电脑账户。
-2. 确认 `config.toml` 和 `auth.json` 都位于用户目录的 `.codex` 文件夹。
-3. Windows 检查文件是否被保存成 `config.toml.txt` 或 `auth.json.txt`。
-4. 确认 `config.toml` 包含 `cli_auth_credentials_store = "file"`。
-5. 完全退出 App，而不是只关闭当前项目窗口，然后重新打开。
+### 为什么打开后看不到我的项目？
 
-### 提示未授权或 API Key 无效
-
-确认：
-
-1. `auth.json` 中包含 `"auth_mode": "apikey"`。
-2. `OPENAI_API_KEY` 的值没有前后空格。
-3. API Key 仍然有效且账户有可用额度。
-4. `config.toml` 中的 `requires_openai_auth` 是 `true`。
-5. `base_url` 包含 `/v1`，`wire_api` 是 `responses`。
-
-### 以前使用过切换工具或本地代理
-
-本教程不需要任何本地代理。检查 `base_url`，不要使用 `127.0.0.1` 或 `localhost` 地址。配置应直接指向：
-
-```toml
-base_url = "https://intl.dualseason.com/v1"
-```
-
-## 官方资源
-
-- [Codex 官方仓库](https://github.com/openai/codex)
-- [Codex App 官方页面](https://chatgpt.com/codex?app-landing-page=true)
-- [Codex 官方文档](https://developers.openai.com/codex)
-- [Xcompute API Key](https://xcompute.us/keys)
+在工具中选择 **打开文件夹** 或 **Open Folder**，然后选择实际保存代码的项目文件夹。不要选择单个文件，也不要选择下载目录中的压缩包。

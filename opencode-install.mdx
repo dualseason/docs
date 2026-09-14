@@ -1,14 +1,16 @@
 ---
-title: "OpenCode 安装与配置（推荐）"
-description: "在 Windows、macOS 和 Linux 上安装 OpenCode，并配置 Xcompute 模型服务。"
+title: "OpenCode 代码任务安装与配置"
+description: "在 Windows、macOS 和 Linux 上安装 OpenCode，并用 Xcompute 完成代码任务。"
 ---
+
+OpenCode 用于修改网站、程序和项目文件。写邮件、整理资料等日常工作请使用 [WorkBuddy](/workbuddy)。
 
 这篇教程使用同一套流程完成 OpenCode 安装和 Xcompute 配置：
 
 1. 安装 Node.js 24。
 2. 使用 npm 安装 OpenCode CLI。
 3. 修改 `.config/opencode/opencode.json`。
-4. 启动 OpenCode 并切换模型。
+4. 打开项目文件夹并开始代码任务。
 
 <Info>
   如果你不熟悉下载安装包、PowerShell、终端、命令或配置文件，请先阅读 [电脑基础操作](/computer-basics)，再回来继续操作。
@@ -113,7 +115,7 @@ description: "在 Windows、macOS 和 Linux 上安装 OpenCode，并配置 Xcomp
 
 ### 备用方案：使用 NVM 安装 Node.js 24
 
-需要同时管理多个 Node.js 版本，或者官网安装包无法正常使用时，再选择 NVM。完整步骤请查看 [NVM、Node.js 22 和 npm 环境准备](/node-setup)。
+需要同时管理多个 Node.js 版本，或者官网安装包无法正常使用时，再选择 NVM。
 
 <Tabs>
   <Tab title="Windows">
@@ -268,7 +270,7 @@ CLI 和桌面端共用同一个全局配置文件。配置一次后，两边都�
 | `models` | 在 OpenCode 中可选择的模型列表 |
 | `model` | OpenCode 启动时默认使用的模型 |
 
-模型 ID 必须与 Xcompute 支持的模型名称完全一致。需要添加其他模型时，在 `models` 中按照相同格式增加条目，并前往 [模型定价](https://xcompute.us/pricing) 查看当前可用的模型 ID。
+模型 ID 必须与 Xcompute 支持的模型名称完全一致。需要更换文本模型时，在 `models` 中按照相同格式增加条目，并前往 [模型广场](https://xcompute.us/models) 查看当前可用的模型 ID。
 
 例如，新增一个模型：
 
@@ -291,10 +293,10 @@ opencode
 
 进入 OpenCode 后：
 
-1. 输入 `/models`，确认能看到 Xcompute 下配置的模型。
-2. 选择需要使用的模型。
-3. 输入 `/init`，让 OpenCode 分析项目并生成 `AGENTS.md`。
-4. 输入一个简单任务，例如“读取项目结构并告诉我如何启动”。
+1. 输入 `/models`，确认能看到 Xcompute 下配置的文本模型。
+2. 输入 `/init`，让 OpenCode 分析项目并生成 `AGENTS.md`。
+3. 输入“读取项目结构并告诉我如何启动，不要修改文件”。
+4. 确认理解无误后，再让它修改代码。
 
 <Tip>
   修改 `opencode.json` 后，请退出并重新打开 CLI 或桌面端，使新配置生效。

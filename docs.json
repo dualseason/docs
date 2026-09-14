@@ -72,56 +72,21 @@
             "group": "开始使用",
             "pages": [
               "file",
-              "agent",
-              "computer-basics"
+              "computer-basics",
+              "agent"
             ]
           },
           {
-            "group": "推荐：OpenCode",
+            "group": "日常任务",
             "pages": [
-              "opencode-install"
+              "workbuddy"
             ]
           },
           {
-            "group": "其他编程 Agent",
+            "group": "代码任务",
             "pages": [
-              "codex-cli-app",
-              "claude-code-cli-app",
-              "codex-install"
-            ]
-          },
-          {
-            "group": "第三方客户端",
-            "pages": [
-              "cc-switch",
-              "codex-plus-plus",
-              "codexhub",
-              "kelivo"
-            ]
-          },
-          {
-            "group": "进阶内容",
-            "pages": [
-              "codex-jailbreak"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "深入模型",
-        "groups": [
-          {
-            "group": "模型基础与选型",
-            "pages": [
-              "guides/llm-fundamentals",
-              "guides/open-source-models",
-              "guides/closed-source-models"
-            ]
-          },
-          {
-            "group": "Agent 开发实战",
-            "pages": [
-              "deepagents-in-action"
+              "opencode-install",
+              "codex-cli-app"
             ]
           }
         ]
@@ -136,69 +101,10 @@
             ]
           },
           {
-            "group": "图像生成与编辑",
+            "group": "图像生成",
             "pages": [
-              "api-reference/images/new-images-generations",
-              "api-reference/images/new-images-edits",
               "api-reference/images/gpt-image-2/generation",
-              "api-reference/images/gpt-image-2/async-generation",
-              "api-reference/images/duomi-nano-banana"
-            ]
-          },
-          {
-            "group": "语音生成",
-            "pages": [
-              "api-reference/audios/new-audio-speech",
-              "api-reference/audios/duomi-suno"
-            ]
-          },
-          {
-            "group": "视频生成",
-            "pages": [
-              "api-reference/videos/generations",
-              "api-reference/videos/grok-imagine-video-1.5"
-            ]
-          },
-          {
-            "group": "可灵视频",
-            "pages": [
-              "api-reference/kling/videos/text-to-video",
-              "api-reference/kling/videos/image-to-video",
-              "api-reference/kling/videos/multi-image-to-video",
-              "api-reference/kling/videos/effects",
-              "api-reference/kling/videos/video-extend",
-              "api-reference/kling/videos/omni-video",
-              "api-reference/kling/videos/motion-control"
-            ]
-          },
-          {
-            "group": "可灵数字人",
-            "pages": [
-              "api-reference/kling/digital-humans/identify-face",
-              "api-reference/kling/digital-humans/advanced-lip-sync",
-              "api-reference/kling/digital-humans/image-avatar-video"
-            ]
-          },
-          {
-            "group": "可灵音频",
-            "pages": [
-              "api-reference/kling/audios/text-to-audio",
-              "api-reference/kling/audios/video-to-audio",
-              "api-reference/kling/audios/text-to-speech"
-            ]
-          },
-          {
-            "group": "可灵图像",
-            "pages": [
-              "api-reference/kling/images/generation",
-              "api-reference/kling/images/multi-image-to-image",
-              "api-reference/kling/images/expand"
-            ]
-          },
-          {
-            "group": "可灵通用",
-            "pages": [
-              "api-reference/kling/general/presets-elements"
+              "api-reference/images/gpt-image-2/async-generation"
             ]
           },
           {
@@ -208,47 +114,11 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "集成指南",
-        "groups": [
-          {
-            "group": "开发环境",
-            "pages": [
-              "node-setup"
-            ]
-          },
-          {
-            "group": "编程 Agent 集成",
-            "pages": [
-              "opencode",
-              "claude-code",
-              "codex"
-            ]
-          },
-          {
-            "group": "AI 应用与工作流",
-            "pages": [
-              "openclaw",
-              "comfyui",
-              "dify",
-              "n8n"
-            ]
-          }
-        ]
       }
     ]
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view"]
   },
   "footer": {
     "socials": {

@@ -1,22 +1,10 @@
 ---
-title: 'GPT Image 2 同步图像生成'
-description: '使用 XCompute 国际站的 gpt-image-2 模型同步生成 1K、2K 或 4K 图片。'
+title: 'GPT Image 2.5 同步图像生成'
+description: '使用 GPT Image 2.5 同步生成图片。'
 api: 'POST /v1/images/generations'
 ---
 
-`gpt-image-2` 使用 OpenAI Images 兼容协议。请求会保持连接，图片生成完成后直接返回图片 URL 或内联 Base64 数据。
-
-## 价格
-
-| 分辨率 | 推荐 `size` | 单张价格 |
-| --- | --- | --- |
-| 1K | `1024x1024` | $0.03 |
-| 2K | `2048x2048` | $0.045 |
-| 4K | `4096x4096` | $0.045 |
-
-<Note>
-  价格按请求分辨率档位计算。失败请求会按平台计费规则退款。
-</Note>
+使用 `gpt-image-2.5` 调用同步图像生成接口。请求会保持 HTTP 连接，直到图片生成完成并返回结果。客户端超时建议设置为至少 300 秒。
 
 ## 请求示例
 
@@ -24,12 +12,12 @@ api: 'POST /v1/images/generations'
   ```bash cURL theme={null}
   curl --request POST \
     --url https://xcompute.us/v1/images/generations \
-    --header 'Authorization: Bearer <token>' \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
     --header 'Content-Type: application/json' \
     --data '{
-      "model": "gpt-image-2",
-      "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
-      "size": "2048x2048",
+      "model": "gpt-image-2.5",
+      "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+      "size": "1536x1024",
       "quality": "medium",
       "n": 1,
       "response_format": "url"
@@ -42,120 +30,111 @@ api: 'POST /v1/images/generations'
   response = requests.post(
       "https://xcompute.us/v1/images/generations",
       headers={
-          "Authorization": "Bearer <token>",
+          "Authorization": "Bearer YOUR_API_KEY",
           "Content-Type": "application/json",
       },
       json={
-          "model": "gpt-image-2",
-          "prompt": "一只橘猫坐在窗台上看夕阳，水彩画风格",
-          "size": "2048x2048",
+          "model": "gpt-image-2.5",
+          "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+          "size": "1536x1024",
           "quality": "medium",
           "n": 1,
           "response_format": "url",
       },
       timeout=300,
   )
+  response.raise_for_status()
 
-  print(response.json())
+  print(response.json()["data"][0]["url"])
   ```
 
   ```javascript JavaScript theme={null}
   const response = await fetch("https://xcompute.us/v1/images/generations", {
     method: "POST",
     headers: {
-      Authorization: "Bearer <token>",
+      Authorization: "Bearer YOUR_API_KEY",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gpt-image-2",
-      prompt: "一只橘猫坐在窗台上看夕阳，水彩画风格",
-      size: "2048x2048",
+      model: "gpt-image-2.5",
+      prompt: "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+      size: "1536x1024",
       quality: "medium",
       n: 1,
       response_format: "url",
     }),
   });
 
-  console.log(await response.json());
+  if (!response.ok) throw new Error(await response.text());
+  console.log((await response.json()).data[0].url);
   ```
 </RequestExample>
 
 ## 请求参数
 
 <ParamField header="Authorization" type="string" required>
-  使用 Bearer Token 认证，例如 `Authorization: Bearer YOUR_API_KEY`。你可以在 [API Key 管理页面](https://xcompute.us/keys) 创建密钥。
+  Bearer Token，例如 `Authorization: Bearer YOUR_API_KEY`。你可以在 [API Key 管理页面](https://xcompute.us/keys) 创建密钥。
 </ParamField>
 
-<ParamField body="model" type="string" default="gpt-image-2" required>
-  固定填写 `gpt-image-2`。
+<ParamField body="model" type="string" default="gpt-image-2.5" required>
+  固定填写 `gpt-image-2.5`。
 </ParamField>
 
 <ParamField body="prompt" type="string" required>
-  图片内容描述。支持中文和英文。
+  图片内容描述。支持中文和英文。建议清晰描述主体、环境、构图和风格。
 </ParamField>
 
 <ParamField body="size" type="string" default="1024x1024">
-  输出尺寸。正方形常用值为 `1024x1024`、`2048x2048` 和 `4096x4096`。
-
-  也可以传入其他宽高组合。最长边不超过 1920 像素时按 1K 档计费；最长边超过 1920 像素时按 2K/4K 档计费。
+  输出尺寸必须使用下方列出的支持值。
 </ParamField>
 
 <ParamField body="quality" type="string" default="auto">
-  图片质量。可选值：`auto`、`low`、`medium`、`high`。
-
-  `quality` 控制生成质量，不决定分辨率档位。分辨率由 `size` 决定。
+  图片质量。可选值为 `auto`、`low`、`medium`、`high`。
 </ParamField>
 
 <ParamField body="n" type="integer" default="1">
-  生成数量。支持 `1` 到 `4`。
+  生成数量。
 </ParamField>
 
 <ParamField body="response_format" type="string" default="url">
-  建议填写 `url`。根据上游结果，`data[0].url` 可能是公网 URL，也可能是以 `data:image/png;base64,` 开头的内联图片。
+  返回格式。建议填写 `url`。
 </ParamField>
+
+## 支持尺寸
+
+`size` 仅支持以下尺寸：
+
+| 档位 | 支持的 `size` |
+| --- | --- |
+| 标准 | `1024x1024`、`1536x1024`、`1024x1536`、`1024x1365`、`1365x1024`、`1088x1920`、`1920x1088` |
+| 高分辨率 | `2048x2048`、`1712x2560`、`2560x1712`、`2048x1536`、`1152x2048`、`2048x1152`、`2880x2880`、`2560x3840`、`3840x2560`、`3840x2880`、`2160x3840`、`3840x2160` |
 
 ## 成功响应
 
 <ResponseExample>
   ```json 200 theme={null}
   {
-    "created": 1785780998,
-    "model": "gpt-image-2",
+    "created": 1789097054,
     "data": [
       {
-        "url": "https://example.com/generated-image.png"
+        "url": "https://example.com/generated-image.png",
+        "revised_prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格"
       }
     ],
     "usage": {
-      "total_tokens": 3591
+      "input_tokens": 18,
+      "output_tokens": 1056,
+      "total_tokens": 1074
     }
   }
   ```
 </ResponseExample>
 
-从 `data[0].url` 读取图片。如果该值是 Data URL，可以直接赋给浏览器 `<img>` 的 `src`，也可以解码 Base64 后保存为 PNG。
-
-## 图像编辑
-
-带参考图的请求使用 `POST /v1/images/edits`。模型仍填写 `gpt-image-2`。参考图需要是 XCompute 能访问的 HTTP 或 HTTPS URL。
-
-```bash cURL theme={null}
-curl --request POST \
-  --url https://xcompute.us/v1/images/edits \
-  --header 'Authorization: Bearer <token>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "model": "gpt-image-2",
-    "prompt": "把主体改成水彩画风格",
-    "images": ["https://example.com/reference.png"],
-    "size": "2048x2048",
-    "quality": "medium"
-  }'
-```
+从 `data[0].url` 读取生成图片。图片 URL 可能具有有效期，请及时下载并保存到自己的存储服务。
 
 ## 注意事项
 
-- 同步请求通常需要几十秒。客户端超时建议设置为至少 300 秒。
-- 1K、2K 和 4K 已在 XCompute 国际站完成实际请求验证。
-- `quality=auto`、`low`、`medium`、`high` 均受支持。
-- 如果你的业务不能保持长连接，请使用 [GPT Image 2 异步图像生成](/api-reference/images/gpt-image-2/async-generation)。
+- 同步请求通常需要几十秒，客户端超时建议至少为 300 秒。
+- 图片尺寸必须使用本文列出的值。
+- 生产环境应检查 HTTP 状态码，并在图片生成完成后及时转存。
+- 不能保持长连接的业务请使用 [GPT Image 2.5 异步图像生成](/api-reference/images/gpt-image-2/async-generation)。
