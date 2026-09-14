@@ -1,0 +1,29 @@
+---
+title: "Kelivo 安装与配置"
+description: "了解 Kelivo 第三方客户端的基础配置和 Xcompute 文本模型接入。"
+---
+
+Kelivo 是第三方 AI 客户端。它不属于 Xcompute，也不是使用 Xcompute 的必需软件。图片、音频、搜索等功能是否可用，以 Kelivo 和对应服务的当前版本为准。
+
+## 安装
+
+请从 [Kelivo 官方项目页面](https://github.com) 或作者提供的正式发布页下载安装。确认系统版本匹配后，再打开应用。
+
+## 添加 Xcompute 文本模型
+
+在 Kelivo 的供应商设置中选择 OpenAI 兼容接口，填写：
+
+| 字段 | 填写内容 |
+| --- | --- |
+| 供应商名称 | `Xcompute` |
+| Base URL | `https://intl.dualseason.com/v1` |
+| API Key | 你的 Xcompute API Key |
+| 模型 ID | [模型广场](https://xcompute.us/models) 当前的文本模型 ID |
+
+Base URL 必须以 `/v1` 结尾。保存后发送一条简单消息测试连接。
+
+## 使用边界
+
+当前 Xcompute 对外文档只保证文本生成和 GPT Image 2.5 图像生成接口。Kelivo 中显示的其他模型或能力，不代表 Xcompute 当前提供或保证可用。
+
+日常任务请使用 [WorkBuddy](/workbuddy)，代码项目请使用 [OpenCode](/opencode-install)。不要让 Kelivo 和其他代码 Agent 同时修改同一个项目文件。

@@ -1,0 +1,37 @@
+---
+title: "CC Switch 安装与配置"
+description: "使用 CC Switch 管理支持的 AI 客户端配置。"
+---
+
+CC Switch 是第三方配置管理工具，可以帮助你保存和切换不同客户端的连接配置。它不是 Xcompute 官方客户端，也不是使用 Xcompute 的必需软件。
+
+<Warning>
+  普通用户不需要安装 CC Switch。优先按照 [OpenCode 代码任务安装与配置](/opencode-install) 或 [Codex 订阅与项目协作](/codex-cli-app) 操作。只在你确实需要管理多套配置时使用本页。
+</Warning>
+
+## 安装
+
+请从 [CC Switch 官方项目页面](https://github.com/farion1231/cc-switch) 获取最新安装包。不要从搜索结果中的第三方下载站获取程序。
+
+安装完成后打开 CC Switch，按照界面提示完成初始化。
+
+## 添加 Xcompute 配置
+
+如果 CC Switch 版本支持 OpenAI 兼容服务，创建一个新的 OpenAI 配置：
+
+| 字段 | 填写内容 |
+| --- | --- |
+| 名称 | `Xcompute` |
+| Base URL | `https://intl.dualseason.com/v1` |
+| API Key | 你的 Xcompute API Key |
+| 模型 | 从 [模型广场](https://xcompute.us/models) 复制当前文本模型 ID |
+
+保存前检查 Base URL 末尾包含 `/v1`。API Key 不要截图或发送给他人。
+
+## 验证
+
+在 CC Switch 中选择刚创建的配置，然后打开对应客户端。先发送“请回复配置测试成功”，确认能收到回复，再处理真实任务。
+
+## 常见问题
+
+如果配置无法使用，请先退出 CC Switch 和对应客户端，再检查 Base URL、API Key 和模型 ID。仍然无法使用时，改用官方客户端或 [OpenCode 教程](/opencode-install) 排查，不要反复创建密钥。

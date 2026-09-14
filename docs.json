@@ -114,6 +114,40 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Agent 安装与配置",
+        "groups": [
+          {
+            "group": "推荐使用",
+            "pages": [
+              "opencode-install",
+              "codex-cli-app"
+            ]
+          },
+          {
+            "group": "海外 Agent",
+            "pages": [
+              "claude-code",
+              "claude-code-cli-app"
+            ]
+          },
+          {
+            "group": "第三方客户端",
+            "pages": [
+              "cc-switch",
+              "codex-plus-plus",
+              "codexhub",
+              "kelivo"
+            ]
+          },
+          {
+            "group": "安装基础",
+            "pages": [
+              "node-setup"
+            ]
+          }
+        ]
       }
     ]
   },

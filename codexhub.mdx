@@ -1,0 +1,38 @@
+---
+title: "CodexHub 安装与配置"
+description: "了解 CodexHub 第三方客户端的基本配置和使用边界。"
+---
+
+CodexHub 是第三方 Codex 客户端或管理工具。它不属于 OpenAI 官方产品，也不是 Xcompute 的必需组件。
+
+<Warning>
+  本页只提供通用配置思路。请以 CodexHub 当前版本的官方界面为准，不要照抄过期截图或第三方代理配置。
+</Warning>
+
+## 适合谁
+
+已经熟悉 API 地址、API Key 和模型 ID，并且确实需要第三方客户端管理功能的用户，可以尝试 CodexHub。电脑初学者请直接使用 [OpenCode](/opencode-install) 或 [WorkBuddy](/workbuddy)。
+
+## 配置步骤
+
+1. 从 CodexHub 官方发布页下载安装包。
+2. 打开客户端，找到 **Provider**、**供应商** 或 **API 设置**。
+3. 选择 OpenAI 兼容协议。
+4. 填写 Base URL：`https://intl.dualseason.com/v1`。
+5. 填写自己的 Xcompute API Key。
+6. 从 [模型广场](https://xcompute.us/models) 复制当前文本模型 ID。
+7. 保存设置并重新打开客户端。
+
+## 测试项目
+
+先选择项目文件夹，发送：
+
+```text
+请先告诉我这个项目如何启动，不要修改任何文件。
+```
+
+确认理解正确后，再执行小范围修改。不同客户端不要同时编辑同一文件。
+
+## 安全提醒
+
+不要使用要求你上传 API Key、安装不明补丁或开启远程控制的版本。发现 API Key 泄露时，立即到 [Xcompute API Key 管理](https://xcompute.us/keys) 删除并重新创建。

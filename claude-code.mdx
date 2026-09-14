@@ -1,0 +1,49 @@
+---
+title: "Claude Code 安装与配置"
+description: "安装 Claude Code 并了解海外网络、账号和 API 配置注意事项。"
+---
+
+Claude Code 是 Anthropic 的海外代码 Agent。它可以读取和修改本地项目文件，但对国内网络环境不一定友好。
+
+<Warning>
+  Claude Code 不是 Xcompute 的主推荐工具。账号、网络、官方订阅和 Claude Code 本身的功能由 Anthropic 官方决定。使用前请确认你能正常访问官方服务。
+</Warning>
+
+## 适合谁
+
+- 已经有 Claude 账号或官方订阅的用户。
+- 能够自行解决海外网络访问问题的用户。
+- 希望体验 Claude 官方代码工具的用户。
+
+如果你只是想在国内完成代码任务，优先使用 [OpenCode 代码任务安装与配置](/opencode-install)。日常工作请使用 [WorkBuddy](/workbuddy)。
+
+## 安装
+
+请从 [Claude Code 官方文档](https://docs.anthropic.com/en/docs/claude-code/overview) 获取当前安装命令。官方安装方式会随版本变化，不建议复制第三方教程中的旧命令。
+
+安装完成后，在终端执行：
+
+```bash
+claude --version
+```
+
+能显示版本号，表示安装完成。
+
+## 登录和首次使用
+
+1. 执行 `claude`。
+2. 按界面提示登录 Anthropic 账号或选择官方支持的认证方式。
+3. 进入项目文件夹后，再启动 Claude Code。
+4. 第一次先输入“分析这个项目，不要修改任何文件”。
+
+不要在聊天窗口发送 Xcompute API Key、密码或其他私密信息。
+
+## 和其它工具共用项目
+
+Claude Code、OpenCode 和 Codex 都可以打开同一个项目文件夹，但不要同时修改同一个文件。一个工具完成任务后，先检查并保存改动，再打开另一个工具。
+
+## 常见问题
+
+### 命令无法安装或无法登录
+
+先确认能访问 Claude 官方网站，再查看 [Claude Code 官方故障排查文档](https://docs.anthropic.com/en/docs/claude-code/troubleshooting)。不要为了绕过网络问题随意安装来源不明的代理或补丁。

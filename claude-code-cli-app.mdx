@@ -1,0 +1,59 @@
+---
+title: "Claude Code CLI 使用入门"
+description: "从项目目录启动 Claude Code，并安全地完成第一次代码任务。"
+---
+
+本页介绍 Claude Code 的基本使用方式。它是海外代码 Agent，适合已有 Anthropic 账号并能访问官方服务的用户。
+
+## 第一步：打开终端
+
+- Windows：打开 PowerShell。
+- macOS：打开“终端”。
+- Linux：打开 Terminal。
+
+如果不熟悉命令行，请先看 [电脑基础操作](/computer-basics)。
+
+## 第二步：进入项目文件夹
+
+在终端中执行下面的命令，把路径替换为你的项目文件夹：
+
+```bash
+cd /path/to/your-project
+```
+
+Windows PowerShell 示例：
+
+```powershell
+cd "C:\Users\你的用户名\Desktop\my-project"
+```
+
+## 第三步：启动并测试
+
+```bash
+claude
+```
+
+第一次使用建议输入：
+
+```text
+请先分析这个项目的目录结构和启动方式，不要修改任何文件。
+```
+
+确认它理解项目后，再提出小范围修改，并要求它说明修改了哪些文件。
+
+## 与 OpenCode、Codex 的分工
+
+| 需求 | 推荐工具 |
+| --- | --- |
+| 国内环境下使用 Xcompute 完成代码任务 | OpenCode |
+| 已有 Codex 官方订阅 | Codex |
+| 已有 Claude 账号并能访问官方服务 | Claude Code |
+| 日常文档、表格和资料整理 | WorkBuddy |
+
+三个代码 Agent 可以使用同一个项目文件夹，但不要同时修改文件。完成一个工具的任务后，再切换到另一个工具。
+
+## 安全提醒
+
+- 不要把 API Key、密码、`.env` 文件或数据库备份粘贴到对话中。
+- 发送错误截图前，遮住账号、路径和密钥。
+- 执行删除文件、安装依赖或上传代码前，先让 Agent 说明计划并等待确认。

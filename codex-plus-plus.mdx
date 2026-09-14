@@ -1,0 +1,40 @@
+---
+title: "Codex++ 安装与配置"
+description: "了解 Codex++ 第三方客户端的安装和 Xcompute 配置。"
+---
+
+Codex++ 是第三方 Codex 客户端。它不是 OpenAI 官方 Codex，也不是使用 Xcompute 的必需软件。
+
+<Warning>
+  优先使用 [Codex 订阅与项目协作](/codex-cli-app) 或 [OpenCode 代码任务安装与配置](/opencode-install)。第三方客户端的版本、账号登录和配置字段可能随项目更新。
+</Warning>
+
+## 安装
+
+请从 Codex++ 官方项目页面或作者提供的正式发布页获取安装包。安装前确认发布页地址和文件名，不要运行来源不明的破解包或代理程序。
+
+## 配置 Xcompute
+
+如果当前版本提供 OpenAI 兼容服务配置项，填写：
+
+| 字段 | 填写内容 |
+| --- | --- |
+| API 地址或 Base URL | `https://intl.dualseason.com/v1` |
+| API Key | 你的 Xcompute API Key |
+| 模型 | 从 [模型广场](https://xcompute.us/models) 复制文本模型 ID |
+
+地址必须包含 `/v1`。保存后重新打开客户端。
+
+## 第一次使用
+
+先打开一个测试项目，输入：
+
+```text
+请分析这个项目的目录结构，不要修改任何文件。
+```
+
+确认结果正常后，再让它修改单个文件。不要同时打开 Codex++ 和 OpenCode 修改同一项目。
+
+## 连接失败
+
+检查网络是否能访问 `https://intl.dualseason.com`，再检查 API Key 是否有效。第三方客户端无法正常使用时，直接改用 OpenCode，不要把 API Key 粘贴到公开 issue 或群聊。

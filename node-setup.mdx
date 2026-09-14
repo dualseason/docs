@@ -1,0 +1,45 @@
+---
+title: "Node.js 环境准备"
+description: "为需要命令行安装的 OpenCode、Codex 和 Claude Code 准备 Node.js。"
+---
+
+部分 Agent 的命令行版本需要 Node.js。电脑小白优先使用安装包，不需要先学习 NVM。
+
+## 检查是否已经安装
+
+打开 PowerShell 或终端，执行：
+
+```bash
+node -v
+npm -v
+```
+
+两条命令都显示版本号，就可以继续安装 Agent。
+
+## 安装 Node.js
+
+从 [Node.js 官方下载页面](https://nodejs.org/en/download) 下载 LTS 版本：
+
+- Windows：下载 `.msi` 安装包。
+- macOS：下载 `.pkg` 安装包。
+- Linux：按照发行版说明安装。
+
+双击安装包并使用默认选项完成安装。安装结束后，关闭并重新打开 PowerShell 或终端，再次执行 `node -v` 和 `npm -v`。
+
+## 选择后续教程
+
+- [OpenCode 代码任务安装与配置](/opencode-install)
+- [Codex 订阅与项目协作](/codex-cli-app)
+- [Claude Code 安装与配置](/claude-code)
+
+如果只是使用 OpenCode 桌面端，仍建议先阅读 OpenCode 教程中的桌面端章节。
+
+## 常见问题
+
+### 显示“不是内部或外部命令”
+
+关闭当前命令行窗口并重新打开。如果仍然没有版本号，重新运行 Node.js 安装包，并确认安装程序允许添加到系统 PATH。
+
+### 要不要安装 NVM
+
+普通用户不需要。只有需要同时管理多个 Node.js 版本时，才考虑使用 NVM。
