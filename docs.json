@@ -81,13 +81,6 @@
             "pages": [
               "workbuddy"
             ]
-          },
-          {
-            "group": "代码任务",
-            "pages": [
-              "opencode-install",
-              "codex-cli-app"
-            ]
           }
         ]
       },
@@ -118,6 +111,12 @@
       {
         "tab": "Agent 安装与配置",
         "groups": [
+          {
+            "group": "开始使用",
+            "pages": [
+              "agent-installation"
+            ]
+          },
           {
             "group": "推荐使用",
             "pages": [
