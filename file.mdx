@@ -1,38 +1,28 @@
 ---
-title: "快速入门"
-description: "用 Xcompute 调用文本模型和 GPT Image 2.5。"
+title: "快速开始"
+description: "用 API Key 完成第一次 Xcompute 请求。"
 ---
 
-Xcompute 当前提供文本生成模型与 GPT Image 2.5 图像生成能力。先创建 API Key，再选择适合你的工具。
+## 1. 创建 API Key
 
-## 先选择工具
-
-| 目标 | 推荐入口 |
-| --- | --- |
-| 写邮件、整理资料、处理表格等日常工作 | [WorkBuddy 日常任务入门](/workbuddy) |
-| 修改网站、程序或项目代码 | [OpenCode 安装与配置](/opencode-install) |
-| 已有 Codex 官方订阅 | [Codex 订阅与项目协作](/codex-cli-app) |
-| 自己开发程序并调用接口 | [通用对话接口](/api-reference/text/chat-completions) |
-| 生成图片 | [GPT Image 2.5 同步图像生成](/api-reference/images/generate) |
-| 修改一张或多张参考图片 | [GPT Image 2.5 图生图](/api-reference/images/edit) |
-
-## 创建 API Key
-
-1. 打开 [Xcompute API Key 管理](https://xcompute.us/keys)。
-2. 点击 **创建新密钥**。
-3. 复制生成的 API Key，并保存在安全位置。
+打开 [API Key 管理页面](https://xcompute.us/keys)，创建并复制密钥。
 
 <Warning>
-  API Key 相当于账户密码。不要发到聊天群、截图、提交到 GitHub，也不要粘贴到不可信的软件或网页。
+  API Key 只放在服务端或本地配置中。不要提交到 GitHub、发送到聊天群或写入浏览器前端。
 </Warning>
 
-## 接口地址
+## 2. 选择入口
 
-Xcompute 统一使用 https://xcompute.us/v1。该地址已配置回国线路，所有接口地址都必须保留末尾的 /v1。
+| 需求 | 入口 |
+| --- | --- |
+| 调用文本或图像 API | [API 总览](/api-reference/overview) |
+| 修改网站或程序代码 | [OpenCode 配置](/opencode-install) |
+| 处理邮件、文档和表格 | [WorkBuddy](/workbuddy) |
+| 已有 Codex 官方订阅 | [Codex 协作](/codex-cli-app) |
 
-## 快速测试文本生成
+## 3. 测试文本接口
 
-将 `YOUR_API_KEY` 替换为自己的 API Key，然后在终端执行：
+接口地址统一使用 `https://xcompute.us/v1`。将 `YOUR_API_KEY` 换成自己的密钥，并使用[模型目录](/xcompute-models)中的模型 ID。
 
 ```bash
 curl https://xcompute.us/v1/chat/completions \
@@ -44,15 +34,11 @@ curl https://xcompute.us/v1/chat/completions \
   }'
 ```
 
-返回 JSON 内容表示连接成功。模型名称以 [模型广场](https://xcompute.us/models) 当前显示的文本模型为准。
+返回 JSON 即表示请求成功。完整参数见[文本对话](/api-reference/text/chat-completions)。
 
-## 当前可用能力
+## 4. 下一步
 
-| 能力 | 模型或接口 |
-| --- | --- |
-| 文本生成 | `POST /v1/chat/completions` |
-| 同步图像生成 | POST /v1/images/generations |
-| 图生图 | POST /v1/images/edits |
-| 异步图像生成 | `gpt-image-2.5-async` |
-
-遇到问题时，请提供操作系统、使用的工具、操作步骤和完整错误提示。发送截图或日志前，将 API Key、密码和个人信息替换为 `***`。
+- [同步图像生成](/api-reference/images/generate)
+- [图生图](/api-reference/images/edit)
+- [异步图像生成](/api-reference/images/async-generate)
+- [模型目录](/xcompute-models)

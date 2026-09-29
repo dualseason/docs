@@ -3,6 +3,10 @@
   "theme": "mint",
   "redirects": [
     {
+      "source": "/computer-basics",
+      "destination": "/installation-basics"
+    },
+    {
       "source": "/api-overview",
       "destination": "/api-reference/overview"
     },
@@ -97,7 +101,6 @@
             "group": "开始使用",
             "pages": [
               "file",
-              "computer-basics",
               "agent"
             ]
           },
@@ -181,7 +184,8 @@
           {
             "group": "安装基础",
             "pages": [
-              "node-setup"
+              "node-setup",
+              "installation-basics"
             ]
           }
         ]
