@@ -1,0 +1,73 @@
+---
+title: '任务查询'
+description: '查询异步图像生成任务的状态与结果。'
+api: 'GET /v1/tasks/{task_id}'
+---
+
+使用异步图像生成接口返回的任务 ID 查询任务状态。完整流程是：提交任务、保存 `id`、定时查询，直到任务完成或失败。
+
+## 请求
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request GET \
+    --url https://xcompute.us/v1/tasks/YOUR_TASK_ID \
+    --header 'Authorization: Bearer YOUR_API_KEY'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.get(
+      "https://xcompute.us/v1/tasks/YOUR_TASK_ID",
+      headers={"Authorization": "Bearer YOUR_API_KEY"},
+      timeout=30,
+  )
+  response.raise_for_status()
+  print(response.json())
+  ```
+</RequestExample>
+
+## Path 参数
+
+<ParamField path="task_id" type="string" required>
+  提交异步任务时返回的任务 ID，例如 `task_AVzfphDDvLn189o8FyF07uEzx1skzfJP`。
+</ParamField>
+
+## 成功响应
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "status": "completed",
+    "task_id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
+    "progress": "100%",
+    "result_url": "https://example.com/generated-image.png",
+    "result": {
+      "items": [
+        {
+          "id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
+          "status": "success",
+          "data": [
+            {
+              "url": "https://example.com/generated-image.png"
+            }
+          ]
+        }
+      ]
+    }
+  }
+  ```
+</ResponseExample>
+
+优先读取顶层 `result_url`。如果该字段为空，可以读取 `result.items[0].data[0].url`。
+
+## 状态说明
+
+| `status` | 含义 | 处理方式 |
+| --- | --- | --- |
+| `queued` | 任务已进入队列 | 继续轮询 |
+| `in_progress` | 任务正在执行 | 继续轮询 |
+| `completed` | 任务完成 | 读取结果 URL |
+| `failed` | 任务失败 | 读取错误信息并停止 |
+| `cancelled` | 任务已取消 | 停止轮询 |

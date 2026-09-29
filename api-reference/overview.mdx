@@ -8,7 +8,7 @@ Xcompute 提供 OpenAI 兼容的文本生成接口，以及 GPT Image 2.5 图像
 ## 三步开始
 
 1. 在 [API Key 管理页面](https://xcompute.us/keys) 创建并复制 API Key。
-2. 选择适合任务的 [文本接口](/api-reference/texts/general/new-chat-completions) 或 [图像接口](/api-reference/images/gpt-image-2/generation)。
+2. 选择适合任务的 [文本接口](/api-reference/text/chat-completions) 或 [图像接口](/api-reference/images/generate)。
 3. 将示例中的 `YOUR_API_KEY` 替换为自己的密钥，并从[模型目录](/xcompute-models)选择当前可用的模型 ID。
 
 <Warning>
@@ -38,16 +38,16 @@ Content-Type: application/json
 
 使用 OpenAI Chat Completions 兼容格式调用文本模型：
 
-- [通用对话接口](/api-reference/texts/general/new-chat-completions) `POST /v1/chat/completions`
+- [通用对话接口](/api-reference/text/chat-completions) `POST /v1/chat/completions`
 
 模型可用性会随渠道变化，请以[模型目录](/xcompute-models)和模型广场实时显示为准。
 
 ### 图像生成
 
-- [同步图像生成](/api-reference/images/gpt-image-2/generation) `POST /v1/images/generations`
-- [图生图](/api-reference/images/gpt-image-2/edits) `POST /v1/images/edits`
-- [异步图像生成](/api-reference/images/gpt-image-2/async-generation) `POST /v1/images/generations`
-- [异步任务查询](/api-reference/tasks/new-status) `GET /v1/tasks/{task_id}`
+- [同步图像生成](/api-reference/images/generate) `POST /v1/images/generations`
+- [图生图](/api-reference/images/edit) `POST /v1/images/edits`
+- [异步图像生成](/api-reference/images/async-generate) `POST /v1/images/generations`
+- [异步任务查询](/api-reference/tasks/query) `GET /v1/tasks/{task_id}`
 
 同步接口会等待图片生成完成；异步接口立即返回任务 ID，需配合任务查询接口轮询结果。
 

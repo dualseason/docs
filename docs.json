@@ -1,7 +1,32 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Xcompute",
+  "redirects": [
+    {
+      "source": "/api-overview",
+      "destination": "/api-reference/overview"
+    },
+    {
+      "source": "/api-reference/texts/general/new-chat-completions",
+      "destination": "/api-reference/text/chat-completions"
+    },
+    {
+      "source": "/api-reference/images/gpt-image-2/generation",
+      "destination": "/api-reference/images/generate"
+    },
+    {
+      "source": "/api-reference/images/gpt-image-2/edits",
+      "destination": "/api-reference/images/edit"
+    },
+    {
+      "source": "/api-reference/images/gpt-image-2/async-generation",
+      "destination": "/api-reference/images/async-generate"
+    },
+    {
+      "source": "/api-reference/tasks/new-status",
+      "destination": "/api-reference/tasks/query"
+    }
+  ],
   "colors": {
     "primary": "#2563EB",
     "light": "#3B82F6",
@@ -96,27 +121,27 @@
           {
             "group": "API 入门",
             "pages": [
-              "api-overview"
+              "api-reference/overview"
             ]
           },
           {
             "group": "文本生成",
             "pages": [
-              "api-reference/texts/general/new-chat-completions"
+              "api-reference/text/chat-completions"
             ]
           },
           {
             "group": "图像生成",
             "pages": [
-              "api-reference/images/gpt-image-2/generation",
-              "api-reference/images/gpt-image-2/edits",
-              "api-reference/images/gpt-image-2/async-generation"
+              "api-reference/images/generate",
+              "api-reference/images/edit",
+              "api-reference/images/async-generate"
             ]
           },
           {
             "group": "任务管理",
             "pages": [
-              "api-reference/tasks/new-status"
+              "api-reference/tasks/query"
             ]
           }
         ]

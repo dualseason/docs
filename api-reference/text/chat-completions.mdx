@@ -1,0 +1,116 @@
+---
+title: '文本对话'
+description: '使用 OpenAI Chat Completions 兼容格式调用 Xcompute 文本模型。'
+api: 'POST /v1/chat/completions'
+---
+
+使用 OpenAI 兼容的 Chat Completions 格式调用文本模型。模型 ID 以[模型目录](/xcompute-models)和模型广场当前显示的值为准。
+
+## 请求
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/chat/completions \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-5.6-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "请用一句话介绍你自己。"
+        }
+      ]
+    }'
+  ```
+
+  ```python Python theme={null}
+  from openai import OpenAI
+
+  client = OpenAI(
+      base_url="https://xcompute.us/v1",
+      api_key="YOUR_API_KEY",
+  )
+
+  response = client.chat.completions.create(
+      model="gpt-5.6-sol",
+      messages=[
+          {"role": "user", "content": "请用一句话介绍你自己。"}
+      ],
+  )
+
+  print(response.choices[0].message.content)
+  ```
+
+  ```javascript JavaScript theme={null}
+  const response = await fetch("https://xcompute.us/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-5.6-sol",
+      messages: [{ role: "user", content: "请用一句话介绍你自己。" }],
+    }),
+  });
+
+  if (!response.ok) throw new Error(await response.text());
+  const data = await response.json();
+  console.log(data.choices[0].message.content);
+  ```
+</RequestExample>
+
+## Header 参数
+
+<ParamField header="Authorization" type="string" required>
+  Bearer Token，例如 `Authorization: Bearer YOUR_API_KEY`。
+</ParamField>
+
+<ParamField header="Content-Type" type="string" default="application/json" required>
+  固定使用 `application/json`。
+</ParamField>
+
+## Body 参数
+
+<ParamField body="model" type="string" required>
+  模型 ID，例如 `gpt-5.6-sol`。请从[模型目录](/xcompute-models)复制当前可用的模型名。
+</ParamField>
+
+<ParamField body="messages" type="array" required>
+  对话消息数组。每条消息包含 `role` 和 `content`，常用角色包括 `system`、`user` 和 `assistant`。
+</ParamField>
+
+<ParamField body="stream" type="boolean" default="false">
+  是否以流式方式返回结果。使用流式响应时，请按照 SSE 事件逐段读取内容。
+</ParamField>
+
+## 成功响应
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "chatcmpl_xxx",
+    "object": "chat.completion",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "你好，我是一个 AI 助手。"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  }
+  ```
+</ResponseExample>
+
+读取 `choices[0].message.content` 获取非流式响应文本。生产环境请同时检查 HTTP 状态码和响应中的错误信息。
+
+## 注意事项
+
+- 模型名称会随渠道配置变化，请不要依赖过期的固定列表。
+- API Key 只能放在服务端或本地安全配置中，不能写入浏览器前端代码。
+- 需要长文本输出时，建议设置合理的客户端超时，并处理限流和网络重试。

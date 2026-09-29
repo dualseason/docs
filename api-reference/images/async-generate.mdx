@@ -1,0 +1,101 @@
+---
+title: '异步图像生成'
+description: '提交 GPT Image 2.5 异步图像任务，并通过任务 ID获取结果。'
+api: 'POST /v1/images/generations'
+---
+
+使用 `gpt-image-2.5-async` 提交异步图像生成任务。接口会立即返回任务 ID，适合不希望长时间保持 HTTP 连接的场景。
+
+## 提交任务
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/images/generations \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-image-2.5-async",
+      "prompt": "未来城市夜景，电影感灯光，无文字",
+      "size": "1536x1024",
+      "quality": "medium"
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.post(
+      "https://xcompute.us/v1/images/generations",
+      headers={
+          "Authorization": "Bearer YOUR_API_KEY",
+          "Content-Type": "application/json",
+      },
+      json={
+          "model": "gpt-image-2.5-async",
+          "prompt": "未来城市夜景，电影感灯光，无文字",
+          "size": "1536x1024",
+          "quality": "medium",
+      },
+      timeout=30,
+  )
+  response.raise_for_status()
+  print(response.json()["id"])
+  ```
+</RequestExample>
+
+## 参数
+
+<ParamField header="Authorization" type="string" required>
+  Bearer Token，例如 `Authorization: Bearer YOUR_API_KEY`。
+</ParamField>
+
+<ParamField header="Content-Type" type="string" default="application/json" required>
+  固定使用 `application/json`。
+</ParamField>
+
+<ParamField body="model" type="string" default="gpt-image-2.5-async" required>
+  固定填写 `gpt-image-2.5-async`。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图片内容描述。
+</ParamField>
+
+<ParamField body="size" type="string" default="1024x1024">
+  输出尺寸。可用值见下方的[支持尺寸](#支持尺寸)。
+</ParamField>
+
+<ParamField body="quality" type="string" default="auto">
+  图片质量，可选 `auto`、`low`、`medium` 或 `high`。
+</ParamField>
+
+## 响应
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
+    "status": "queued",
+    "mode": "generate",
+    "model": "gpt-image-2.5-async",
+    "created_at": "2026-09-11 03:33:10"
+  }
+  ```
+</ResponseExample>
+
+保存响应中的 `id`，然后按照[任务查询](/api-reference/tasks/query)页面轮询任务状态和结果。
+
+## 支持尺寸
+
+| 档位 | 支持的 `size` |
+| --- | --- |
+| 标准 | `1024x1024`、`1536x1024`、`1024x1536`、`1024x1365`、`1365x1024`、`1088x1920`、`1920x1088` |
+| 高分辨率 | `2048x2048`、`1712x2560`、`2560x1712`、`2048x1536`、`1152x2048`、`2048x1152`、`2880x2880`、`2560x3840`、`3840x2560`、`3840x2880`、`2160x3840`、`3840x2160` |
+
+## 轮询建议
+
+- 每 3 到 5 秒查询一次，最长等待 10 分钟。
+- 任务状态为 `completed` 后读取结果 URL。
+- `failed` 或 `cancelled` 时停止轮询，并读取错误信息。
+- 停止轮询不会取消服务端任务。
