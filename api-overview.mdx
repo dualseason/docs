@@ -1,0 +1,67 @@
+---
+title: "API 总览"
+description: "了解 Xcompute API 的地址、认证方式和常用接口。"
+---
+
+Xcompute 提供 OpenAI 兼容的文本生成接口，以及 GPT Image 2.5 图像生成接口。使用 API 前，先创建 [API Key](https://xcompute.us/keys)，再根据任务选择接口。
+
+## 三步开始
+
+1. 在 [API Key 管理页面](https://xcompute.us/keys) 创建并复制 API Key。
+2. 选择适合任务的 [文本接口](/api-reference/texts/general/new-chat-completions) 或 [图像接口](/api-reference/images/gpt-image-2/generation)。
+3. 将示例中的 `YOUR_API_KEY` 替换为自己的密钥，并从[模型目录](/xcompute-models)选择当前可用的模型 ID。
+
+<Warning>
+  API Key 等同于账户密码。不要提交到 GitHub、写入前端代码、发送到聊天群或粘贴到不可信的软件中。发现泄露时，请立即删除并重新创建密钥。
+</Warning>
+
+## 服务地址
+
+| 使用场景 | Base URL |
+| --- | --- |
+| 通用入口 | `https://xcompute.us/v1` |
+
+所有接口路径都接在 Base URL 后面，例如文本接口的完整地址是 `https://xcompute.us/v1/chat/completions`。Base URL 必须保留末尾的 `/v1`。
+
+## 认证
+
+除特别说明外，每个请求都需要以下 Header：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+```
+
+## 接口目录
+
+### 文本生成
+
+使用 OpenAI Chat Completions 兼容格式调用文本模型：
+
+- [通用对话接口](/api-reference/texts/general/new-chat-completions) `POST /v1/chat/completions`
+
+模型可用性会随渠道变化，请以[模型目录](/xcompute-models)和模型广场实时显示为准。
+
+### 图像生成
+
+- [同步图像生成](/api-reference/images/gpt-image-2/generation) `POST /v1/images/generations`
+- [图生图](/api-reference/images/gpt-image-2/edits) `POST /v1/images/edits`
+- [异步图像生成](/api-reference/images/gpt-image-2/async-generation) `POST /v1/images/generations`
+- [异步任务查询](/api-reference/tasks/new-status) `GET /v1/tasks/{task_id}`
+
+同步接口会等待图片生成完成；异步接口立即返回任务 ID，需配合任务查询接口轮询结果。
+
+## 如何选择图像接口
+
+| 需求 | 接口 |
+| --- | --- |
+| 根据文字直接生成图片，并等待结果 | 同步图像生成 |
+| 根据一张或多张参考图进行修改 | 图生图 |
+| 不希望长时间保持 HTTP 连接 | 异步图像生成 + 异步任务查询 |
+
+## 通用请求约定
+
+- 请求体使用 JSON，并设置 `Content-Type: application/json`。
+- 图片接口的 `response_format` 当前仅支持 `url`。
+- 模型 ID 必须使用模型广场当前展示的值，不要根据旧教程猜测模型名。
+- 生产环境应检查 HTTP 状态码，并对网络错误、超时和限流进行重试或降级处理。

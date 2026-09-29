@@ -3,7 +3,7 @@ title: "快速入门"
 description: "用 Xcompute 调用文本模型和 GPT Image 2.5。"
 ---
 
-Xcompute 当前提供两类能力：文本生成模型与 GPT Image 2.5 图像生成。先创建 API Key，再选择适合你的工具。
+Xcompute 当前提供文本生成模型与 GPT Image 2.5 图像生成能力。先创建 API Key，再选择适合你的工具。
 
 ## 先选择工具
 
@@ -14,6 +14,7 @@ Xcompute 当前提供两类能力：文本生成模型与 GPT Image 2.5 图像�
 | 已有 Codex 官方订阅 | [Codex 订阅与项目协作](/codex-cli-app) |
 | 自己开发程序并调用接口 | [通用对话接口](/api-reference/texts/general/new-chat-completions) |
 | 生成图片 | [GPT Image 2.5 同步图像生成](/api-reference/images/gpt-image-2/generation) |
+| 修改一张或多张参考图片 | [GPT Image 2.5 图生图](/api-reference/images/gpt-image-2/edits) |
 
 ## 创建 API Key
 
@@ -27,14 +28,14 @@ Xcompute 当前提供两类能力：文本生成模型与 GPT Image 2.5 图像�
 
 ## 接口地址
 
-国内网络推荐使用 `https://intl.dualseason.com/v1`。Xcompute 主入口是 `https://xcompute.us/v1`。两个地址都必须保留末尾的 `/v1`。
+Xcompute 统一使用 https://xcompute.us/v1。该地址已配置回国线路，所有接口地址都必须保留末尾的 /v1。
 
 ## 快速测试文本生成
 
 将 `YOUR_API_KEY` 替换为自己的 API Key，然后在终端执行：
 
 ```bash
-curl https://intl.dualseason.com/v1/chat/completions \
+curl https://xcompute.us/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
@@ -50,7 +51,8 @@ curl https://intl.dualseason.com/v1/chat/completions \
 | 能力 | 模型或接口 |
 | --- | --- |
 | 文本生成 | `POST /v1/chat/completions` |
-| 同步图像生成 | `gpt-image-2.5` |
+| 同步图像生成 | POST /v1/images/generations |
+| 图生图 | POST /v1/images/edits |
 | 异步图像生成 | `gpt-image-2.5-async` |
 
 遇到问题时，请提供操作系统、使用的工具、操作步骤和完整错误提示。发送截图或日志前，将 API Key、密码和个人信息替换为 `***`。

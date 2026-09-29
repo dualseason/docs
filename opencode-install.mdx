@@ -237,7 +237,7 @@ CLI 和桌面端共用同一个全局配置文件。配置一次后，两边都�
       "npm": "@ai-sdk/openai-compatible",
       "name": "Xcompute",
       "options": {
-        "baseURL": "https://intl.dualseason.com/v1",
+        "baseURL": "https://xcompute.us/v1",
         "apiKey": "在这里填写你的APIKey"
       },
       "models": {
@@ -252,7 +252,7 @@ CLI 和桌面端共用同一个全局配置文件。配置一次后，两边都�
 ```
 
 <Info>
-  默认推荐使用 `https://intl.dualseason.com/v1`。如果你具备稳定的科学上网能力，也可以将 `baseURL` 改为 `https://xcompute.us/v1`。两个地址都必须保留末尾的 `/v1`。
+  统一使用 https://xcompute.us/v1。该地址已配置回国线路，地址末尾必须保留 /v1。
 </Info>
 
 <Warning>
@@ -265,7 +265,7 @@ CLI 和桌面端共用同一个全局配置文件。配置一次后，两边都�
 | --- | --- |
 | `provider.xcompute` | 创建名为 Xcompute 的模型提供商 |
 | `npm` | 使用 OpenAI 兼容协议适配器 |
-| `baseURL` | 默认使用 `https://intl.dualseason.com/v1`；具备科学上网能力时可使用 `https://xcompute.us/v1` |
+| baseURL | https://xcompute.us/v1 |
 | `apiKey` | 你的 Xcompute API Key |
 | `models` | 在 OpenCode 中可选择的模型列表 |
 | `model` | OpenCode 启动时默认使用的模型 |
@@ -340,7 +340,7 @@ opencode
 | --- | --- |
 | Provider ID | `xcompute` |
 | Display Name | `Xcompute` |
-| Base URL | `https://intl.dualseason.com/v1` |
+| Base URL | `https://xcompute.us/v1` |
 | API Key | 你的 Xcompute API Key |
 | Model ID | `gpt-5.6-sol` |
 
@@ -381,7 +381,7 @@ opencode --version
 1. 配置文件路径和文件名是否正确。
 2. Windows 文件名是否被保存成 `opencode.json.txt`。
 3. JSON 是否使用英文双引号，最后一项后面是否有多余逗号。
-4. `baseURL` 是否为默认的 `https://intl.dualseason.com/v1`，或可科学上网时使用的 `https://xcompute.us/v1`。
+4. baseURL 必须设置为 https://xcompute.us/v1。
 5. 修改后是否完全重启 OpenCode。
 
 ### 提示 API Key 无效

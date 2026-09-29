@@ -94,6 +94,12 @@
         "tab": "API 参考",
         "groups": [
           {
+            "group": "API 入门",
+            "pages": [
+              "api-overview"
+            ]
+          },
+          {
             "group": "文本生成",
             "pages": [
               "api-reference/texts/general/new-chat-completions"
@@ -116,7 +122,7 @@
         ]
       },
       {
-        "tab": "Agent 安装与配置",
+        "tab": "客户端配置",
         "groups": [
           {
             "group": "开始使用",
@@ -125,14 +131,14 @@
             ]
           },
           {
-            "group": "推荐使用",
+            "group": "推荐配置",
             "pages": [
               "opencode-install",
               "codex-cli-app"
             ]
           },
           {
-            "group": "海外 Agent",
+            "group": "其他客户端",
             "pages": [
               "claude-code",
               "claude-code-cli-app"
