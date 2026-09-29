@@ -10,7 +10,15 @@ description: "先使用 OpenCode 免费 AI，再自动同步 Xcompute 模型。"
 第一次使用时，先选择 OpenCode 当前提供的免费 AI，发送：
 
 ```text
-请先分析这个项目的目录结构和启动方式，不要修改任何文件。
+请使用下面的连接信息配置 Xcompute OpenAI 兼容 Provider：
+- Provider：Xcompute
+- Base URL：{{XCOMPUTE_BASE_URL}}
+- API Key：{{XCOMPUTE_API_KEY}}
+- Models endpoint：{{XCOMPUTE_MODELS_ENDPOINT}}
+- Context length：{{XCOMPUTE_CONTEXT_LENGTH}}
+
+请通过 Models endpoint 自动读取模型，不要手工猜测模型名。{{XCOMPUTE_API_KEY}} 只表示客户端安全密钥字段，真实 Key 由我从 API 密钥管理页面复制后直接填写，不要在聊天记录、项目文件或日志中保存。
+配置完成后先展示 Provider、请求地址、模型列表和上下文设置，等待我确认后再保存。
 ```
 
 ## 2. 添加 Xcompute

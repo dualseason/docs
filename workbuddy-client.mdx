@@ -22,10 +22,15 @@ description: "使用 WorkBuddy 自带免费 AI，或通过 OpenAI 兼容接口�
 也可以让 WorkBuddy 的免费 AI 协助配置：
 
 ```text
-请帮我添加一个 OpenAI 兼容 Provider，名称为 Xcompute。
-Base URL 使用 https://xcompute.us/v1，通过 GET /models 自动读取模型列表。
-上下文长度设置为 1000000。请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话。
-保存前告诉我配置项和模型列表，等待确认。
+请使用下面的连接信息配置 Xcompute OpenAI 兼容 Provider：
+- Provider：Xcompute
+- Base URL：{{XCOMPUTE_BASE_URL}}
+- API Key：{{XCOMPUTE_API_KEY}}
+- Models endpoint：{{XCOMPUTE_MODELS_ENDPOINT}}
+- Context length：{{XCOMPUTE_CONTEXT_LENGTH}}
+
+请通过 Models endpoint 自动读取模型，不要手工猜测模型名。{{XCOMPUTE_API_KEY}} 只表示客户端安全密钥字段，真实 Key 由我从 API 密钥管理页面复制后直接填写，不要在聊天记录、项目文件或日志中保存。
+配置完成后先展示 Provider、请求地址、模型列表和上下文设置，等待我确认后再保存。
 ```
 
 如果当前 WorkBuddy 版本没有自定义 Provider 功能，就继续使用自带 AI，或使用 [OpenCode 桌面端](/opencode-install)接入 Xcompute。

@@ -16,9 +16,15 @@ description: "在龙虾客户端中使用免费 AI 或配置 Xcompute。"
 如果龙虾支持 AI 自动配置，可以发送：
 
 ```text
-请添加 Xcompute OpenAI 兼容 Provider。
-Base URL 是 https://xcompute.us/v1，通过 GET /models 获取全部模型，Context length 设置为 1000000。
-请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话、项目或日志。保存前等待确认。
+请使用下面的连接信息配置 Xcompute OpenAI 兼容 Provider：
+- Provider：Xcompute
+- Base URL：{{XCOMPUTE_BASE_URL}}
+- API Key：{{XCOMPUTE_API_KEY}}
+- Models endpoint：{{XCOMPUTE_MODELS_ENDPOINT}}
+- Context length：{{XCOMPUTE_CONTEXT_LENGTH}}
+
+请通过 Models endpoint 自动读取模型，不要手工猜测模型名。{{XCOMPUTE_API_KEY}} 只表示客户端安全密钥字段，真实 Key 由我从 API 密钥管理页面复制后直接填写，不要在聊天记录、项目文件或日志中保存。
+配置完成后先展示 Provider、请求地址、模型列表和上下文设置，等待我确认后再保存。
 ```
 
 免费 AI 适合简单任务；复杂任务再使用 Xcompute。配置失败时，先确认客户端是否支持 OpenAI 兼容 Provider，再检查 Base URL 是否包含 `/v1`。

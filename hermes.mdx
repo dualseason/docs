@@ -16,9 +16,15 @@ Hermes 的具体设置名称会随版本变化。先选择 Hermes 自带的免�
 可以让 Hermes 自带 AI 协助操作：
 
 ```text
-请检查当前客户端是否支持 OpenAI 兼容 Provider。
-如果支持，添加 Xcompute，Base URL 为 https://xcompute.us/v1，调用 GET /models 获取模型列表，
-上下文长度设置为 1000000。请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话或日志，保存前等待确认。
+请使用下面的连接信息配置 Xcompute OpenAI 兼容 Provider：
+- Provider：Xcompute
+- Base URL：{{XCOMPUTE_BASE_URL}}
+- API Key：{{XCOMPUTE_API_KEY}}
+- Models endpoint：{{XCOMPUTE_MODELS_ENDPOINT}}
+- Context length：{{XCOMPUTE_CONTEXT_LENGTH}}
+
+请通过 Models endpoint 自动读取模型，不要手工猜测模型名。{{XCOMPUTE_API_KEY}} 只表示客户端安全密钥字段，真实 Key 由我从 API 密钥管理页面复制后直接填写，不要在聊天记录、项目文件或日志中保存。
+配置完成后先展示 Provider、请求地址、模型列表和上下文设置，等待我确认后再保存。
 ```
 
 简单问答和摘要优先使用免费 AI；长上下文、复杂推理和多步骤任务再使用 Xcompute。API Key 只保存在客户端的安全配置中。

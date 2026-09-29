@@ -23,11 +23,15 @@ OpenCode 和 WorkBuddy 都有桌面端，也提供官方自带的免费 AI。第
 先打开 [API 密钥管理页面](https://xcompute.us/keys)，创建或选择一个 Key，点击“使用令牌”查看连接信息。将 Base URL 和模型获取地址用于自动配置，将 API Key 粘贴到客户端的安全密钥字段。不要把真实 Key 放进 AI 对话内容。
 
 ```text
-请帮我添加一个 OpenAI 兼容的模型提供商，名称为 Xcompute。
-Base URL 使用 https://xcompute.us/v1。
-请通过 GET /models 自动读取可用模型，不要手工猜测或固定模型名。
-上下文长度按 1M 配置。API Key 我会从 API 密钥管理页面复制，并直接粘贴到客户端的安全密钥字段，不要把 Key 写入提示词、项目文件或日志。
-配置完成后先列出将要使用的模型和请求地址，等待我确认后再保存。
+请使用下面的连接信息配置 Xcompute OpenAI 兼容 Provider：
+- Provider：Xcompute
+- Base URL：{{XCOMPUTE_BASE_URL}}
+- API Key：{{XCOMPUTE_API_KEY}}
+- Models endpoint：{{XCOMPUTE_MODELS_ENDPOINT}}
+- Context length：{{XCOMPUTE_CONTEXT_LENGTH}}
+
+请通过 Models endpoint 自动读取模型，不要手工猜测模型名。{{XCOMPUTE_API_KEY}} 只表示客户端安全密钥字段，真实 Key 由我从 API 密钥管理页面复制后直接填写，不要在聊天记录、项目文件或日志中保存。
+配置完成后先展示 Provider、请求地址、模型列表和上下文设置，等待我确认后再保存。
 ```
 
 ## 手动配置字段
