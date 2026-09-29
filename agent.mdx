@@ -1,20 +1,36 @@
 ---
-title: "工具选择"
-description: "根据任务选择 WorkBuddy、OpenCode 或 Codex。"
+title: "工具选择：WorkBuddy、OpenCode 和 Codex"
+description: "根据任务选择工具，并了解免费 AI 与 Xcompute 中转模型的区别。"
 ---
 
-不需要先理解模型或 API，只看任务类型：
-
-| 任务 | 工具 | 入口 |
+| 工具 | 主要用途 | 是否需要 Xcompute API Key |
 | --- | --- | --- |
-| 邮件、文档、表格、资料整理 | WorkBuddy | [WorkBuddy 入门](/workbuddy) |
-| 修改网站、程序和项目代码 | OpenCode | [OpenCode 配置](/opencode-install) |
-| 已购买 Codex 官方订阅 | Codex | [Codex 协作](/codex-cli-app) |
+| WorkBuddy | 日常文字、资料、表格和办公任务 | 使用自带 AI 时不需要；接入 Xcompute 时需要 |
+| OpenCode | 代码阅读、修改、测试和项目协作 | 使用自带 AI 时不需要；接入 Xcompute 时需要 |
+| Codex | 已有官方订阅的代码任务 | 使用官方订阅时不需要 |
 
-## 选择原则
+## 免费 AI 和中转模型怎么选
 
-- 日常内容使用 WorkBuddy，不需要配置 Xcompute API Key。
-- 代码任务使用 OpenCode，配置 Xcompute API Key 后即可调用模型。
-- 有 Codex 订阅时继续使用订阅，不需要把 Xcompute API Key 配进 Codex。
+WorkBuddy 和 OpenCode 都可能提供官方内置的免费 AI 能力。可用模型、额度和功能由各自产品版本、账号和官方政策决定，使用前以软件界面显示为准。
 
-同一个项目可以被多个工具打开，但不要让两个工具同时修改同一个文件。
+通常可以这样理解：
+
+- 免费 AI：适合简单问答、摘要、代码解释、单文件小修改和试用功能。
+- Xcompute 中转模型：适合复杂推理、长上下文、多文件修改、特定模型和更稳定的 API 调用。
+- 中转模型并不自动代表更适合所有任务，应按任务难度选择能力足够的模型。
+
+## 推荐选择
+
+- 日常内容：先用 [WorkBuddy](/workbuddy) 自带 AI，复杂或需要统一 API 时再接入 Xcompute。
+- 代码任务：先用 [OpenCode](/opencode) 自带 AI 分析，复杂重构或长上下文任务再接入 Xcompute。
+- 已有 Codex 订阅：继续使用 [Codex 官方订阅](/codex-cli-app)，不必重复配置 Xcompute。
+
+## 控制成本
+
+1. 先明确目标，只提供完成任务所需的文件和上下文。
+2. 简单任务使用免费 AI 或低成本模型。
+3. 复杂任务拆成多个小步骤，减少重复发送历史内容。
+4. 让 AI 先给计划，再执行修改，避免无效生成。
+5. 修改后检查结果，不要反复让 AI 重写同一段内容。
+
+合理使用 AI 可以提高效率，也可以降低 Token 资费。模型目录和当前可用模型见[模型目录](/xcompute-models)。

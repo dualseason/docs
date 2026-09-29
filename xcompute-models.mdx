@@ -1,87 +1,43 @@
 ---
-title: "Xcompute 模型目录"
-description: "Xcompute 模型广场当前可用的模型列表。"
+title: "模型目录"
+description: "查看 Xcompute 当前模型及其适用场景。"
 ---
 
-# Xcompute 模型目录
+模型广场中的模型由当前启用渠道动态提供，账号实际可见范围会受到分组限制。以下列表是已核对的全局模型，模型和价格可能调整，请以[模型广场](https://xcompute.us/models)实时显示为准。
 
-本文记录 Xcompute 模型广场中当前已启用的模型。模型列表来自 xcompute 生产环境的启用渠道配置，最后核对时间为 **2026 年 9 月 29 日**。
+## 如何选模型
 
-> 模型广场会按照用户所属分组过滤模型。以下列表是全局启用模型，实际账号可见范围可能少于此列表。
+| 任务 | 建议 |
+| --- | --- |
+| 简单问答、摘要、改写 | 选择成本较低且满足任务的模型，或使用工具自带免费 AI |
+| 普通代码修改和日常开发 | 选择通用文本模型，先从低成本模型开始 |
+| 长上下文、复杂重构和高要求推理 | 再选择能力更强的模型 |
+| 图像生成或图像编辑 | 使用对应的 GPT Image 接口和模型 |
+
+不要为了简单任务默认使用最高规格模型。先明确目标、缩短上下文、减少重复请求，通常比盲目升级模型更省 Token。
 
 ## Claude
 
-- `claude-fable-5`
-- `claude-fable-5-1`
-- `claude-haiku-4-5`
-- `claude-haiku-4-5-20251001`
-- `claude-opus-4-5`
-- `claude-opus-4-6`
-- `claude-opus-4-7`
-- `claude-opus-4-8`
-- `claude-opus-5`
-- `claude-opus-5-5`
-- `claude-sonnet-4-5`
-- `claude-sonnet-4-6`
-- `claude-sonnet-5`
-- `claude-sonnet-5-5`
+`claude-fable-5`、`claude-fable-5-1`、`claude-haiku-4-5`、`claude-haiku-4-5-20251001`、`claude-opus-4-5`、`claude-opus-4-6`、`claude-opus-4-7`、`claude-opus-4-8`、`claude-opus-5`、`claude-opus-5-5`、`claude-sonnet-4-5`、`claude-sonnet-4-6`、`claude-sonnet-5`、`claude-sonnet-5-5`
 
-## GPT 与图像生成
+## GPT 与图像
 
-- `gpt-5.4`
-- `gpt-5.5`
-- `gpt-5.6-luna`
-- `gpt-5.6-sol`
-- `gpt-5.6-terra`
-- `gpt-6-astra`
-- `gpt-6-luna`
-- `gpt-6-sol`
-- `gpt-image-2`
-- `gpt-image-2-async`
-- `gpt-image-2.5`
-- `gpt-image-2.5-async`
+`gpt-5.4`、`gpt-5.5`、`gpt-5.6-luna`、`gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-6-astra`、`gpt-6-luna`、`gpt-6-sol`、`gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async`
 
 ## Gemini 与 Nano Banana
 
-- `gemini-3.1-pro`
-- `gemini-3.6-flash`
-- `gemini-3.7-flash`
-- `gemini-3.8-flash`
-- `nano-banana`
-- `nano-banana-2`
-- `nano-banana-2-lite`
-- `nano-banana-pro`
+`gemini-3.1-pro`、`gemini-3.6-flash`、`gemini-3.7-flash`、`gemini-3.8-flash`、`nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro`
 
 ## Grok
 
-- `grok-4.5`
-- `grok-4.6`
-- `grok-4.7`
+`grok-4.5`、`grok-4.6`、`grok-4.7`
 
-## 国产及其他模型
+## 国产及其他
 
-- `deepseek-v4-flash`
-- `deepseek-v4-pro`
-- `deepseek-v4.1-flash`
-- `glm-5.2`
-- `glm-5.3`
-- `glm-5.3-flash`
-- `kimi-k3`
+`deepseek-v4-flash`、`deepseek-v4-pro`、`deepseek-v4.1-flash`、`glm-5.2`、`glm-5.3`、`glm-5.3-flash`、`kimi-k3`
 
-## 分组说明
+## 分组和可见性
 
-当前配置中可以看到以下模型分组：
+当前配置包含 `default`、`GPT 渠道`、`GPT-企业版`、`GPT福利渠道`、`GPT-6-Astra不降智`、`Claude Max`、`Claude Kiro`、`Claude 官转`、`Gemini 官转`、`Grok稳定分组` 和 `国产模型渠道`。
 
-- `default`
-- `GPT 渠道`
-- `GPT-企业版`
-- `GPT福利渠道`
-- `GPT-6-Astra不降智`
-- `Claude Max`
-- `Claude Kiro`
-- `Claude 官转`
-- `Gemini 官转`
-- `Grok稳定分组`
-- `国产模型渠道`
-
-模型是否显示以及是否可以调用，以账号所属分组和模型对应渠道的实时状态为准。
+模型是否显示以及是否可以调用，以账号所属分组、模型定价和渠道实时状态为准。

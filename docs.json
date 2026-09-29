@@ -58,14 +58,14 @@
   },
   "navbar": {
     "links": [
-        {
-          "label": "控制台",
-          "href": "https://xcompute.us/dashboard/overview"
-        },
-        {
-          "label": "模型定价",
-          "href": "https://xcompute.us/pricing"
-        }
+      {
+        "label": "控制台",
+        "href": "https://xcompute.us/dashboard/overview"
+      },
+      {
+        "label": "模型定价",
+        "href": "https://xcompute.us/pricing"
+      }
     ],
     "primary": {
       "type": "button",
@@ -107,7 +107,8 @@
           {
             "group": "日常任务",
             "pages": [
-              "workbuddy"
+              "workbuddy",
+              "opencode"
             ]
           },
           {
@@ -182,7 +183,7 @@
             ]
           },
           {
-            "group": "安装基础",
+            "group": "基础操作",
             "pages": [
               "node-setup",
               "installation-basics"
@@ -193,7 +194,10 @@
     ]
   },
   "contextual": {
-    "options": ["copy", "view"]
+    "options": [
+      "copy",
+      "view"
+    ]
   },
   "footer": {
     "socials": {

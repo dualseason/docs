@@ -1,26 +1,26 @@
 ---
-title: "快速开始"
-description: "用 API Key 完成第一次 Xcompute 请求。"
+title: "快速入门"
+description: "选择工具、创建 API Key，并完成第一次 Xcompute 请求。"
 ---
 
-## 1. 创建 API Key
+## 先选工具
 
-打开 [API Key 管理页面](https://xcompute.us/keys)，创建并复制密钥。
+| 任务 | 推荐入口 |
+| --- | --- |
+| 第一次调用 API | [API 总览](/api-reference/overview) |
+| 写邮件、整理文档、处理表格 | [WorkBuddy 日常任务入门](/workbuddy) |
+| 修改网站、程序和项目代码 | [OpenCode 日常任务入门](/opencode) |
+| 已有 Codex 官方订阅 | [Codex 订阅与项目协作](/codex-cli-app) |
+
+## 创建 Xcompute API Key
+
+只有调用 Xcompute 中转模型时才需要 API Key。打开 [API Key 管理页面](https://xcompute.us/keys)，创建并复制密钥。
 
 <Warning>
   API Key 只放在服务端或本地配置中。不要提交到 GitHub、发送到聊天群或写入浏览器前端。
 </Warning>
 
-## 2. 选择入口
-
-| 需求 | 入口 |
-| --- | --- |
-| 调用文本或图像 API | [API 总览](/api-reference/overview) |
-| 修改网站或程序代码 | [OpenCode 配置](/opencode-install) |
-| 处理邮件、文档和表格 | [WorkBuddy](/workbuddy) |
-| 已有 Codex 官方订阅 | [Codex 协作](/codex-cli-app) |
-
-## 3. 测试文本接口
+## 第一次请求
 
 接口地址统一使用 `https://xcompute.us/v1`。将 `YOUR_API_KEY` 换成自己的密钥，并使用[模型目录](/xcompute-models)中的模型 ID。
 
@@ -34,11 +34,11 @@ curl https://xcompute.us/v1/chat/completions \
   }'
 ```
 
-返回 JSON 即表示请求成功。完整参数见[文本对话](/api-reference/text/chat-completions)。
+返回 JSON 即表示请求成功。详细参数见[文本对话](/api-reference/text/chat-completions)。
 
-## 4. 下一步
+## 使用原则
 
-- [同步图像生成](/api-reference/images/generate)
-- [图生图](/api-reference/images/edit)
-- [异步图像生成](/api-reference/images/async-generate)
-- [模型目录](/xcompute-models)
+- 简单任务优先使用工具自带的免费 AI。
+- 复杂任务再使用 Xcompute 中转模型，避免为不需要的能力付费。
+- 先拆分任务、减少重复上下文、只发送必要文件。
+- 每次修改后检查 diff 和测试结果，合理使用 AI 也能减少 Token 消耗。
