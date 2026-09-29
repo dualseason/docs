@@ -81,6 +81,12 @@
             "pages": [
               "workbuddy"
             ]
+          },
+          {
+            "group": "模型目录",
+            "pages": [
+              "xcompute-models"
+            ]
           }
         ]
       },
