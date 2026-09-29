@@ -12,7 +12,7 @@ OpenCode 和 WorkBuddy 都有桌面端，也提供官方自带的免费 AI。第
 | 配置项 | 内容 |
 | --- | --- |
 | Base URL | `https://xcompute.us/v1` |
-| API Key | 在 [Xcompute 控制台](https://xcompute.us/keys)创建 |
+| 连接信息 | 在 [API 密钥管理页面](https://xcompute.us/keys)创建或打开 Key，点击“使用令牌”获取 |
 | 模型列表 | 请求 `GET https://xcompute.us/v1/models` 自动获取 |
 | 上下文 | 当前对外提供的模型均按 1M 上下文使用 |
 
@@ -20,13 +20,13 @@ OpenCode 和 WorkBuddy 都有桌面端，也提供官方自带的免费 AI。第
 
 ## 用免费 AI 自动配置
 
-在客户端自带的免费 AI 对话框中，可以直接发送下面的指令。执行配置前，先确认客户端展示的配置内容，不要让 AI 读取或输出已有密钥。
+先打开 [API 密钥管理页面](https://xcompute.us/keys)，创建或选择一个 Key，点击“使用令牌”查看连接信息。将 Base URL 和模型获取地址用于自动配置，将 API Key 粘贴到客户端的安全密钥字段。不要把真实 Key 放进 AI 对话内容。
 
 ```text
 请帮我添加一个 OpenAI 兼容的模型提供商，名称为 Xcompute。
 Base URL 使用 https://xcompute.us/v1。
 请通过 GET /models 自动读取可用模型，不要手工猜测或固定模型名。
-上下文长度按 1M 配置；API Key 由我在客户端的密钥输入框中填写，不要在对话中显示或保存密钥。
+上下文长度按 1M 配置。API Key 我会从 API 密钥管理页面复制，并直接粘贴到客户端的安全密钥字段，不要把 Key 写入提示词、项目文件或日志。
 配置完成后先列出将要使用的模型和请求地址，等待我确认后再保存。
 ```
 
@@ -39,7 +39,7 @@ Base URL 使用 https://xcompute.us/v1。
 | Provider / 供应商名称 | `Xcompute` |
 | Protocol / 协议 | `OpenAI Compatible` |
 | Base URL | `https://xcompute.us/v1` |
-| API Key | 你的 Xcompute API Key |
+| API Key | 从 API 密钥管理页面获取后，粘贴到客户端的安全字段 |
 | Models | 从 `GET /v1/models` 获取 |
 | Context length | `1000000` |
 

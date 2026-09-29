@@ -19,7 +19,7 @@ description: "先使用 OpenCode 免费 AI，再自动同步 Xcompute 模型。"
 
 - Name：`Xcompute`
 - Base URL：`https://xcompute.us/v1`
-- API Key：在 [控制台](https://xcompute.us/keys)创建后填写
+- 连接信息：打开 [API 密钥管理页面](https://xcompute.us/keys)，点击“使用令牌”获取；API Key 粘贴到客户端的安全字段
 - Model list：点击“同步模型”或“刷新模型列表”
 - Context length：`1000000`
 
@@ -28,7 +28,7 @@ description: "先使用 OpenCode 免费 AI，再自动同步 Xcompute 模型。"
 ```text
 请添加 Xcompute OpenAI 兼容 Provider。
 Base URL 是 https://xcompute.us/v1，请调用 GET /models 获取全部模型，不要手工填写模型名。
-上下文长度设置为 1000000。API Key 我会在设置界面填写，不要读取或输出它。
+上下文长度设置为 1000000。请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话、项目或日志。
 保存前展示 Provider、模型列表和上下文设置，等待确认。
 ```
 
@@ -40,7 +40,7 @@ Base URL 是 https://xcompute.us/v1，请调用 GET /models 获取全部模型�
 
 ## 4. 安全和成本
 
-- API Key 只填写在客户端的密钥字段，不要粘贴到对话框。
+- 先到 [API 密钥管理页面](https://xcompute.us/keys)获取连接信息，再将 API Key 直接填写到客户端安全字段。
 - 不要让 AI 把 API Key 写入项目、提交到 Git 或输出到日志。
 - 先让 AI 说明计划，再执行修改。
 - 只打开相关目录，减少无关上下文和 Token 消耗。

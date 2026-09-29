@@ -15,7 +15,7 @@ description: "使用 WorkBuddy 自带免费 AI，或通过 OpenAI 兼容接口�
 
 - Provider：`Xcompute`
 - Base URL：`https://xcompute.us/v1`
-- API Key：在 [控制台](https://xcompute.us/keys)创建
+- 连接信息：打开 [API 密钥管理页面](https://xcompute.us/keys)，点击“使用令牌”获取；API Key 粘贴到客户端安全字段
 - Models：点击“获取模型”“同步模型”或“刷新模型列表”
 - Context length：`1000000`
 
@@ -24,7 +24,7 @@ description: "使用 WorkBuddy 自带免费 AI，或通过 OpenAI 兼容接口�
 ```text
 请帮我添加一个 OpenAI 兼容 Provider，名称为 Xcompute。
 Base URL 使用 https://xcompute.us/v1，通过 GET /models 自动读取模型列表。
-上下文长度设置为 1000000。API Key 我会在设置页面填写，不要在对话中显示密钥。
+上下文长度设置为 1000000。请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话。
 保存前告诉我配置项和模型列表，等待确认。
 ```
 

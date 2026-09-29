@@ -12,7 +12,7 @@ Claude Code 的官方账号、订阅和网络要求由 Anthropic 决定。先按
 只有当前版本支持自定义 API 地址、Provider 或 OpenAI 兼容协议时，才添加 Xcompute：
 
 - Base URL：`https://xcompute.us/v1`
-- API Key：在 [Xcompute 控制台](https://xcompute.us/keys)创建
+- 连接信息：打开 [API 密钥管理页面](https://xcompute.us/keys)，点击“使用令牌”获取；API Key 粘贴到客户端安全字段
 - Models：通过 `GET /v1/models` 自动获取
 - Context length：`1000000`
 
@@ -21,7 +21,7 @@ Claude Code 的官方账号、订阅和网络要求由 Anthropic 决定。先按
 ```text
 请检查当前 Claude Code 版本是否支持自定义兼容 API Provider。
 如果支持，添加 Xcompute，Base URL 为 https://xcompute.us/v1，调用 GET /models 获取模型列表，
-上下文长度设置为 1000000。API Key 由我在配置界面填写，不要读取或输出它，保存前等待确认。
+上下文长度设置为 1000000。请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入对话或日志，保存前等待确认。
 ```
 
 如果版本不支持自定义 Provider，不要修改官方登录流程。使用官方 Claude Code，或改用 [OpenCode](/opencode-install)接入 Xcompute。

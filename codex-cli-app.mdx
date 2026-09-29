@@ -12,7 +12,7 @@ description: "在 Codex 中使用官方订阅，或配置当前版本支持的 O
 只有当前 Codex 版本提供自定义 Provider、OpenAI Compatible 或 Base URL 设置时，才按以下字段配置：
 
 - Base URL：`https://xcompute.us/v1`
-- API Key：在 [Xcompute 控制台](https://xcompute.us/keys)创建
+- 连接信息：打开 [API 密钥管理页面](https://xcompute.us/keys)，点击“使用令牌”获取；API Key 粘贴到客户端安全字段
 - Models：请求 `GET /v1/models` 自动同步
 - Context length：`1000000`
 
@@ -22,7 +22,7 @@ description: "在 Codex 中使用官方订阅，或配置当前版本支持的 O
 请检查当前客户端是否支持 OpenAI 兼容 Provider。
 如果支持，添加 Xcompute，Base URL 为 https://xcompute.us/v1，
 通过 GET /models 获取模型列表，Context length 设置为 1000000。
-API Key 不要读取、显示或写入项目文件，保存前等待确认。
+请提示我打开 API 密钥管理页面获取连接信息，并将 API Key 直接填入客户端安全字段，不要把真实 Key 写入项目文件或日志，保存前等待确认。
 ```
 
 如果当前版本不支持自定义 Provider，不要修改官方登录配置。继续使用 Codex 官方订阅，或使用 [OpenCode](/opencode-install)接入 Xcompute。
