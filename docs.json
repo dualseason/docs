@@ -103,6 +103,7 @@
             "group": "图像生成",
             "pages": [
               "api-reference/images/gpt-image-2/generation",
+              "api-reference/images/gpt-image-2/edits",
               "api-reference/images/gpt-image-2/async-generation"
             ]
           },

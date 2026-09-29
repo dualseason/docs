@@ -1,0 +1,145 @@
+---
+title: 'GPT Image 2.5 图生图'
+description: '使用 GPT Image 2.5 根据一张或多张参考图片生成新图片。'
+api: 'POST /v1/images/edits'
+---
+
+使用 `gpt-image-2.5` 根据一张或多张参考图片生成新图片。参考图片通过 `images` 数组传入，支持单张和多张图片。
+
+## 请求示例
+
+<RequestExample>
+  ```bash cURL theme={null}
+  curl --request POST \
+    --url https://xcompute.us/v1/images/edits \
+    --header 'Authorization: Bearer YOUR_API_KEY' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "model": "gpt-image-2.5",
+      "prompt": "小狗换成小猫",
+      "response_format": "url",
+      "size": "1024x1024",
+      "images": [
+        "https://example.com/source.png"
+      ],
+      "n": 1
+    }'
+  ```
+
+  ```python Python theme={null}
+  import requests
+
+  response = requests.post(
+      "https://xcompute.us/v1/images/edits",
+      headers={
+          "Authorization": "Bearer YOUR_API_KEY",
+          "Content-Type": "application/json",
+      },
+      json={
+          "model": "gpt-image-2.5",
+          "prompt": "小狗换成小猫",
+          "response_format": "url",
+          "size": "1024x1024",
+          "images": ["https://example.com/source.png"],
+          "n": 1,
+      },
+      timeout=300,
+  )
+  response.raise_for_status()
+
+  print(response.json()["data"][0]["url"])
+  ```
+
+  ```javascript JavaScript theme={null}
+  const response = await fetch("https://xcompute.us/v1/images/edits", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer YOUR_API_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-image-2.5",
+      prompt: "小狗换成小猫",
+      response_format: "url",
+      size: "1024x1024",
+      images: ["https://example.com/source.png"],
+      n: 1,
+    }),
+  });
+
+  if (!response.ok) throw new Error(await response.text());
+  console.log((await response.json()).data[0].url);
+  ```
+</RequestExample>
+
+## 请求参数
+
+### Header 参数
+
+<ParamField header="Authorization" type="string">
+  Bearer Token，例如 `Authorization: Bearer YOUR_API_KEY`。你可以在 [API Key 管理页面](https://xcompute.us/keys) 创建密钥。
+</ParamField>
+
+<ParamField header="Content-Type" type="string" default="application/json">
+  请求体格式。请使用 `application/json`。
+</ParamField>
+
+### Body 参数
+
+<ParamField body="model" type="string" default="gpt-image-2.5" required>
+  模型名。固定填写 `gpt-image-2.5`。
+</ParamField>
+
+<ParamField body="prompt" type="string" required>
+  图像编辑提示词，例如需要替换、添加、删除或修改的内容。
+</ParamField>
+
+<ParamField body="size" type="string" default="1024x1024">
+  输出图片尺寸。支持的尺寸见下方的[支持尺寸](#支持尺寸)列表。
+</ParamField>
+
+<ParamField body="response_format" type="string" default="url">
+  返回图片格式。目前仅支持 `url`。
+</ParamField>
+
+<ParamField body="images" type="array[string]" required>
+  参考图片 URL 数组，支持传入单张或多张图片。图片 URL 必须可以被服务端访问。
+</ParamField>
+
+<ParamField body="n" type="integer" default="1">
+  生成数量，范围为 `1` 到 `4`。
+</ParamField>
+
+## 支持尺寸
+
+`gpt-image-2.5` 支持以下 `size` 值：
+
+| 档位 | 支持的 `size` |
+| --- | --- |
+| 标准 | `1024x1024`、`1536x1024`、`1024x1536`、`1024x1365`、`1365x1024`、`1088x1920`、`1920x1088` |
+| 高分辨率 | `2048x2048`、`1712x2560`、`2560x1712`、`2048x1536`、`1536x2048`、`1152x2048`、`2048x1152`、`2880x2880`、`2560x3840`、`3840x2560`、`2880x3840`、`3840x2880`、`2160x3840`、`3840x2160` |
+
+## 成功响应
+
+<ResponseExample>
+  ```json 200 theme={null}
+  {
+    "created": 1789097054,
+    "data": [
+      {
+        "url": "https://example.com/generated-image.png"
+      }
+    ]
+  }
+  ```
+</ResponseExample>
+
+从 `data[0].url` 读取生成图片。使用 `n` 大于 `1` 时，遍历 `data` 数组读取全部结果。图片 URL 可能具有有效期，请及时下载并保存到自己的存储服务。
+
+## 注意事项
+
+- `images` 至少需要包含一个图片 URL，也可以同时传入多张参考图片。
+- 图片 URL 必须可以被 Xcompute 服务端访问，不能使用仅本机可访问的地址。
+- `response_format` 目前仅支持 `url`。
+- `n` 的取值范围为 `1` 到 `4`。
+- 图片尺寸必须使用本文列出的值。
