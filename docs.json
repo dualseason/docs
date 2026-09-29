@@ -4,10 +4,6 @@
   "name": "Xcompute",
   "redirects": [
     {
-      "source": "/computer-basics",
-      "destination": "/installation-basics"
-    },
-    {
       "source": "/api-overview",
       "destination": "/api-reference/overview"
     },
@@ -174,13 +170,6 @@
               "claude-code",
               "lobster",
               "hermes"
-            ]
-          },
-          {
-            "group": "基础操作",
-            "pages": [
-              "node-setup",
-              "installation-basics"
             ]
           }
         ]
