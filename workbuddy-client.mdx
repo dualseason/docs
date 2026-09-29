@@ -1,0 +1,38 @@
+---
+title: "WorkBuddy 桌面端配置"
+description: "使用 WorkBuddy 自带免费 AI，或通过 OpenAI 兼容接口接入 Xcompute。"
+---
+
+## 1. 先使用免费 AI
+
+从 WorkBuddy 官方渠道安装桌面端，登录后直接选择一个官方自带的免费 AI。它适合问答、摘要、改写、邮件、表格和资料整理。
+
+免费 AI 的具体模型、额度和质量由 WorkBuddy 当前版本、地区和账号决定，以应用内显示为准；不要把免费能力理解为固定模型或永久额度。
+
+## 2. 接入 Xcompute
+
+如果当前版本提供自定义 Provider、OpenAI 兼容或 API 设置，填写：
+
+- Provider：`Xcompute`
+- Base URL：`https://xcompute.us/v1`
+- API Key：在 [控制台](https://xcompute.us/keys)创建
+- Models：点击“获取模型”“同步模型”或“刷新模型列表”
+- Context length：`1000000`
+
+也可以让 WorkBuddy 的免费 AI 协助配置：
+
+```text
+请帮我添加一个 OpenAI 兼容 Provider，名称为 Xcompute。
+Base URL 使用 https://xcompute.us/v1，通过 GET /models 自动读取模型列表。
+上下文长度设置为 1000000。API Key 我会在设置页面填写，不要在对话中显示密钥。
+保存前告诉我配置项和模型列表，等待确认。
+```
+
+如果当前 WorkBuddy 版本没有自定义 Provider 功能，就继续使用自带 AI，或使用 [OpenCode 桌面端](/opencode-install)接入 Xcompute。
+
+## 3. 合理使用
+
+- 简单摘要、改写和问答优先用免费 AI。
+- 长文档、复杂分析和指定模型再切换 Xcompute。
+- 不要重复上传相同文件或完整历史记录。
+- 涉及删除、发送或修改重要资料时，先让 AI 给方案并确认。

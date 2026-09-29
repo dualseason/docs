@@ -1,0 +1,24 @@
+---
+title: "龙虾配置"
+description: "在龙虾客户端中使用免费 AI 或配置 Xcompute。"
+---
+
+龙虾的菜单名称和 Provider 支持以当前版本为准。先选择客户端自带的免费 AI，确认基础功能正常，再添加 Xcompute。
+
+## Xcompute 参数
+
+- 协议：`OpenAI Compatible`
+- Base URL：`https://xcompute.us/v1`
+- API Key：在 [Xcompute 控制台](https://xcompute.us/keys)创建
+- 模型：通过 `GET /v1/models` 获取，不要手工猜测
+- 上下文长度：`1000000`
+
+如果龙虾支持 AI 自动配置，可以发送：
+
+```text
+请添加 Xcompute OpenAI 兼容 Provider。
+Base URL 是 https://xcompute.us/v1，通过 GET /models 获取全部模型，Context length 设置为 1000000。
+API Key 我会在设置界面填写，不要读取、输出或保存密钥。保存前等待确认。
+```
+
+免费 AI 适合简单任务；复杂任务再使用 Xcompute。配置失败时，先确认客户端是否支持 OpenAI 兼容 Provider，再检查 Base URL 是否包含 `/v1`。

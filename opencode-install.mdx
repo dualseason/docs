@@ -1,395 +1,48 @@
 ---
-title: "OpenCode 代码任务安装与配置"
-description: "在 Windows、macOS 和 Linux 上安装 OpenCode，并用 Xcompute 完成代码任务。"
+title: "OpenCode 桌面端配置"
+description: "先使用 OpenCode 免费 AI，再自动同步 Xcompute 模型。"
 ---
 
-OpenCode 用于修改网站、程序和项目文件。写邮件、整理资料等日常工作请使用 [WorkBuddy](/workbuddy)。
+## 1. 安装并打开桌面端
 
-这篇教程使用同一套流程完成 OpenCode 安装和 Xcompute 配置：
+从 [OpenCode 官方下载页面](https://opencode.ai/download)安装桌面端，打开一个项目文件夹。
 
-1. 安装 Node.js 24。
-2. 使用 npm 安装 OpenCode CLI。
-3. 修改 `.config/opencode/opencode.json`。
-4. 打开项目文件夹并开始代码任务。
+第一次使用时，先选择 OpenCode 当前提供的免费 AI，发送：
 
-<Info>
-  如果你不熟悉下载安装包、PowerShell、终端、命令或配置文件，请先阅读 [电脑基础操作](/installation-basics)，再回来继续操作。
-</Info>
-
-<Note>
-  教程中的命令都需要粘贴到“命令行窗口”中，再按 Enter 执行。Windows 使用 PowerShell，macOS 使用“终端”，Linux 使用 Terminal。下面每一步都会告诉你如何打开。
-</Note>
-
-<Tip>
-  **推荐方案：Node.js 24 安装包 + npm**
-
-  Windows 直接安装 MSI，macOS 直接安装 PKG，操作比先安装 NVM 更简单。Node.js 环境准备好以后，Windows、macOS 和 Linux 都使用同一条 npm 命令安装 OpenCode。
-</Tip>
-
-## 第一步：直接安装 Node.js
-
-本文提供 Node.js 24.18.0 安装包直链，无需进入带广告的下载页面。Windows 和 macOS 用户直接下载安装包即可。
-
-<Tabs>
-  <Tab title="Windows">
-    1. 点击 [下载 Node.js 24 Windows 64 位安装包](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-x64.msi)。
-    2. 等待浏览器下载 `node-v24.18.0-x64.msi`。
-    3. 双击 MSI 文件，按照默认选项完成安装。
-    4. 点击 Windows 左下角的 **开始菜单**，输入 `PowerShell`。
-    5. 点击搜索结果中的 **Windows PowerShell**。如果后续提示权限不足，请右键选择 **以管理员身份运行**，再点击 **是**。
-
-    <Frame>
-      ![Windows 开始菜单中打开 Windows PowerShell](/images/image-32.png)
-    </Frame>
-
-    在打开的蓝色或黑色窗口中依次输入下面两条命令，每输入一条都按一次 Enter：
-
-    ```powershell
-    node -v
-    npm -v
-    ```
-
-    绝大多数 Windows 电脑都应选择 64 位安装包。只有明确知道自己的系统是 32 位时，才使用下方的 32 位安装包。
-  </Tab>
-  <Tab title="macOS">
-    1. 点击 [下载 Node.js 24 macOS 安装包](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0.pkg)。
-    2. 等待浏览器下载 `node-v24.18.0.pkg`。
-    3. 双击 PKG 文件，按照提示完成安装。
-    4. 按 `Command + 空格键` 打开聚焦搜索，输入“终端”或 `Terminal`，再按 Enter 打开。
-
-    在终端窗口中依次输入下面两条命令，每输入一条都按一次 Enter：
-
-    ```bash
-    node -v
-    npm -v
-    ```
-
-    该 PKG 安装包支持 64 位 Intel 和 Apple Silicon Mac。
-  </Tab>
-  <Tab title="Linux">
-    按 `Ctrl + Alt + T` 打开终端。部分桌面系统也可以在应用列表中搜索 `Terminal` 或“终端”。
-
-    Debian 和 Ubuntu 在终端中依次执行：
-
-    ```bash
-    curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
-    sudo apt install -y nodejs
-    ```
-
-    Fedora、RHEL 及其衍生发行版在终端中依次执行：
-
-    ```bash
-    curl -fsSL https://rpm.nodesource.com/setup_24.x | sudo bash -
-    sudo dnf install -y nodejs
-    ```
-
-    然后验证安装：
-
-    ```bash
-    node -v
-    npm -v
-    ```
-  </Tab>
-</Tabs>
-
-<Info>
-  安装完成后，`node -v` 应显示 `v24.x.x`。OpenCode 也兼容 Node.js 22 或更高版本。
-</Info>
-
-<Accordion title="其他架构和压缩包下载">
-  新手优先使用上面的 64 位 MSI 或 PKG。只有系统架构不同时，才选择以下文件：
-
-  | 系统 | 安装包 |
-  | --- | --- |
-  | Windows 32 位 MSI | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-x86.msi) |
-  | Windows 32 位 ZIP | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-win-x86.zip) |
-  | Windows 64 位 ZIP | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-win-x64.zip) |
-  | macOS Intel TAR.GZ | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-darwin-x64.tar.gz) |
-  | macOS ARM64 TAR.GZ | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-darwin-arm64.tar.gz) |
-  | Linux x64 TAR.XZ | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-linux-x64.tar.xz) |
-  | Linux ARMv7 TAR.XZ | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-linux-armv7l.tar.xz) |
-  | Linux ARM64 TAR.XZ | [下载](https://npmmirror.com/mirrors/node/v24.18.0/node-v24.18.0-linux-arm64.tar.xz) |
-
-  [查看 Node.js 24.18.0 全部安装包](https://npmmirror.com/mirrors/node/v24.18.0/)
-</Accordion>
-
-### 备用方案：使用 NVM 安装 Node.js 24
-
-需要同时管理多个 Node.js 版本，或者官网安装包无法正常使用时，再选择 NVM。
-
-<Tabs>
-  <Tab title="Windows">
-    点击 **开始菜单**，输入 `PowerShell`，右键点击 **Windows PowerShell**，选择 **以管理员身份运行**，再点击 **是**。然后执行：
-
-    ```powershell
-    winget install CoreyButler.NVMforWindows
-    ```
-
-    关闭并重新打开管理员 PowerShell，然后执行：
-
-    ```powershell
-    nvm install 24
-    nvm use 24
-    ```
-  </Tab>
-  <Tab title="macOS / Linux">
-    ```bash
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    ```
-
-    重新打开终端，然后执行：
-
-    ```bash
-    nvm install 24
-    nvm use 24
-    nvm alias default 24
-    ```
-  </Tab>
-</Tabs>
-
-## 第二步：统一安装 OpenCode CLI
-
-完成 Node.js 安装后，在刚才打开的 PowerShell 或终端中依次执行下面的命令。可以整段复制粘贴，也可以一行一行执行：
-
-```bash
-node -v
-npm -v
-npm install -g opencode-ai
-opencode --version
+```text
+请先分析这个项目的目录结构和启动方式，不要修改任何文件。
 ```
 
-<Frame>
-  ![PowerShell 中安装 OpenCode 并显示版本号](/images/image-34.png)
-</Frame>
+## 2. 添加 Xcompute
 
-你应该看到：
+在 Provider、Model Provider 或设置页面添加 OpenAI 兼容服务：
 
-- `node -v` 输出 `v24.x.x`。
-- `npm -v` 输出 npm 版本号。
-- `opencode --version` 输出 OpenCode 版本号。
+- Name：`Xcompute`
+- Base URL：`https://xcompute.us/v1`
+- API Key：在 [控制台](https://xcompute.us/keys)创建后填写
+- Model list：点击“同步模型”或“刷新模型列表”
+- Context length：`1000000`
 
-<Info>
-  Windows PowerShell 通常可以直接按 `Ctrl+V` 粘贴，macOS 终端使用 `Command+V`，Linux 终端通常使用 `Ctrl+Shift+V`。粘贴后按 Enter 开始执行。
-</Info>
+如果桌面端自带 AI 可以执行设置操作，也可以发送：
 
-### 可选：使用官方 curl 脚本
-
-macOS、Linux 和 WSL 也可以跳过 Node.js 环境，直接执行：
-
-```bash
-curl -fsSL https://opencode.ai/install | bash
+```text
+请添加 Xcompute OpenAI 兼容 Provider。
+Base URL 是 https://xcompute.us/v1，请调用 GET /models 获取全部模型，不要手工填写模型名。
+上下文长度设置为 1000000。API Key 我会在设置界面填写，不要读取或输出它。
+保存前展示 Provider、模型列表和上下文设置，等待确认。
 ```
 
-原生 Windows 无法直接使用这条 Bash 命令，所以需要三平台统一操作时，仍然推荐 npm 方案。
+## 3. 选择模型
 
-## 第三步：创建配置文件
+配置完成后，从模型选择器中选择 Xcompute 模型。模型列表以 `GET /v1/models` 返回结果为准，不要照抄旧教程中的模型名。
 
-CLI 和桌面端共用同一个全局配置文件。配置一次后，两边都可以使用 Xcompute 模型。
+简单任务优先使用免费 AI 或成本较低的模型；复杂重构、长上下文和多文件任务再使用能力更强的 Xcompute 模型。
 
-<Tabs>
-  <Tab title="Windows">
-    点击 **开始菜单**，输入 `PowerShell` 并打开 **Windows PowerShell**。
+## 4. 安全和成本
 
-    复制下面两行并按 Enter，系统会自动创建目录并用记事本打开配置文件：
+- API Key 只填写在客户端的密钥字段，不要粘贴到对话框。
+- 不要让 AI 把 API Key 写入项目、提交到 Git 或输出到日志。
+- 先让 AI 说明计划，再执行修改。
+- 只打开相关目录，减少无关上下文和 Token 消耗。
 
-    ```powershell
-    New-Item -ItemType Directory -Force "$HOME\.config\opencode"
-    notepad "$HOME\.config\opencode\opencode.json"
-    ```
-
-    记事本询问是否创建文件时选择 **是**。粘贴配置后按 `Ctrl+S` 保存。
-
-    如果出现“另存为”窗口，将 **保存类型** 改为 **所有文件**，并确保文件名是 `opencode.json`，而不是 `opencode.json.txt`。
-  </Tab>
-  <Tab title="macOS / Linux">
-    打开终端，复制下面两行并按 Enter。第一行创建配置目录，第二行用 nano 编辑器打开配置文件：
-
-    ```bash
-    mkdir -p ~/.config/opencode
-    nano ~/.config/opencode/opencode.json
-    ```
-
-    使用 nano 时，按 `Ctrl+O` 保存，按 Enter 确认，再按 `Ctrl+X` 退出。
-  </Tab>
-</Tabs>
-
-## 第四步：写入 Xcompute 配置
-
-打开 [Xcompute API Key 页面](https://xcompute.us/keys)，创建 API Key 后点击 **使用令牌**。
-
-<Frame>
-  ![Xcompute API Key 页面中的使用令牌按钮](/images/image-35.png)
-</Frame>
-
-选择 OpenCode 客户端并复制配置。请仍以本页的完整 JSON 为准，避免漏掉必要字段。
-
-<Frame>
-  ![Xcompute 使用令牌窗口中的 OpenCode 配置](/images/image-36.png)
-</Frame>
-
-把 `在这里填写你的APIKey` 替换为你的 Xcompute API Key，然后将下面内容完整粘贴到 `opencode.json`：
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "xcompute": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Xcompute",
-      "options": {
-        "baseURL": "https://xcompute.us/v1",
-        "apiKey": "在这里填写你的APIKey"
-      },
-      "models": {
-        "gpt-5.6-sol": {
-          "name": "GPT-5.6-Sol"
-        }
-      }
-    }
-  },
-  "model": "xcompute/gpt-5.6-sol"
-}
-```
-
-<Info>
-  统一使用 https://xcompute.us/v1。该地址已配置回国线路，地址末尾必须保留 /v1。
-</Info>
-
-<Warning>
-  配置文件包含 API Key，请勿上传到 GitHub、发送给他人或放入项目目录。全局配置文件只应保存在你自己的电脑中。
-</Warning>
-
-### 配置项说明
-
-| 配置项 | 作用 |
-| --- | --- |
-| `provider.xcompute` | 创建名为 Xcompute 的模型提供商 |
-| `npm` | 使用 OpenAI 兼容协议适配器 |
-| baseURL | https://xcompute.us/v1 |
-| `apiKey` | 你的 Xcompute API Key |
-| `models` | 在 OpenCode 中可选择的模型列表 |
-| `model` | OpenCode 启动时默认使用的模型 |
-
-模型 ID 必须与 Xcompute 支持的模型名称完全一致。需要更换文本模型时，在 `models` 中按照相同格式增加条目，并前往 [模型广场](https://xcompute.us/models) 查看当前可用的模型 ID。
-
-例如，新增一个模型：
-
-```json
-"模型ID": {
-  "name": "显示名称"
-}
-```
-
-添加多个模型时，注意使用英文逗号分隔。JSON 最后一项后面不能保留逗号。
-
-## 第五步：启动并切换模型
-
-进入你的项目目录并启动 OpenCode：
-
-```bash
-cd /path/to/your-project
-opencode
-```
-
-进入 OpenCode 后：
-
-1. 输入 `/models`，确认能看到 Xcompute 下配置的文本模型。
-2. 输入 `/init`，让 OpenCode 分析项目并生成 `AGENTS.md`。
-3. 输入“读取项目结构并告诉我如何启动，不要修改文件”。
-4. 确认理解无误后，再让它修改代码。
-
-<Tip>
-  修改 `opencode.json` 后，请退出并重新打开 CLI 或桌面端，使新配置生效。
-</Tip>
-
-## 桌面端安装
-
-桌面端是可选项。它与 CLI 共用刚才创建的 `opencode.json`，无需重复配置模型。
-
-建议通过 [OpenCode 官方下载页面](https://opencode.ai/download) 获取最新版本。
-
-| 系统 | 最新安装包 |
-| --- | --- |
-| macOS（Apple Silicon） | [下载 DMG](https://opencode.ai/download/stable/darwin-aarch64-dmg) |
-| macOS（Intel） | [下载 DMG](https://opencode.ai/download/stable/darwin-x64-dmg) |
-| Windows（x64） | [下载安装程序](https://opencode.ai/download/stable/windows-x64-nsis) |
-| Debian / Ubuntu（x64） | [下载 DEB](https://opencode.ai/download/stable/linux-x64-deb) |
-| Fedora / RHEL（x64） | [下载 RPM](https://opencode.ai/download/stable/linux-x64-rpm) |
-
-- macOS：打开 DMG，将 OpenCode 拖入 **Applications** 文件夹。
-- Windows：双击安装程序，并按照界面提示完成安装。
-- Linux：双击 DEB 或 RPM 安装包，使用系统软件中心安装。
-
-安装后启动桌面端并打开项目。如果模型列表没有立即更新，请完全退出桌面端后重新打开。
-
-### 可选：在桌面端手动添加提供商
-
-如果你不想编辑 JSON，也可以在桌面端的提供商设置中选择 **Custom Provider**。
-
-<Frame>
-  <img
-    src="/images/image-39.png"
-    alt="OpenCode 桌面端的自定义提供商表单"
-    title="自定义提供商表单"
-  />
-</Frame>
-
-按下表填写。Base URL 必须保留末尾的 `/v1`。
-
-| 字段 | 值 |
-| --- | --- |
-| Provider ID | `xcompute` |
-| Display Name | `Xcompute` |
-| Base URL | `https://xcompute.us/v1` |
-| API Key | 你的 Xcompute API Key |
-| Model ID | `gpt-5.6-sol` |
-
-添加后，在提供商设置中确认 API Key 和模型，然后选择需要使用的模型。
-
-<Frame>
-  ![OpenCode 桌面端的提供商 API Key 和模型设置](/images/image-37.png)
-</Frame>
-
-## 更新 OpenCode
-
-三个平台都使用同一条 npm 命令更新 CLI：
-
-```bash
-npm update -g opencode-ai
-opencode --version
-```
-
-桌面端请访问 [官方下载页面](https://opencode.ai/download) 获取最新安装包。
-
-## 常见问题
-
-### `opencode` 命令不存在
-
-关闭并重新打开终端，然后依次执行：
-
-```bash
-node -v
-npm -v
-npm install -g opencode-ai
-opencode --version
-```
-
-### 看不到 Xcompute 模型
-
-依次检查：
-
-1. 配置文件路径和文件名是否正确。
-2. Windows 文件名是否被保存成 `opencode.json.txt`。
-3. JSON 是否使用英文双引号，最后一项后面是否有多余逗号。
-4. baseURL 必须设置为 https://xcompute.us/v1。
-5. 修改后是否完全重启 OpenCode。
-
-### 提示 API Key 无效
-
-前往 [API 密钥页面](https://xcompute.us/keys) 确认 Key 可用，并检查复制时是否带入了空格。不要在 API Key 前后添加额外引号或中文符号。
-
-## 官方资源
-
-- [OpenCode 官网](https://opencode.ai)
-- [OpenCode 官方文档](https://opencode.ai/docs/)
-- [OpenCode 下载页面](https://opencode.ai/download)
+命令行安装和旧版配置方式见 [安装基础](/installation-basics)，但桌面端用户不需要先安装 Node.js。

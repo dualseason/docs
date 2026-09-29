@@ -1,53 +1,70 @@
 ---
-title: "Agent 安装与配置"
-description: "选择并安装适合你的代码 Agent 或第三方客户端。"
+title: "客户端配置总览"
+description: "使用客户端自带免费 AI，或通过统一接口接入 Xcompute。"
 ---
 
-这里集中提供 Agent 安装和配置教程。Xcompute 推荐使用 OpenCode 完成代码任务；已经购买 Codex 官方订阅的用户，可以继续使用订阅。
+## 最新配置方式
 
-## 推荐顺序
+OpenCode 和 WorkBuddy 都有桌面端，也提供官方自带的免费 AI。第一次使用时，先打开桌面端并选择一个免费 AI，确认客户端能正常工作，再决定是否接入 Xcompute。
 
-<CardGroup cols={2}>
-  <Card title="OpenCode" icon="terminal" href="/opencode-install">
-    国内代码任务的推荐选择，支持配置 Xcompute 文本模型。
-  </Card>
-  <Card title="Codex" icon="code" href="/codex-cli-app">
-    适合已经购买 Codex 官方订阅的用户。
-  </Card>
-</CardGroup>
+需要更强模型、长上下文、多文件任务或统一 API 时，再配置 Xcompute：
 
-## 海外 Agent
+| 配置项 | 内容 |
+| --- | --- |
+| Base URL | `https://xcompute.us/v1` |
+| API Key | 在 [Xcompute 控制台](https://xcompute.us/keys)创建 |
+| 模型列表 | 请求 `GET https://xcompute.us/v1/models` 自动获取 |
+| 上下文 | 当前对外提供的模型均按 1M 上下文使用 |
 
-<CardGroup cols={2}>
-  <Card title="Claude Code 安装" icon="download" href="/claude-code">
-    安装 Claude Code 并了解账号与网络要求。
-  </Card>
-  <Card title="Claude Code CLI" icon="square-terminal" href="/claude-code-cli-app">
-    从项目目录启动并完成第一次代码任务。
-  </Card>
-</CardGroup>
+客户端支持 OpenAI 兼容接口时，通常只需要填写 Base URL 和 API Key，然后点击“获取模型”“同步模型”或“刷新模型列表”。不要手工把模型名一条条写进配置文件。
 
-海外 Agent 在国内可能遇到网络、账号和登录问题。它们是可选方案，不是 Xcompute 当前的主推荐入口。
+## 用免费 AI 自动配置
 
-## 第三方客户端
+在客户端自带的免费 AI 对话框中，可以直接发送下面的指令。执行配置前，先确认客户端展示的配置内容，不要让 AI 读取或输出已有密钥。
 
-<CardGroup cols={2}>
-  <Card title="CC Switch" icon="repeat" href="/cc-switch">
-    管理和切换客户端配置。
-  </Card>
-  <Card title="Codex++" icon="code-branch" href="/codex-plus-plus">
-    第三方 Codex 客户端配置。
-  </Card>
-  <Card title="CodexHub" icon="boxes-stacked" href="/codexhub">
-    第三方 Codex 管理工具配置。
-  </Card>
-  <Card title="Kelivo" icon="message" href="/kelivo">
-    第三方 AI 客户端文本模型配置。
-  </Card>
-</CardGroup>
+```text
+请帮我添加一个 OpenAI 兼容的模型提供商，名称为 Xcompute。
+Base URL 使用 https://xcompute.us/v1。
+请通过 GET /models 自动读取可用模型，不要手工猜测或固定模型名。
+上下文长度按 1M 配置；API Key 由我在客户端的密钥输入框中填写，不要在对话中显示或保存密钥。
+配置完成后先列出将要使用的模型和请求地址，等待我确认后再保存。
+```
 
-第三方客户端不是使用 Xcompute 的必需软件。客户端中出现的其它模型或功能，不代表 Xcompute 当前提供或保证可用。
+## 手动配置字段
 
-## 安装前准备
+如果客户端不支持自动配置，填写以下字段：
 
-需要通过命令行安装时，先阅读 [Node.js 环境准备](/node-setup)。不熟悉文件路径、终端和配置文件时，先阅读 [电脑基础操作](/installation-basics)。
+| 字段 | 值 |
+| --- | --- |
+| Provider / 供应商名称 | `Xcompute` |
+| Protocol / 协议 | `OpenAI Compatible` |
+| Base URL | `https://xcompute.us/v1` |
+| API Key | 你的 Xcompute API Key |
+| Models | 从 `GET /v1/models` 获取 |
+| Context length | `1000000` |
+
+验证模型列表：
+
+```bash
+curl https://xcompute.us/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+模型列表以接口实际返回为准。模型可能受到账号分组、渠道状态和权限影响。
+
+## 选择免费 AI 还是 Xcompute
+
+- 简单问答、摘要、代码解释和小修改：优先使用客户端自带免费 AI。
+- 长文档、多文件重构、复杂推理和指定模型：使用 Xcompute。
+- 不要为了简单任务默认使用最高规格模型。
+- 先让 AI 给计划，再执行修改；只提供完成任务所需的文件和上下文。
+- 减少重复发送历史内容，完成一步就检查结果，可以直接降低 Token 消耗。
+
+## 支持的客户端
+
+- [OpenCode 桌面端](/opencode-install)：代码项目和 Agent 任务。
+- [WorkBuddy 桌面端](/workbuddy-client)：日常文档、表格和资料任务。
+- [Codex](/codex-cli-app)：官方订阅或 OpenAI 兼容配置，取决于当前版本支持的 Provider。
+- [Claude Code](/claude-code)：官方账号或当前版本支持的兼容 Provider。
+- [龙虾](/lobster)：使用客户端内置配置或 OpenAI 兼容 Provider。
+- [Hermes](/hermes)：使用客户端内置配置或 OpenAI 兼容 Provider。

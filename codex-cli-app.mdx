@@ -1,54 +1,30 @@
 ---
-title: "Codex 订阅与项目协作"
-description: "已有 Codex 订阅时，保留订阅并用 OpenCode 或 WorkBuddy 协作处理项目。"
+title: "Codex 配置"
+description: "在 Codex 中使用官方订阅，或配置当前版本支持的 OpenAI 兼容 Provider。"
 ---
 
-如果你已经购买 Codex 官方订阅，继续在 Codex 官方 App 或 CLI 登录订阅账号即可。不要为了使用同一个项目再把 Xcompute API Key 配进 Codex。
+## 官方订阅
 
-<Tip>
-  对电脑初学者，推荐将 Codex 订阅、OpenCode 和 WorkBuddy 分工使用：Codex 保留官方订阅；OpenCode 处理代码；WorkBuddy 处理日常材料和说明文字。
-</Tip>
+如果你有 Codex 官方订阅，直接在 Codex 桌面端或 CLI 登录官方账号。简单代码任务可以优先使用官方提供的免费或订阅额度，不需要重复配置 Xcompute。
 
-## 先登录 Codex 订阅
+## 配置 Xcompute
 
-1. 从 [Codex 官方页面](https://chatgpt.com/codex?app-landing-page=true) 安装或打开 Codex。
-2. 使用购买订阅的 OpenAI 账号登录。
-3. 按 Codex 界面提示选择或打开项目文件夹。
-4. 先输入“请分析这个项目，不要修改任何文件”，确认可以正常使用。
+只有当前 Codex 版本提供自定义 Provider、OpenAI Compatible 或 Base URL 设置时，才按以下字段配置：
 
-Codex 订阅按 OpenAI 官方规则计费。Xcompute API Key 是另一种独立的计费方式，两者不需要混用。
+- Base URL：`https://xcompute.us/v1`
+- API Key：在 [Xcompute 控制台](https://xcompute.us/keys)创建
+- Models：请求 `GET /v1/models` 自动同步
+- Context length：`1000000`
 
-## 如何与 OpenCode、WorkBuddy 协作
+可以让 Codex 自带 AI 协助检查配置：
 
-项目文件夹就是保存网站、程序或代码的文件夹，例如桌面的 `my-website` 文件夹。三个工具可以先后打开同一个项目文件夹。
+```text
+请检查当前客户端是否支持 OpenAI 兼容 Provider。
+如果支持，添加 Xcompute，Base URL 为 https://xcompute.us/v1，
+通过 GET /models 获取模型列表，Context length 设置为 1000000。
+API Key 不要读取、显示或写入项目文件，保存前等待确认。
+```
 
-推荐工作顺序：
+如果当前版本不支持自定义 Provider，不要修改官方登录配置。继续使用 Codex 官方订阅，或使用 [OpenCode](/opencode-install)接入 Xcompute。
 
-1. 用 WorkBuddy 整理需求、客户材料或待办事项。
-2. 选择 Codex 或 OpenCode 其中一个修改项目代码。
-3. 修改完成后，运行测试或打开网站确认结果。
-4. 再用 WorkBuddy 整理修改说明、发布内容或交付清单。
-
-<Warning>
-  不要同时让 Codex 和 OpenCode 修改同一个文件。完成一个工具的任务后，先检查并保存文件，再关闭该工具或停止任务，然后再使用另一个工具。
-</Warning>
-
-## 什么时候使用 OpenCode
-
-需要用 Xcompute 模型修改代码、在国内网络环境下进行代码任务，或者希望由 Xcompute API 计费时，请使用 [OpenCode 代码任务安装与配置](/opencode-install)。
-
-OpenCode 桌面端和 Codex 都可以打开同一个项目文件夹。打开文件夹前，确认没有未保存的改动。
-
-## 常见问题
-
-### 我有 Codex 订阅，还需要 API Key 吗？
-
-只使用 Codex 订阅时不需要。只有使用 OpenCode 调用 Xcompute 时，才需要 Xcompute API Key。
-
-### 我能让 WorkBuddy 修改代码吗？
-
-WorkBuddy 适合需求整理、资料处理和日常内容。代码修改优先使用 OpenCode 或 Codex。
-
-### 为什么打开后看不到我的项目？
-
-在工具中选择 **打开文件夹** 或 **Open Folder**，然后选择实际保存代码的项目文件夹。不要选择单个文件，也不要选择下载目录中的压缩包。
+不要同时让 Codex 和其他 Agent 修改同一个文件；每次修改后检查 diff 和测试结果。

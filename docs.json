@@ -155,32 +155,25 @@
         "tab": "客户端配置",
         "groups": [
           {
-            "group": "开始使用",
+            "group": "配置总览",
             "pages": [
               "agent-installation"
             ]
           },
           {
-            "group": "推荐配置",
+            "group": "桌面端",
             "pages": [
               "opencode-install",
-              "codex-cli-app"
+              "workbuddy-client"
             ]
           },
           {
-            "group": "其他客户端",
+            "group": "代码客户端",
             "pages": [
+              "codex-cli-app",
               "claude-code",
-              "claude-code-cli-app"
-            ]
-          },
-          {
-            "group": "第三方客户端",
-            "pages": [
-              "cc-switch",
-              "codex-plus-plus",
-              "codexhub",
-              "kelivo"
+              "lobster",
+              "hermes"
             ]
           },
           {
