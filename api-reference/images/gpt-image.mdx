@@ -1,0 +1,156 @@
+---
+title: 'GPT Image：从零开始生成图片'
+description: '一步一步调用 GPT Image 2 和 GPT Image 2.5 生图模型。'
+api: 'POST /v1/images/generations'
+---
+
+这篇教程适合第一次调用接口的客户。你只需要准备 API Key、选择一个模型，然后复制下面的请求。
+
+## 第一步：准备 API Key
+
+在 [API Key 管理页面](https://xcompute.us/keys) 创建一个 API Key。下面所有示例里的 `YOUR_API_KEY` 都要替换成你自己的 Key。
+
+<Warning>API Key 等同于账户密码。不要把它放进网页前端、GitHub、微信群或公开代码中。</Warning>
+
+## 第二步：选择模型
+
+| 模型 | 适合什么情况 | 返回方式 |
+| --- | --- | --- |
+| `gpt-image-2` | 普通文生图，先从这个开始 | 等待完成后直接返回图片 |
+| `gpt-image-2.5` | 需要更高规格的通用生图 | 等待完成后直接返回图片 |
+| `gpt-image-2-async` | 不想让程序长时间等待 | 先返回任务 ID，再查询结果 |
+| `gpt-image-2.5-async` | 高规格生图，但使用异步任务 | 先返回任务 ID，再查询结果 |
+
+第一次测试建议使用 `gpt-image-2`，参数最少，成功后再换其他模型。
+
+## 第三步：先用最简单的请求
+
+把下面命令复制到终端，把 `YOUR_API_KEY` 替换为你的 Key：
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-image-2",
+    "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+    "size": "1024x1024",
+    "n": 1,
+    "response_format": "url"
+  }'
+```
+
+Python 调用：
+
+```python
+import requests
+
+response = requests.post(
+    "https://xcompute.us/v1/images/generations",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "gpt-image-2",
+        "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+        "size": "1024x1024",
+        "n": 1,
+        "response_format": "url",
+    },
+    timeout=300,
+)
+response.raise_for_status()
+print(response.json()["data"][0]["url"])
+```
+
+## 第四步：看懂成功响应
+
+成功时会返回类似下面的数据：
+
+```json
+{
+  "created": 1790950716,
+  "data": [
+    {
+      "url": "https://example.com/generated-image.png",
+      "revised_prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格"
+    }
+  ]
+}
+```
+
+图片地址在 `data[0].url`。这个地址可能有有效期，建议拿到地址后立即下载到自己的存储。
+
+## 第五步：使用异步模型
+
+如果你的程序不方便等待 30 秒左右，可以把模型换成 `gpt-image-2-async` 或 `gpt-image-2.5-async`：
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "gpt-image-2.5-async",
+    "prompt": "未来城市夜景，电影感灯光，无文字",
+    "size": "1024x1024"
+  }'
+```
+
+提交成功后会返回 `id`：
+
+```json
+{
+  "id": "task_EXAMPLE",
+  "status": "queued",
+  "mode": "generate"
+}
+```
+
+保存这个 `id`，然后查询：
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/v1/images/generations/task_EXAMPLE \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+当返回的 `items[0].status` 是 `success` 时，读取 `items[0].data[0].url`。完整的响应格式见[任务查询](/api-reference/tasks/query)。
+
+## 第六步：调整图片
+
+常用参数：
+
+| 参数 | 示例 | 说明 |
+| --- | --- | --- |
+| `prompt` | `一座雪山，日出，写实摄影` | 必填，描述你想要的图片 |
+| `size` | `1024x1024` | 图片尺寸，第一次建议使用这个值 |
+| `quality` | `auto`、`low`、`medium`、`high` | 图片质量 |
+| `n` | `1` | 生成数量，同步 GPT Image 支持 `1` 到 `4` |
+| `response_format` | `url` | 当前使用图片 URL |
+
+提示词建议按照“主体 + 场景 + 构图 + 风格 + 限制”来写，例如：
+
+```text
+一杯咖啡放在木桌上，窗边自然光，近景构图，商业产品摄影风格，画面中不要出现文字
+```
+
+## 常见问题
+
+### 返回 `401`
+
+检查请求头是否严格写成：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+### 返回 `503 No available channel`
+
+这通常表示你的 API Key 所属分组暂时看不到这个模型。联系管理员确认模型权限，或换用你账号可见的模型。
+
+### 请求超时
+
+同步模型需要等待上游生成。客户端超时建议设置为至少 300 秒；不方便等待时请改用带 `-async` 后缀的模型。

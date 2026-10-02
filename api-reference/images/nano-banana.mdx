@@ -1,0 +1,158 @@
+---
+title: 'Nano Banana：从零开始生成和编辑图片'
+description: '一步一步调用 Nano Banana 系列文生图和图生图模型。'
+api: 'POST /v1/images/generations'
+---
+
+这篇教程适合第一次使用 Nano Banana 的客户。Nano Banana 的特点是：提交图片后先返回任务 ID，生成完成后再查询图片地址。
+
+## 第一步：准备 API Key
+
+在 [API Key 管理页面](https://xcompute.us/keys) 创建一个 API Key，并确认这个 Key 可以看到 Nano Banana 模型。下面示例中的 `YOUR_API_KEY` 要替换成你的 Key。
+
+<Warning>API Key 不要写入浏览器前端、公开仓库或聊天群。服务端程序请使用环境变量保存它。</Warning>
+
+## 第二步：选择模型
+
+| 模型 | 建议 |
+| --- | --- |
+| `nano-banana` | 通用 Nano Banana 图像生成 |
+| `nano-banana-2` | 默认推荐，先从这个开始 |
+| `nano-banana-2-lite` | 更关注速度的场景 |
+| `nano-banana-pro` | 更关注质量的场景 |
+
+第一次测试建议使用 `nano-banana-2`。
+
+## 第三步：提交一张图片生成任务
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "nano-banana-2",
+    "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+    "size": "1024x1024"
+  }'
+```
+
+Python 调用：
+
+```python
+import requests
+
+response = requests.post(
+    "https://xcompute.us/v1/images/generations",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": "nano-banana-2",
+        "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+        "size": "1024x1024",
+    },
+    timeout=60,
+)
+response.raise_for_status()
+task_id = response.json()["data"]["task_id"]
+print(task_id)
+```
+
+## 第四步：保存任务 ID
+
+Nano Banana 提交成功时，返回的是任务 ID，不是图片地址：
+
+```json
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "task_id": "YOUR_TASK_ID"
+  }
+}
+```
+
+记下 `data.task_id`，把它放到下一步的查询 URL 中。
+
+## 第五步：查询任务结果
+
+```bash
+curl --request GET \
+  --url https://xcompute.us/v1/images/generations/YOUR_TASK_ID \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
+
+生成完成时会看到：
+
+```json
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "task_id": "YOUR_TASK_ID",
+    "state": "succeeded",
+    "data": {
+      "images": [
+        {"url": "https://example.com/generated-image.png"}
+      ]
+    }
+  }
+}
+```
+
+判断 `data.state` 是否为 `succeeded`，然后读取 `data.data.images[0].url`。如果还没有完成，继续每 3 到 5 秒查询一次。完整说明见[任务查询](/api-reference/tasks/query)。
+
+## 第六步：使用参考图编辑
+
+参考图片必须是 Xcompute 服务端可以访问的公网 URL：
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/edits \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "nano-banana-2",
+    "prompt": "把背景改成海边，保留主体和姿势",
+    "images": ["https://example.com/source.png"],
+    "size": "1024x1024"
+  }'
+```
+
+`images` 是数组，即使只有一张图片也要写成数组格式。提交后仍然按照上面的方式取得 `task_id`，再查询任务结果。
+
+## 如何写提示词
+
+图片生成：
+
+```text
+一只金毛犬在草地上奔跑，清晨阳光，低机位，写实摄影风格，画面中不要出现文字
+```
+
+图片编辑：
+
+```text
+保留人物的脸、姿势和衣服，只把背景替换成雪山，光线保持自然
+```
+
+编辑图片时要明确写出“保留什么”和“修改什么”，这样更容易得到稳定结果。
+
+## 常见问题
+
+### 返回 `401`
+
+检查是否使用了正确的 Bearer Token，并确认 API Key 没有过期。
+
+### 返回 `503 No available channel`
+
+这通常是 API Key 所属分组没有 Nano Banana 渠道。联系管理员开通对应模型权限。
+
+### 一直没有图片
+
+不要把提交成功当成生成完成。必须使用 `data.task_id` 调用查询接口，直到 `data.state` 变为 `succeeded`。
+
+### 参考图无法读取
+
+检查图片 URL 是否公网可访问、是否需要登录、是否会很快过期。优先使用稳定的 HTTPS 图片地址。

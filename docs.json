@@ -135,6 +135,8 @@
             "group": "图像生成",
             "pages": [
               "api-reference/images/models",
+              "api-reference/images/gpt-image",
+              "api-reference/images/nano-banana",
               "api-reference/images/generate",
               "api-reference/images/edit",
               "api-reference/images/async-generate"

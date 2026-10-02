@@ -33,6 +33,11 @@ Content-Type: application/json
 
 ## 如何选择
 
+如果你第一次调用图像接口，建议先阅读对应的分步教程：
+
+- [GPT Image：从零开始生成图片](/api-reference/images/gpt-image)
+- [Nano Banana：从零开始生成图片和编辑图片](/api-reference/images/nano-banana)
+
 ### 需要马上拿到图片
 
 使用 `gpt-image-2` 或 `gpt-image-2.5`，调用[同步图像生成](/api-reference/images/generate)。接口会等待上游生成完成，并在 `data[0].url` 返回图片地址。
