@@ -31,15 +31,6 @@ Content-Type: application/json
 | `nano-banana-2-lite` | 任务式 | Nano Banana 2 Lite 图像生成 |
 | `nano-banana-pro` | 任务式 | Nano Banana Pro 图像生成 |
 
-## 当前图片渠道
-
-| 渠道 | 分组 | 当前配置的模型 |
-| --- | --- | --- |
-| Duomi Nano Banana | `default` | `nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro` |
-| GoEasyAPI Images | `default` | `gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async` |
-| Forward 四方官转 | `图片官转` | `gpt-image-2`、`gpt-image-2.5-flare`、`gpt-image-2.5-sunburst` |
-| Forward 香蕉 | `default` | `nano-banana-2`、`nano-banana-pro`、`gemini-3-pro-image-preview` |
-
 ## 图片价格
 
 图片模型按次计费。下面是当前基础美元价格：
@@ -53,22 +44,7 @@ Content-Type: application/json
 | `nano-banana-pro` | `$0.030/次` |
 | `gemini-3-pro-image-preview` | `$0.020/次` |
 
-实际扣费公式：
-
-```text
-实际扣费 = 基础模型价格 × 分组倍率 × 图片倍率
-```
-
-当前图片相关分组倍率：
-
-| 分组 | 分组倍率 |
-| --- | ---: |
-| `default` | `1` |
-| `图片官转` | `3` |
-
-例如，同一个 `gpt-image-2` 在 `default` 分组为 `$0.015/次`，在 `图片官转` 分组为 `$0.045/次`。
-
-GPT Image 的图片倍率为：1K=`1`，2K/4K=`1.5`。Nano Banana 当前 1K、2K、4K 都是 `1` 倍。
+最终扣费可能会根据 API Key 所属账户方案、分辨率和实时价格配置变化，请以控制台的模型价格为准。GPT Image 的图片倍率为：1K=`1`，2K/4K=`1.5`。Nano Banana 当前 1K、2K、4K 都是 `1` 倍。
 
 ## 如何选择
 
@@ -79,7 +55,7 @@ GPT Image 的图片倍率为：1K=`1`，2K/4K=`1.5`。Nano Banana 当前 1K、2K
 
 ### 需要马上拿到图片
 
-使用 `gpt-image-2` 或 `gpt-image-2.5`，调用[同步图像生成](/api-reference/images/generate)。接口会等待上游生成完成，并在 `data[0].url` 返回图片地址。
+使用 `gpt-image-2` 或 `gpt-image-2.5`，调用[同步图像生成](/api-reference/images/generate)。接口会等待图片生成完成，并在 `data[0].url` 返回图片地址。
 
 ### 请求可能耗时较长
 
@@ -87,7 +63,7 @@ GPT Image 的图片倍率为：1K=`1`，2K/4K=`1.5`。Nano Banana 当前 1K、2K
 
 ### 想使用 Nano Banana
 
-使用 `nano-banana`、`nano-banana-2`、`nano-banana-2-lite` 或 `nano-banana-pro`，仍然调用 `POST /v1/images/generations`。服务会根据模型名自动选择对应的上游图像模型。
+使用 `nano-banana`、`nano-banana-2`、`nano-banana-2-lite` 或 `nano-banana-pro`，仍然调用 `POST /v1/images/generations`。
 
 这四个模型的提交响应是 `data.task_id`，不是图片 URL。继续调用 `GET /v1/images/generations/{task_id}`，在 `data.state` 为 `succeeded` 时读取 `data.data.images[0].url`。
 
@@ -129,4 +105,4 @@ curl --request POST \
 | `401` | API Key 无效或缺少认证头 | 检查 `Authorization: Bearer YOUR_API_KEY` |
 | `400` | 请求参数错误 | 检查模型名、提示词和尺寸格式 |
 | `503` | 当前 API Key 所属分组没有该模型的可用渠道 | 换用账号可见的模型，或联系管理员开通对应分组 |
-| `504` | 上游生成超时 | 同步请求增加客户端超时时间，或改用异步模型 |
+| `504` | 图片生成超时 | 同步请求增加客户端超时时间，或改用异步模型 |
