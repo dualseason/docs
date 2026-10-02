@@ -1,10 +1,10 @@
 ---
 title: '图像生成'
-description: '使用 GPT Image 2.5 根据文字提示生成图片。'
+description: '使用 GPT Image 或 Nano Banana 根据文字提示生成图片。'
 api: 'POST /v1/images/generations'
 ---
 
-使用 `gpt-image-2.5` 根据文字提示生成图片。同步接口会保持 HTTP 连接，直到生成完成并返回图片 URL；客户端超时建议设置为至少 300 秒。
+使用 `gpt-image-2` 或 `gpt-image-2.5` 根据文字提示生成图片。接口会保持 HTTP 连接，直到生成完成并返回图片 URL；客户端超时建议设置为至少 300 秒。Nano Banana 也使用此路径，但提交后返回任务 ID，需按[任务查询](/api-reference/tasks/query)读取结果。查看[全部图像模型](/api-reference/images/models)。
 
 ## 请求
 
@@ -59,7 +59,7 @@ api: 'POST /v1/images/generations'
 </ParamField>
 
 <ParamField body="model" type="string" default="gpt-image-2.5" required>
-  固定填写 `gpt-image-2.5`。
+  填写 `gpt-image-2` 或 `gpt-image-2.5`。Nano Banana 模型的返回格式不同，参见[图像模型与调用方式](/api-reference/images/models)。
 </ParamField>
 
 <ParamField body="prompt" type="string" required>
@@ -75,11 +75,11 @@ api: 'POST /v1/images/generations'
 </ParamField>
 
 <ParamField body="n" type="integer" default="1">
-  生成数量。具体上限以当前账户和模型配置为准。
+  GPT Image 同步模型支持 `1` 到 `4`。Nano Banana 建议省略此参数。
 </ParamField>
 
 <ParamField body="response_format" type="string" default="url">
-  返回格式。目前仅支持 `url`。
+  GPT Image 同步模型仅支持 `url`；Nano Banana 建议省略此参数。
 </ParamField>
 
 ## 支持尺寸
@@ -106,3 +106,11 @@ api: 'POST /v1/images/generations'
 </ResponseExample>
 
 从 `data[0].url` 读取图片。返回的 URL 可能具有有效期，请及时下载并保存。
+
+Nano Banana 的提交响应示例：
+
+```json
+{"code":200,"msg":"success","data":{"task_id":"YOUR_TASK_ID"}}
+```
+
+请使用该 `task_id` 调用[任务查询](/api-reference/tasks/query)，不要把提交成功当成图片已生成。

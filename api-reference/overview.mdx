@@ -3,7 +3,7 @@ title: "API 总览"
 description: "了解 Xcompute API 的地址、认证方式和常用接口。"
 ---
 
-Xcompute 提供 OpenAI 兼容的文本生成接口，以及 GPT Image 2.5 图像生成接口。使用 API 前，先创建 [API Key](https://xcompute.us/keys)，再根据任务选择接口。
+Xcompute 提供 OpenAI 兼容的文本生成接口，以及 GPT Image 和 Nano Banana 图像生成接口。使用 API 前，先创建 [API Key](https://xcompute.us/keys)，再根据任务选择接口。
 
 ## 三步开始
 
@@ -44,12 +44,13 @@ Content-Type: application/json
 
 ### 图像生成
 
+- [图像模型与调用方式](/api-reference/images/models) 查看当前可用模型和参数建议
 - [同步图像生成](/api-reference/images/generate) `POST /v1/images/generations`
 - [图生图](/api-reference/images/edit) `POST /v1/images/edits`
-- [异步图像生成](/api-reference/images/async-generate) `POST /v1/images/generations`
-- [异步任务查询](/api-reference/tasks/query) `GET /v1/tasks/{task_id}`
+- [异步图像生成](/api-reference/images/async-generate) `POST /v1/images/generations`（异步模型）或 `POST /v1/images/generations/async`（独立入队）
+- [异步任务查询](/api-reference/tasks/query) `GET /v1/images/generations/{task_id}`
 
-同步接口会等待图片生成完成；异步接口立即返回任务 ID，需配合任务查询接口轮询结果。
+GPT Image 同步接口会等待图片生成完成；异步模型及 Nano Banana 会返回任务 ID，需配合任务查询接口轮询结果。
 
 ## 如何选择图像接口
 

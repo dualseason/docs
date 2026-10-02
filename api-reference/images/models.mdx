@@ -1,0 +1,88 @@
+---
+title: '图像模型与调用方式'
+description: '选择 Xcompute 当前可用的图像生成模型，并使用统一接口调用。'
+---
+
+Xcompute 的图像模型使用 OpenAI 兼容接口。所有请求都使用同一个 Base URL：
+
+```text
+https://xcompute.us/v1
+```
+
+请求头固定为：
+
+```http
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+```
+
+## 当前可用模型
+
+以下 8 个模型已通过 Xcompute 实际接口验证。模型是否对你的 API Key 可见，还会受到账号分组和模型权限影响。
+
+| 模型 | 类型 | 推荐用途 |
+| --- | --- | --- |
+| `gpt-image-2` | 同步 | 等待接口直接返回图片 |
+| `gpt-image-2.5` | 同步 | 更高规格的通用文生图 |
+| `gpt-image-2-async` | 异步 | 提交任务后轮询结果 |
+| `gpt-image-2.5-async` | 异步 | 提交高规格任务后轮询结果 |
+| `nano-banana` | 任务式 | 文生图和参考图编辑 |
+| `nano-banana-2` | 任务式 | Nano Banana 2 图像生成 |
+| `nano-banana-2-lite` | 任务式 | Nano Banana 2 Lite 图像生成 |
+| `nano-banana-pro` | 任务式 | Nano Banana Pro 图像生成 |
+
+## 如何选择
+
+### 需要马上拿到图片
+
+使用 `gpt-image-2` 或 `gpt-image-2.5`，调用[同步图像生成](/api-reference/images/generate)。接口会等待上游生成完成，并在 `data[0].url` 返回图片地址。
+
+### 请求可能耗时较长
+
+使用 `gpt-image-2-async` 或 `gpt-image-2.5-async`，调用[异步图像生成](/api-reference/images/async-generate)。接口会立即返回任务 ID，再使用[任务查询](/api-reference/tasks/query)获取图片地址。
+
+### 想使用 Nano Banana
+
+使用 `nano-banana`、`nano-banana-2`、`nano-banana-2-lite` 或 `nano-banana-pro`，仍然调用 `POST /v1/images/generations`。服务会根据模型名自动选择对应的上游图像模型。
+
+这四个模型的提交响应是 `data.task_id`，不是图片 URL。继续调用 `GET /v1/images/generations/{task_id}`，在 `data.state` 为 `succeeded` 时读取 `data.data.images[0].url`。
+
+## 最小文生图请求
+
+下面的请求适用于 8 个模型。把 `model` 替换为上表中的模型 ID，再按模型对应的[响应格式](#如何选择)处理结果。
+
+```bash
+curl --request POST \
+  --url https://xcompute.us/v1/images/generations \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "nano-banana-2",
+    "prompt": "一只橘猫坐在窗台上看夕阳，水彩插画风格",
+    "size": "1024x1024"
+  }'
+```
+
+`gpt-image-2` 和 `gpt-image-2.5` 建议额外传入 `n: 1` 和 `response_format: "url"`。图片地址可能有有效期，拿到 URL 后请及时下载保存。
+
+## 图生图
+
+需要参考图片时，使用[图生图](/api-reference/images/edit)的 `POST /v1/images/edits`。请求体中的 `images` 是图片 URL 数组，图片必须能被 Xcompute 服务端访问。
+
+```json
+{
+  "model": "nano-banana-2",
+  "prompt": "把背景改成海边，保留主体和姿势",
+  "images": ["https://example.com/source.png"],
+  "size": "1024x1024"
+}
+```
+
+## 常见错误
+
+| HTTP 状态码 | 含义 | 处理方式 |
+| --- | --- | --- |
+| `401` | API Key 无效或缺少认证头 | 检查 `Authorization: Bearer YOUR_API_KEY` |
+| `400` | 请求参数错误 | 检查模型名、提示词和尺寸格式 |
+| `503` | 当前 API Key 所属分组没有该模型的可用渠道 | 换用账号可见的模型，或联系管理员开通对应分组 |
+| `504` | 上游生成超时 | 同步请求增加客户端超时时间，或改用异步模型 |

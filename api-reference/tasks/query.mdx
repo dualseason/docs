@@ -1,17 +1,17 @@
 ---
 title: '任务查询'
 description: '查询异步图像生成任务的状态与结果。'
-api: 'GET /v1/tasks/{task_id}'
+api: 'GET /v1/images/generations/{task_id}'
 ---
 
-使用异步图像生成接口返回的任务 ID 查询任务状态。完整流程是：提交任务、保存 `id`、定时查询，直到任务完成或失败。
+使用图像生成接口返回的任务 ID 查询任务状态。GPT Image 异步模型的任务 ID 位于响应 `id`；Nano Banana 的任务 ID 位于响应 `data.task_id`。保存任务 ID 后定时查询，直到任务完成或失败。
 
 ## 请求
 
 <RequestExample>
   ```bash cURL theme={null}
   curl --request GET \
-    --url https://xcompute.us/v1/tasks/YOUR_TASK_ID \
+    --url https://xcompute.us/v1/images/generations/YOUR_TASK_ID \
     --header 'Authorization: Bearer YOUR_API_KEY'
   ```
 
@@ -19,7 +19,7 @@ api: 'GET /v1/tasks/{task_id}'
   import requests
 
   response = requests.get(
-      "https://xcompute.us/v1/tasks/YOUR_TASK_ID",
+    "https://xcompute.us/v1/images/generations/YOUR_TASK_ID",
       headers={"Authorization": "Bearer YOUR_API_KEY"},
       timeout=30,
   )
@@ -36,31 +36,46 @@ api: 'GET /v1/tasks/{task_id}'
 
 ## 成功响应
 
+GPT Image 异步模型返回：
+
 <ResponseExample>
   ```json 200 theme={null}
   {
-    "status": "completed",
-    "task_id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
-    "progress": "100%",
-    "result_url": "https://example.com/generated-image.png",
-    "result": {
-      "items": [
-        {
-          "id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
-          "status": "success",
-          "data": [
-            {
-              "url": "https://example.com/generated-image.png"
-            }
-          ]
-        }
-      ]
-    }
+    "items": [
+      {
+        "id": "task_AVzfphDDvLn189o8FyF07uEzx1skzfJP",
+        "status": "success",
+        "data": [
+          {
+            "url": "https://example.com/generated-image.png",
+            "b64_json": ""
+          }
+        ],
+        "error": ""
+      }
+    ],
+    "missing_ids": []
   }
   ```
 </ResponseExample>
 
-优先读取顶层 `result_url`。如果该字段为空，可以读取 `result.items[0].data[0].url`。
+任务完成后读取 `items[0].data[0].url`。如果 `items` 为空，可以检查 `missing_ids` 和错误响应。
+
+Nano Banana 返回另一种格式：
+
+```json
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "task_id": "YOUR_TASK_ID",
+    "state": "succeeded",
+    "data": {"images": [{"url": "https://example.com/generated-image.png"}]}
+  }
+}
+```
+
+当 `data.state` 为 `succeeded` 时读取 `data.data.images[0].url`。状态未完成时继续轮询，失败时停止并检查 `data.msg`。
 
 ## 状态说明
 
@@ -68,6 +83,8 @@ api: 'GET /v1/tasks/{task_id}'
 | --- | --- | --- |
 | `queued` | 任务已进入队列 | 继续轮询 |
 | `in_progress` | 任务正在执行 | 继续轮询 |
-| `completed` | 任务完成 | 读取结果 URL |
+| `success` | 任务完成 | 读取结果 URL |
 | `failed` | 任务失败 | 读取错误信息并停止 |
 | `cancelled` | 任务已取消 | 停止轮询 |
+
+上表适用于 GPT Image 异步模型；Nano Banana 使用 `data.state`，成功值为 `succeeded`。

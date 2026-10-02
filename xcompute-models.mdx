@@ -12,7 +12,7 @@ description: "查看 Xcompute 当前模型及其适用场景。"
 | 简单问答、摘要、改写 | 选择成本较低且满足任务的模型，或使用工具自带免费 AI |
 | 普通代码修改和日常开发 | 选择通用文本模型，先从低成本模型开始 |
 | 长上下文、复杂重构和高要求推理 | 再选择能力更强的模型 |
-| 图像生成或图像编辑 | 使用对应的 GPT Image 接口和模型 |
+| 图像生成或图像编辑 | 先阅读[图像模型与调用方式](/api-reference/images/models)，再选择同步或异步接口 |
 
 不要为了简单任务默认使用最高规格模型。先明确目标、缩短上下文、减少重复请求，通常比盲目升级模型更省 Token。
 
@@ -22,11 +22,15 @@ description: "查看 Xcompute 当前模型及其适用场景。"
 
 ## GPT 与图像
 
-`gpt-5.4`、`gpt-5.5`、`gpt-5.6-luna`、`gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-6-astra`、`gpt-6-luna`、`gpt-6-sol`、`gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async`
+文本模型：`gpt-5.4`、`gpt-5.5`、`gpt-5.6-luna`、`gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-6-astra`、`gpt-6-luna`、`gpt-6-sol`。
+
+图像模型：`gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async`。
 
 ## Gemini 与 Nano Banana
 
 `gemini-3.1-pro`、`gemini-3.6-flash`、`gemini-3.7-flash`、`gemini-3.8-flash`、`nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro`
+
+Nano Banana 模型通过同一个图像生成接口调用，也支持图生图。模型的实际可见性取决于 API Key 所属分组。
 
 ## Grok
 

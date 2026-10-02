@@ -1,10 +1,12 @@
 ---
 title: '图生图'
-description: '使用 GPT Image 2.5 根据一张或多张参考图片生成新图片。'
+description: '使用 GPT Image 或 Nano Banana 根据参考图片生成新图片。'
 api: 'POST /v1/images/edits'
 ---
 
 使用 `gpt-image-2.5` 根据一张或多张参考图片生成新图片。图片通过 `images` 数组传入，支持单张或多张参考图。
+
+Nano Banana 四个模型也可使用此路径。将 `model` 改为 `nano-banana`、`nano-banana-2`、`nano-banana-2-lite` 或 `nano-banana-pro`，保留 `prompt`、`images` 和 `size`，省略 `n` 与 `response_format`。Nano Banana 提交后返回 `data.task_id`，通过[任务查询](/api-reference/tasks/query)读取结果。
 
 ## 请求
 
@@ -59,7 +61,7 @@ api: 'POST /v1/images/edits'
 </ParamField>
 
 <ParamField body="model" type="string" default="gpt-image-2.5" required>
-  固定填写 `gpt-image-2.5`。
+  填写 `gpt-image-2`、`gpt-image-2.5` 或任意 Nano Banana 模型。Nano Banana 的提交响应是任务 ID，处理方式见[图像模型与调用方式](/api-reference/images/models)。
 </ParamField>
 
 <ParamField body="prompt" type="string" required>
