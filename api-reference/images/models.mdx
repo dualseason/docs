@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ## 当前可用模型
 
-以下 8 个模型已通过 Xcompute 实际接口验证。模型是否对你的 API Key 可见，还会受到账号分组和模型权限影响。
+以下模型已配置在当前启用的图片渠道中。模型是否对你的 API Key 可见，还会受到账号分组和模型权限影响。
 
 | 模型 | 类型 | 推荐用途 |
 | --- | --- | --- |
@@ -30,6 +30,45 @@ Content-Type: application/json
 | `nano-banana-2` | 任务式 | Nano Banana 2 图像生成 |
 | `nano-banana-2-lite` | 任务式 | Nano Banana 2 Lite 图像生成 |
 | `nano-banana-pro` | 任务式 | Nano Banana Pro 图像生成 |
+
+## 当前图片渠道
+
+| 渠道 | 分组 | 当前配置的模型 |
+| --- | --- | --- |
+| Duomi Nano Banana | `default` | `nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro` |
+| GoEasyAPI Images | `default` | `gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async` |
+| Forward 四方官转 | `图片官转` | `gpt-image-2`、`gpt-image-2.5-flare`、`gpt-image-2.5-sunburst` |
+| Forward 香蕉 | `default` | `nano-banana-2`、`nano-banana-pro`、`gemini-3-pro-image-preview` |
+
+## 图片价格
+
+图片模型按次计费。下面是当前基础美元价格：
+
+| 模型 | 基础价格 |
+| --- | ---: |
+| `gpt-image-2`、`gpt-image-2-async` | `$0.015/次` |
+| `gpt-image-2.5`、`gpt-image-2.5-async` | `$0.015/次` |
+| `gpt-image-2.5-flare`、`gpt-image-2.5-sunburst` | `$0.015/次` |
+| `nano-banana`、`nano-banana-2`、`nano-banana-2-lite` | `$0.020/次` |
+| `nano-banana-pro` | `$0.030/次` |
+| `gemini-3-pro-image-preview` | `$0.020/次` |
+
+实际扣费公式：
+
+```text
+实际扣费 = 基础模型价格 × 分组倍率 × 图片倍率
+```
+
+当前图片相关分组倍率：
+
+| 分组 | 分组倍率 |
+| --- | ---: |
+| `default` | `1` |
+| `图片官转` | `3` |
+
+例如，同一个 `gpt-image-2` 在 `default` 分组为 `$0.015/次`，在 `图片官转` 分组为 `$0.045/次`。
+
+GPT Image 的图片倍率为：1K=`1`，2K/4K=`1.5`。Nano Banana 当前 1K、2K、4K 都是 `1` 倍。
 
 ## 如何选择
 

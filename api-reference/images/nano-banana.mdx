@@ -23,6 +23,21 @@ api: 'POST /v1/images/generations'
 
 第一次测试建议使用 `nano-banana-2`。
 
+## 价格和分组
+
+Nano Banana 当前基础价格如下：
+
+| 模型 | 基础价格 | `default` 分组实际价格 |
+| --- | ---: | ---: |
+| `nano-banana` | `$0.020/次` | `$0.020/次` |
+| `nano-banana-2` | `$0.020/次` | `$0.020/次` |
+| `nano-banana-2-lite` | `$0.020/次` | `$0.020/次` |
+| `nano-banana-pro` | `$0.030/次` | `$0.030/次` |
+
+当前 `default` 分组倍率为 `1`，Nano Banana 的 1K、2K、4K 图片倍率也都是 `1`，所以不同分辨率暂时不会增加价格。
+
+Forward 香蕉渠道同样属于 `default` 分组，目前配置了 `nano-banana-2`、`nano-banana-pro` 和 `gemini-3-pro-image-preview`。其中 `gemini-3-pro-image-preview` 的基础价格为 `$0.020/次`。
+
 ## 第三步：提交一张图片生成任务
 
 ```bash
