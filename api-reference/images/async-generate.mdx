@@ -86,7 +86,7 @@ api: 'POST /v1/images/generations'
 
 保存响应中的 `id`，然后按照[任务查询](/api-reference/tasks/query)页面轮询任务状态和结果。
 
-<Note>上游提交响应里的 `model` 可能显示底层模型名；请以你提交时的模型 ID 和响应中的 `id` 为准。</Note>
+<Note>服务返回的 `model` 可能显示内部处理模型名；请以你提交时的模型 ID 和响应中的 `id` 为准。</Note>
 
 ## 独立入队接口
 

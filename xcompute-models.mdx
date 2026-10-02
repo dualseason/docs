@@ -1,47 +1,61 @@
 ---
 title: "模型目录"
-description: "查看 Xcompute 当前模型及其适用场景。"
+description: "查看 Xcompute 当前启用的模型和模型选择方式。"
 ---
 
-模型广场中的模型由当前启用渠道动态提供，账号实际可见范围会受到分组限制。以下列表是已核对的全局模型，模型和价格可能调整，请以[模型广场](https://xcompute.us/models)实时显示为准。
+Xcompute 的模型列表会随账号权限和服务配置变化。下面是当前已配置的模型分类。调用前请使用 `GET /v1/models`，或打开[模型广场](https://xcompute.us/models)，确认你的 API Key 可以看到目标模型。
 
-## 如何选模型
+## 如何查看你能用的模型
 
-| 任务 | 建议 |
-| --- | --- |
-| 简单问答、摘要、改写 | 选择成本较低且满足任务的模型，或使用工具自带免费 AI |
-| 普通代码修改和日常开发 | 选择通用文本模型，先从低成本模型开始 |
-| 长上下文、复杂重构和高要求推理 | 再选择能力更强的模型 |
-| 图像生成或图像编辑 | 先阅读[图像模型与调用方式](/api-reference/images/models)，再选择同步或异步接口 |
+```bash
+curl --request GET \
+  --url https://xcompute.us/v1/models \
+  --header 'Authorization: Bearer YOUR_API_KEY'
+```
 
-不要为了简单任务默认使用最高规格模型。先明确目标、缩短上下文、减少重复请求，通常比盲目升级模型更省 Token。
+返回中的每个 `id` 就是可以填入请求体 `model` 字段的模型 ID。不同账号看到的列表可能不同；模型目录下的分类不能替代接口返回结果。
+
+## GPT 和 GPT Image
+
+文本模型：
+
+`gpt-5.4`、`gpt-5.5`、`gpt-5.6-luna`、`gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-6-astra`、`gpt-6-luna`、`gpt-6-sol`、`gpt-6.1-sol`
+
+图片模型：
+
+`gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async`、`gpt-image-2.5-flare`、`gpt-image-2.5-sunburst`
+
+图片模型的调用方式见[图像模型与调用方式](/api-reference/images/models)。
 
 ## Claude
 
-`claude-fable-5`、`claude-fable-5-1`、`claude-haiku-4-5`、`claude-haiku-4-5-20251001`、`claude-opus-4-5`、`claude-opus-4-6`、`claude-opus-4-7`、`claude-opus-4-8`、`claude-opus-5`、`claude-opus-5-5`、`claude-sonnet-4-5`、`claude-sonnet-4-6`、`claude-sonnet-5`、`claude-sonnet-5-5`
+`claude-fable-5`、`claude-fable-5-1`、`claude-haiku-4-5`、`claude-opus-4-5`、`claude-opus-4-6`、`claude-opus-4-7`、`claude-opus-4-8`、`claude-opus-5`、`claude-opus-5-5`、`claude-sonnet-4-5`、`claude-sonnet-4-6`、`claude-sonnet-5`、`claude-sonnet-5-5`
 
-## GPT 与图像
+## Gemini 和 Nano Banana
 
-文本模型：`gpt-5.4`、`gpt-5.5`、`gpt-5.6-luna`、`gpt-5.6-sol`、`gpt-5.6-terra`、`gpt-6-astra`、`gpt-6-luna`、`gpt-6-sol`。
+`gemini-3-pro-image-preview`、`nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro`
 
-图像模型：`gpt-image-2`、`gpt-image-2-async`、`gpt-image-2.5`、`gpt-image-2.5-async`、`gpt-image-2.5-flare`、`gpt-image-2.5-sunburst`。
-
-## Gemini 与 Nano Banana
-
-`gemini-3.1-pro`、`gemini-3.6-flash`、`gemini-3.7-flash`、`gemini-3.8-flash`、`gemini-3-pro-image-preview`、`nano-banana`、`nano-banana-2`、`nano-banana-2-lite`、`nano-banana-pro`
-
-Nano Banana 模型通过同一个图像生成接口调用，也支持图生图。模型的实际可见性取决于 API Key 所属分组。
+Nano Banana 的文生图和图生图调用方式见[Nano Banana 教程](/api-reference/images/nano-banana)。
 
 ## Grok
 
 `grok-4.5`、`grok-4.6`、`grok-4.7`
 
-## 国产及其他
+## 国产模型及其他模型
 
 `deepseek-v4-flash`、`deepseek-v4-pro`、`deepseek-v4.1-flash`、`glm-5.2`、`glm-5.3`、`glm-5.3-flash`、`kimi-k3`
 
-## 分组和可见性
+## 模型可见性
 
-当前配置包含 `default`、`GPT 渠道`、`GPT-企业版`、`GPT福利渠道`、`GPT-6-Astra不降智`、`Claude Max`、`Claude Kiro`、`Claude 官转`、`Gemini 官转`、`Grok稳定分组` 和 `国产模型渠道`。
+模型是否可调用取决于以下因素：
 
-模型是否显示以及是否可以调用，以账号所属分组、模型定价和渠道实时状态为准。
+- API Key 的账号权限和可用额度
+- 模型当前是否启用
+- 模型是否属于你的账号方案
+- 该模型是否有可用服务线路
+
+如果模型不在 `GET /v1/models` 返回结果中，不要直接猜测模型名。遇到 `model_not_found` 或 `No available channel` 时，请从接口返回列表中选择模型，或联系管理员确认权限。
+
+## 价格
+
+文本模型通常按 Token 计费，图片模型通常按次计费。具体价格以[模型定价](https://xcompute.us/pricing)页面和你的账号实际显示为准。

@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ## 当前可用模型
 
-以下模型已配置在当前启用的图片渠道中。模型是否对你的 API Key 可见，还会受到账号分组和模型权限影响。
+以下图片模型已配置在当前服务中。模型是否对你的 API Key 可见，还会受到账号权限、模型方案和服务状态影响。完整的全局模型目录见[模型目录](/xcompute-models)。
 
 | 模型 | 类型 | 推荐用途 |
 | --- | --- | --- |
@@ -26,10 +26,13 @@ Content-Type: application/json
 | `gpt-image-2.5` | 同步 | 更高规格的通用文生图 |
 | `gpt-image-2-async` | 异步 | 提交任务后轮询结果 |
 | `gpt-image-2.5-async` | 异步 | 提交高规格任务后轮询结果 |
+| `gpt-image-2.5-flare` | 同步或任务式 | 以模型列表显示的接口能力为准 |
+| `gpt-image-2.5-sunburst` | 同步或任务式 | 以模型列表显示的接口能力为准 |
 | `nano-banana` | 任务式 | 文生图和参考图编辑 |
 | `nano-banana-2` | 任务式 | Nano Banana 2 图像生成 |
 | `nano-banana-2-lite` | 任务式 | Nano Banana 2 Lite 图像生成 |
 | `nano-banana-pro` | 任务式 | Nano Banana Pro 图像生成 |
+| `gemini-3-pro-image-preview` | 任务式 | 图片生成和图片编辑 |
 
 ## 图片价格
 
@@ -69,7 +72,7 @@ Content-Type: application/json
 
 ## 最小文生图请求
 
-下面的请求适用于 8 个模型。把 `model` 替换为上表中的模型 ID，再按模型对应的[响应格式](#如何选择)处理结果。
+下面的请求适用于当前图片模型。把 `model` 替换为上表中、且你的 `GET /v1/models` 返回的模型 ID，再按模型对应的[响应格式](#如何选择)处理结果。
 
 ```bash
 curl --request POST \
